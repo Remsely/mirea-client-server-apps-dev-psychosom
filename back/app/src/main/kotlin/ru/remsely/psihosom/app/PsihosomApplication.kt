@@ -1,11 +1,11 @@
-package ru.remsely.psihosom
+package ru.remsely.psihosom.app
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class BackApplication
+class PsihosomApplication
 
 fun main(args: Array<String>) {
-	runApplication<BackApplication>(*args)
+    runApplication<PsihosomApplication>(*args)
 }

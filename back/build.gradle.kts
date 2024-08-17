@@ -1,13 +1,14 @@
 plugins {
-	kotlin("jvm") version "1.9.24"
-	kotlin("plugin.spring") version "1.9.24"
-	id("org.springframework.boot") version "3.3.2"
-	id("io.spring.dependency-management") version "1.1.6"
-	kotlin("plugin.jpa") version "1.9.24"
+	id(Plugins.kotlin_jvm) version PluginVersions.kotlin_jvm
+	id(Plugins.kotlin_spring)version PluginVersions.kotlin_spring
+	id(Plugins.spring_boot) version PluginVersions.spring_boot
+	id(Plugins.spring_dependency_management) version PluginVersions.spring_dependency_management
+	id(Plugins.kotlin_jpa) version PluginVersions.kotlin_jpa
+	id(Plugins.ksp) version PluginVersions.ksp
 }
 
-group = "ru.remsely"
-version = "0.0.1-SNAPSHOT"
+group = Project.groupId
+version = Project.version
 
 java {
 	toolchain {
@@ -25,27 +26,14 @@ repositories {
 	mavenCentral()
 }
 
-dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-	implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("org.springframework.boot:spring-boot-starter-validation")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	compileOnly("org.projectlombok:lombok")
-	runtimeOnly("org.postgresql:postgresql")
-	annotationProcessor("org.projectlombok:lombok")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-	testImplementation("org.springframework.security:spring-security-test")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-}
-
 kotlin {
 	compilerOptions {
 		freeCompilerArgs.addAll("-Xjsr305=strict")
 	}
+}
+
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+	mainClass.set(Project.main_class)
 }
 
 tasks.withType<Test> {
