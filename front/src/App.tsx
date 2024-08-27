@@ -1,12 +1,16 @@
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+
 export default function App() {
     return (
         <>
-            <header className="container">
-                <h1 className="title">НАЗВАНИЕ</h1>
-            </header>
+            <Header/>
+
             <div className="main_container container">
 
             </div>
+
+            <Footer/>
         </>
     )
 }

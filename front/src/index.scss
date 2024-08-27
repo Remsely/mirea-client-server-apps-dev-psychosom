@@ -1,5 +1,4 @@
-$background: "white";
-$background: "white";
+$background: #D9D9D9;
 
 @font-face {
     font-family: Manrope;
@@ -31,6 +30,7 @@ $background: "white";
 
     a {
         text-decoration: none;
+        color: #111111;
     }
 
     img {
@@ -41,4 +41,73 @@ $background: "white";
 .container {
     width: 1100px;
     margin: 0 auto;
+}
+
+.wrapper {
+    background-color: $background;
+}
+
+/* Header */
+
+header {
+    padding-top: 8px;
+    padding-bottom: 20px;
+
+    .title {
+        font-weight: 400;
+        font-size: 40px;
+        text-align: center;
+        margin-bottom: 7px;
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: center;
+
+        ul {
+            border: solid 1px #111;
+            border-radius: 15px;
+            width: fit-content;
+            list-style: none;
+
+            li {
+                font-size: 24px;
+                display: inline-block;
+                padding: 4px 10px;
+                margin-right: 16px;
+
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+}
+
+hr.footer {
+    border: 0;
+    height: 1px;
+    background: #111111;
+}
+
+footer {
+    padding-top: 50px;
+    height: 150px;
+
+    .social {
+        display: flex;
+        align-items: center;
+
+        &:last-child {
+            margin-top: 20px;
+        }
+
+        img {
+            margin-right: 42px;
+        }
+
+        span {
+            font-size: 20px;
+        }
+    }
 }
