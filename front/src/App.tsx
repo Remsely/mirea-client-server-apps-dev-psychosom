@@ -1,7 +1,12 @@
 export default function App() {
-  return (
-    <>
-        <h1>Main page</h1>
-    </>
-  )
+    return (
+        <>
+            <header className="container">
+                <h1 className="title">НАЗВАНИЕ</h1>
+            </header>
+            <div className="main_container container">
+
+            </div>
+        </>
+    )
 }
