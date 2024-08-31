@@ -1,3 +1,27 @@
 spring:
   application:
     name: psihosom
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/psihosom
+    username: test
+    password: test
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+    show-sql: true
+  sql:
+    init:
+      mode: never
+
+security:
+  jwt:
+    private-key-path: classpath:jwt/rsa/private_key.pem
+    public-key-path: classpath:jwt/rsa/public_key.pem
+
+frontend:
+  url: ${PSIHOSOM_WEB_URL:http://localhost:3000}

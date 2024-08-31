@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
 	id(Plugins.kotlin_jvm) version PluginVersions.kotlin_jvm
 	id(Plugins.kotlin_spring)version PluginVersions.kotlin_spring
@@ -7,8 +10,8 @@ plugins {
 	id(Plugins.ksp) version PluginVersions.ksp
 }
 
-group = Constants.groupId
-version = Constants.version
+group = Project.groupId
+version = Project.version
 
 java {
 	toolchain {
@@ -16,9 +19,9 @@ java {
 	}
 }
 
-configurations {
-	compileOnly {
-		extendsFrom(configurations.annotationProcessor.get())
+configurations.all {
+	resolutionStrategy {
+		preferProjectModules()
 	}
 }
 
@@ -26,16 +29,33 @@ repositories {
 	mavenCentral()
 }
 
-kotlin {
-	compilerOptions {
-		freeCompilerArgs.addAll("-Xjsr305=strict")
+subprojects {
+	apply {
+		plugin(Plugins.kotlin_jvm)
+	}
+
+	repositories {
+		mavenCentral()
+	}
+
+	tasks {
+		withType<KotlinCompile> {
+			compilerOptions {
+				freeCompilerArgs = listOf("-Xjvm-default=all-compatibility")
+				jvmTarget.set(JvmTarget.JVM_21)
+			}
+		}
+
+		withType<JavaCompile> {
+			options.compilerArgs.add("-Xlint:all")
+		}
+
+		withType<Test> {
+			useJUnitPlatform()
+		}
 	}
 }
 
 tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
-	mainClass.set(Constants.main_class)
-}
-
-tasks.withType<Test> {
-	useJUnitPlatform()
+	mainClass.set(Project.main_class)
 }
