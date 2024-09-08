@@ -3,17 +3,20 @@ spring:
     name: psihosom
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/psihosom
+    url: jdbc:postgresql://localhost:5433/psihosom
     username: test
     password: test
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         format_sql: true
     open-in-view: false
     show-sql: true
+  flyway:
+    locations: classpath:db/migration
+    clean-disabled: false
   sql:
     init:
       mode: never

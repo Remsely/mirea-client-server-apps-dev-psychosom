@@ -16,6 +16,8 @@ object Libs {
 
     // DB
     const val postgresql = "org.postgresql:postgresql:${LibVersions.postgresql}"
+    const val flyway_core = "org.flywaydb:flyway-core:${LibVersions.flyway}"
+    const val flyway_database_postgresql = "org.flywaydb:flyway-database-postgresql:${LibVersions.flyway}"
 
     // Utils
     const val jetbrains_kotlin_reflect = "org.jetbrains.kotlin:kotlin-reflect"
@@ -33,6 +35,7 @@ object LibVersions {
     const val spring_boot_starter = "3.3.2"
     const val postgresql = "42.7.1"
     const val spring_tx = "6.1.12"
+    const val flyway = "10.17.3"
 }
 
 object Plugins {
@@ -42,6 +45,7 @@ object Plugins {
     const val spring_dependency_management = "io.spring.dependency-management"
     const val kotlin_jpa = "org.jetbrains.kotlin.plugin.jpa"
     const val ksp = "com.google.devtools.ksp"
+    const val flyway = "org.flywaydb.flyway"
 }
 
 object PluginVersions {
@@ -51,4 +55,5 @@ object PluginVersions {
     const val spring_dependency_management = "1.1.6"
     const val kotlin_jpa = "1.9.24"
     const val ksp = "2.0.10-1.0.24"
+    const val flyway = "9.10.0"
 }

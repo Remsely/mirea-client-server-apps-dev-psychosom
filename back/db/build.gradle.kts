@@ -1,5 +1,6 @@
 plugins {
     id(Plugins.kotlin_jpa) version PluginVersions.kotlin_jpa
+    id(Plugins.flyway) version PluginVersions.flyway
 }
 
 group = Project.groupId
@@ -16,7 +17,10 @@ dependencies {
     implementation(Libs.spring_boot_starter_data_jpa)
 
     implementation(Libs.arrow_core)
+
     implementation(Libs.postgresql)
+    implementation(Libs.flyway_core)
+    implementation(Libs.flyway_database_postgresql)
 
     implementation(Libs.jetbrains_kotlin_reflect)
 
