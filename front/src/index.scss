@@ -1,36 +1,39 @@
-$background: #D9D9D9;
+$background: #E9E9E9;
+$font-title: #6E522D;
+$font-text: #7D7D7D;
 
 @font-face {
     font-family: Manrope;
-    src: url('/src/assets/fonts/Manrope-Regular.ttf') format('truetype');
-    font-weight: 400;
+    src: url('/src/assets/fonts/Manrope-Medium.ttf') format('truetype');
+    font-weight: 500;
     font-style: normal;
 }
 
 @font-face {
     font-family: Manrope;
-    src: url('/src/assets/fonts/Manrope-ExtraLight.ttf') format('truetype');
-    font-weight: 200;
+    src: url('/src/assets/fonts/Manrope-SemiBold.ttf') format('truetype');
+    font-weight: 600;
     font-style: normal;
 }
 
 @font-face {
     font-family: Manrope;
-    src: url('/src/assets/fonts/Manrope-Light.ttf') format('truetype');
-    font-weight: 300;
+    src: url('/src/assets/fonts/Manrope-Bold.ttf') format('truetype');
+    font-weight: 700;
     font-style: normal;
 }
 
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 
     font-family: "Manrope", sans-serif;
-    font-weight: 200;
+    font-size: 20px;
+    color: $font-text;
 
     a {
         text-decoration: none;
-        color: #111111;
     }
 
     img {
@@ -39,25 +42,33 @@ $background: #D9D9D9;
 }
 
 .container {
-    width: 1100px;
+    width: 1075px;
     margin: 0 auto;
 }
 
 .wrapper {
-    background-color: $background;
+    background-image: url("/public/background.svg");
+}
+
+.title_block {
+    color: $font-title;
+    padding: 24px 0 11px 16px;
+    font-size: 40px;
+    font-weight: 700;
 }
 
 /* Header */
 
 header {
-    padding-top: 8px;
-    padding-bottom: 20px;
+    padding-top: 25px;
+    padding-bottom: 50px;
 
     .title {
-        font-weight: 400;
+        color: $font-title;
+        font-weight: 700;
         font-size: 40px;
         text-align: center;
-        margin-bottom: 7px;
+        margin-bottom: 12px;
     }
 
     .navbar {
@@ -65,16 +76,21 @@ header {
         justify-content: center;
 
         ul {
-            border: solid 1px #111;
-            border-radius: 15px;
+            background: rgba(248, 235, 217, 0.88);
             width: fit-content;
+            border-radius: 18px;
             list-style: none;
 
             li {
-                font-size: 24px;
+                font-weight: 600;
                 display: inline-block;
-                padding: 4px 10px;
-                margin-right: 16px;
+                padding: 5px 10px;
+                margin-right: 5px;
+
+                a {
+                    font-size: 24px;
+                    color: $font-title;
+                }
 
                 &:last-child {
                     margin-right: 0;
@@ -84,7 +100,10 @@ header {
     }
 }
 
+/* Footer */
+
 hr.footer {
+    margin-top: 50px;
     border: 0;
     height: 1px;
     background: #111111;
@@ -92,7 +111,7 @@ hr.footer {
 
 footer {
     padding-top: 50px;
-    height: 150px;
+    height: 200px;
 
     .social {
         display: flex;
@@ -109,5 +128,164 @@ footer {
         span {
             font-size: 20px;
         }
+    }
+}
+
+/* Main */
+
+.main {
+    display: flex;
+
+    border-left: 1px solid #cbbfbf;
+    border-top: 1px solid #cbbfbf;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    border-radius: 35px;
+
+    .description {
+        width: 700px;
+        padding: 25px 0 0 20px;
+
+        p {
+            font-size: 20px;
+        }
+
+        .important {
+            box-shadow: inset 0 0 40px 0 rgba(231, 192, 148, 0.6);
+            background: rgba(231, 192, 148, 0.02);
+            border-radius: 28px;
+            color: $font-title;
+            padding: 10px 20px;
+            margin: 22px 0;
+            width: 100%;
+            height: 75px;
+
+            p {
+                color: $font-title;
+            }
+        }
+    }
+}
+
+/* Form */
+
+form {
+    display: flex;
+
+    .inputs {
+        width: 301px;
+        padding: 15px 18px;
+        margin-right: 10px;
+
+        .row {
+            margin: 32px 0;
+
+            p {
+                font-size: 24px;
+            }
+
+            &:first-child {
+                margin-top: 0;
+            }
+        }
+
+        input {
+            box-shadow: inset 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+            background: rgba(238, 238, 238, 0.7);
+            border: none;
+            width: 254px;
+            height: 42px;
+            margin-top: 10px;
+            font-size: 20px;
+            border-radius: 20px;
+            padding: 0 15px;
+        }
+    }
+
+    .textarea {
+        position: relative;
+        width: calc(100% - 301px);
+        padding: 16px 20px;
+
+        p {
+            font-size: 24px;
+        }
+
+        textarea {
+            box-shadow: inset 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+            background: rgba(238, 238, 238, 0.7);
+            border: none;
+            width: 100%;
+            height: 273px;
+            border-radius: 20px;
+            margin-top: 8px;
+            resize: none;
+            font-size: 20px;
+            padding: 15px;
+        }
+
+        button {
+            background: rgba(248, 235, 217, 0.88);
+            color: $font-title;
+            font-weight: 700;
+            border: none;
+            position: absolute;
+            bottom: 16px;
+            left: 20px;
+            height: 55px;
+            width: calc(100% - 40px);
+            border-radius: 20px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    }
+
+    .block {
+        height: 450px;
+        border-radius: 35px;
+        fill: rgba(255, 255, 255, 0.4);
+        border-left: 1px solid #cbbfbf;
+        border-top: 1px solid #cbbfbf;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    }
+
+}
+
+/* Comments */
+
+.comment {
+    width: 305px;
+    height: 450px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    background: rgba(255, 255, 255, 0.4);
+    border-left: 1px solid #cbbfbf;
+    border-top: 1px solid #cbbfbf;
+    border-radius: 35px;
+    padding: 10px 20px;
+
+    .info {
+        display: flex;
+        align-items: center;
+
+        h3 {
+            font-size: 32px;
+            font-weight: 600;
+            color: $font-title;
+        }
+
+        span {
+            font-size: 40px;
+            font-weight: 600;
+            color: $font-title;
+            margin-left: auto;
+            margin-right: 5px;
+        }
+    }
+
+    h4 {
+        margin-top: 12px;
+        text-align: center;
     }
 }
