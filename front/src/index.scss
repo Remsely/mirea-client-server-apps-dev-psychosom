@@ -1,6 +1,4 @@
-$background: #E9E9E9;
-$font-title: #6E522D;
-$font-text: #7D7D7D;
+@import "/src/utils/variables";
 
 @font-face {
     font-family: Manrope;
@@ -23,17 +21,26 @@ $font-text: #7D7D7D;
     font-style: normal;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 
     font-family: "Manrope", sans-serif;
-    font-size: 20px;
-    color: $font-text;
+    font-size: $font-size-text;
+    color: $text-font-color;
+
+    input::placeholder {
+        opacity: 0.4;
+    }
 
     a {
         text-decoration: none;
+        cursor: pointer;
     }
 
     img {
@@ -42,250 +49,68 @@ $font-text: #7D7D7D;
 }
 
 .container {
-    width: 1075px;
+    max-width: 1075px;
+    width: 100%;
     margin: 0 auto;
+}
+
+.block {
+    height: 450px;
+    border-radius: $border-radius;
+    background: $background-div-color;
+    border-left: $border-shadow;
+    border-top: $border-shadow;
+    backdrop-filter: $backdrop-filter;
+    box-shadow: $box-shadow;
 }
 
 .wrapper {
     background-image: url("/public/background.svg");
 }
 
-.title_block {
-    color: $font-title;
-    padding: 24px 0 11px 16px;
-    font-size: 40px;
-    font-weight: 700;
-}
-
-/* Header */
-
-header {
-    padding-top: 25px;
-    padding-bottom: 50px;
-
-    .title {
-        color: $font-title;
-        font-weight: 700;
-        font-size: 40px;
-        text-align: center;
-        margin-bottom: 12px;
-    }
-
-    .navbar {
-        display: flex;
-        justify-content: center;
-
-        ul {
-            background: rgba(248, 235, 217, 0.88);
-            width: fit-content;
-            border-radius: 18px;
-            list-style: none;
-
-            li {
-                font-weight: 600;
-                display: inline-block;
-                padding: 5px 10px;
-                margin-right: 5px;
-
-                a {
-                    font-size: 24px;
-                    color: $font-title;
-                }
-
-                &:last-child {
-                    margin-right: 0;
-                }
-            }
-        }
+.slick-slide {
+    > div {
+        margin-right: 20px;
     }
 }
 
-/* Footer */
-
-hr.footer {
-    margin-top: 50px;
-    border: 0;
-    height: 1px;
-    background: #111111;
+.slick-list {
+    height: 455px;
 }
 
-footer {
-    padding-top: 50px;
-    height: 200px;
-
-    .social {
-        display: flex;
-        align-items: center;
-
-        &:last-child {
-            margin-top: 20px;
-        }
-
-        img {
-            margin-right: 42px;
-        }
-
-        span {
-            font-size: 20px;
-        }
-    }
-}
-
-/* Main */
-
-.main {
+.slick-arrow.slick-next,
+.slick-arrow.slick-prev {
+    background-color: $button-bg-color;
     display: flex;
-
-    border-left: 1px solid #cbbfbf;
-    border-top: 1px solid #cbbfbf;
-    backdrop-filter: blur(15px);
-    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-    border-radius: 35px;
-
-    .description {
-        width: 700px;
-        padding: 25px 0 0 20px;
-
-        p {
-            font-size: 20px;
-        }
-
-        .important {
-            box-shadow: inset 0 0 40px 0 rgba(231, 192, 148, 0.6);
-            background: rgba(231, 192, 148, 0.02);
-            border-radius: 28px;
-            color: $font-title;
-            padding: 10px 20px;
-            margin: 22px 0;
-            width: 100%;
-            height: 75px;
-
-            p {
-                color: $font-title;
-            }
-        }
-    }
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    opacity: 1;
+    height: 50px;
+    width: 50px;
+    transition: $transition-main;
 }
 
-/* Form */
-
-form {
-    display: flex;
-
-    .inputs {
-        width: 301px;
-        padding: 15px 18px;
-        margin-right: 10px;
-
-        .row {
-            margin: 32px 0;
-
-            p {
-                font-size: 24px;
-            }
-
-            &:first-child {
-                margin-top: 0;
-            }
-        }
-
-        input {
-            box-shadow: inset 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-            background: rgba(238, 238, 238, 0.7);
-            border: none;
-            width: 254px;
-            height: 42px;
-            margin-top: 10px;
-            font-size: 20px;
-            border-radius: 20px;
-            padding: 0 15px;
-        }
-    }
-
-    .textarea {
-        position: relative;
-        width: calc(100% - 301px);
-        padding: 16px 20px;
-
-        p {
-            font-size: 24px;
-        }
-
-        textarea {
-            box-shadow: inset 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-            background: rgba(238, 238, 238, 0.7);
-            border: none;
-            width: 100%;
-            height: 273px;
-            border-radius: 20px;
-            margin-top: 8px;
-            resize: none;
-            font-size: 20px;
-            padding: 15px;
-        }
-
-        button {
-            background: rgba(248, 235, 217, 0.88);
-            color: $font-title;
-            font-weight: 700;
-            border: none;
-            position: absolute;
-            bottom: 16px;
-            left: 20px;
-            height: 55px;
-            width: calc(100% - 40px);
-            border-radius: 20px;
-            font-size: 20px;
-            cursor: pointer;
-        }
-    }
-
-    .block {
-        height: 450px;
-        border-radius: 35px;
-        fill: rgba(255, 255, 255, 0.4);
-        border-left: 1px solid #cbbfbf;
-        border-top: 1px solid #cbbfbf;
-        backdrop-filter: blur(15px);
-        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-    }
-
+.slick-arrow.slick-next {
+    background-image: url('/public/chevron-right.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    right: -85px;
 }
 
-/* Comments */
+.slick-arrow.slick-prev {
+    background-image: url('/public/chevron-left.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    left: -85px;
+}
 
-.comment {
-    width: 305px;
-    height: 450px;
-    backdrop-filter: blur(15px);
-    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-    background: rgba(255, 255, 255, 0.4);
-    border-left: 1px solid #cbbfbf;
-    border-top: 1px solid #cbbfbf;
-    border-radius: 35px;
-    padding: 10px 20px;
+.slick-arrow.slick-next:hover,
+.slick-arrow.slick-prev:hover {
+    background-color: $button-hover-color;
+}
 
-    .info {
-        display: flex;
-        align-items: center;
-
-        h3 {
-            font-size: 32px;
-            font-weight: 600;
-            color: $font-title;
-        }
-
-        span {
-            font-size: 40px;
-            font-weight: 600;
-            color: $font-title;
-            margin-left: auto;
-            margin-right: 5px;
-        }
-    }
-
-    h4 {
-        margin-top: 12px;
-        text-align: center;
-    }
+.slick-prev::before,
+.slick-next::before {
+    display: none;
 }

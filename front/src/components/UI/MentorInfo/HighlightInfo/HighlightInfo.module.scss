@@ -1,0 +1,23 @@
+@import "/src/utils/variables";
+
+.highlight {
+    background: $button-bg-color;
+    border-radius: $border-radius-inputs-form;
+    color: $title-font-color;
+    padding: 10px 20px;
+    margin: 22px 0;
+    width: 100%;
+    height: 75px;
+
+    a {
+        transition: $transition-main;
+
+        &:hover {
+            color: $title-hover-color;
+        }
+    }
+
+    p {
+        color: $title-font-color;
+    }
+}

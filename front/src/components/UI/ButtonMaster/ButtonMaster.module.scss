@@ -1,0 +1,16 @@
+@import "/src/utils/variables";
+
+button {
+    background: $button-bg-color;
+    color: $title-font-color;
+    font-weight: $font-weight-title;
+    border: none;
+    border-radius: $border-radius-inputs-form;
+    font-size: $font-size-text;
+    cursor: pointer;
+    transition: $transition-main;
+
+    &:hover {
+        background-color: $button-hover-color;
+    }
+}

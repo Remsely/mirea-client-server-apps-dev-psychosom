@@ -1,0 +1,10 @@
+@import "/src/utils/variables";
+
+.photo {
+    position: absolute;
+    right:0;
+    top:0;
+    bottom:0;
+    border-radius: 0 $border-radius $border-radius 0;
+    height: 100%;
+}

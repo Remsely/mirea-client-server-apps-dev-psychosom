@@ -1,0 +1,18 @@
+@import "/src/utils/variables";
+
+.main {
+    display: flex;
+    position: relative;
+
+    border-left: $border-shadow;
+    border-top: $border-shadow;
+    backdrop-filter: $backdrop-filter;
+    background: $background-div-color;
+    box-shadow: $box-shadow;
+    border-radius: $border-radius;
+
+    .description {
+        width: 600px;
+        padding: 25px 0 0 20px;
+    }
+}

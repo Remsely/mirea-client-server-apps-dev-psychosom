@@ -1,0 +1,58 @@
+@import "/src/utils/variables";
+
+.dialog {
+    position: relative;
+    z-index: 50;
+
+    .background {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: $background-modal;
+
+        .panel {
+            display: flex;
+            flex-direction: column;
+            background-color: $background-modal-color;
+            padding: 30px;
+            max-width: 85vh;
+            max-height: 95vh;
+            overflow-y: auto;
+
+            .header {
+                display: flex;
+                margin-bottom: 20px;
+                align-items: center;
+
+                .title {
+                    font-size: $font-size-subtitle;
+                    color: $title-font-color;
+                }
+            }
+
+            img {
+                max-height: 750px;
+            }
+
+            .closeModal {
+                margin-left: auto;
+
+                svg {
+                    stroke: $title-font-color;
+                    cursor: pointer;
+                    transition: $transition-main;
+
+                    &:hover {
+                        transform: scale(1.2);
+                        stroke: $title-hover-color;
+                    }
+                }
+            }
+        }
+    }
+}
