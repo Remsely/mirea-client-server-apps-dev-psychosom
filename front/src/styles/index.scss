@@ -1,22 +1,22 @@
-@import "/src/utils/variables";
+@import "/src/styles/variables";
 
 @font-face {
     font-family: Manrope;
-    src: url('/src/assets/fonts/Manrope-Medium.ttf') format('truetype');
+    src: url('/src/fonts/Manrope-Medium.ttf') format('truetype');
     font-weight: 500;
     font-style: normal;
 }
 
 @font-face {
     font-family: Manrope;
-    src: url('/src/assets/fonts/Manrope-SemiBold.ttf') format('truetype');
+    src: url('/src/fonts/Manrope-SemiBold.ttf') format('truetype');
     font-weight: 600;
     font-style: normal;
 }
 
 @font-face {
     font-family: Manrope;
-    src: url('/src/assets/fonts/Manrope-Bold.ttf') format('truetype');
+    src: url('/src/fonts/Manrope-Bold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
 }

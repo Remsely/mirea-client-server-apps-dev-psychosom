@@ -1,5 +1,5 @@
 import { ChangeEvent, KeyboardEvent } from "react";
-import {FieldError, FieldValues, UseFormRegister} from "react-hook-form";
+import {FieldError, FieldValues, UseFormClearErrors, UseFormRegister} from "react-hook-form";
 import styles from "../ConsultationForm.module.scss";
 
 interface NameInputProps {
@@ -7,11 +7,13 @@ interface NameInputProps {
     name: string;
     register: UseFormRegister<FieldValues>;
     errors: Record<string, FieldError | undefined>;
+    clearErrors: UseFormClearErrors<FieldValues>;
 }
 
-export default function NameInputForm({ label, name, register, errors }: NameInputProps) {
+export default function NameInputForm({ label, name, register, errors, clearErrors }: NameInputProps) {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        e.target.value = e.target.value.replace(/[^а-яА-Яa-zA-Z-]/g, '');
+        e.target.value = e.target.value.replace(/[^а-яА-Я-]/g, '');
+        clearErrors(name);
     };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -27,10 +29,11 @@ export default function NameInputForm({ label, name, register, errors }: NameInp
                 type="text"
                 placeholder={label}
                 onKeyDown={handleKeyDown}
+                maxLength={255}
                 {...register(name, {
                     required: "Это поле обязательное",
                     pattern: {
-                        value: /^[а-яА-Яa-zA-Z-]+$/,
+                        value: /^[а-яА-Я-]*$/,
                         message: "Допустимы только буквы и дефис",
                     },
                     onChange: handleChange,

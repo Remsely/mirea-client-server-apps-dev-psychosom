@@ -3,8 +3,8 @@ import ReviewCard from "../ReviewCard/ReviewCard.tsx";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import {reviews} from "../../../utils/!!!data-for-dev.ts";
 import {CSSProperties} from "react";
+import {reviews} from "../../../!!!data-for-dev.ts";
 
 interface ArrowProps {
     className?: string;
