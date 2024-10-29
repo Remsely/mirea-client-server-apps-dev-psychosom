@@ -52,7 +52,7 @@ export default function SliderReview() {
     };
 
     return (
-        <Slider className="container" {...settings}>
+        <Slider {...settings}>
             {reviews.map(review => (
                 <ReviewCard
                     key={review.id}

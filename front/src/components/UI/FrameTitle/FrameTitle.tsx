@@ -7,7 +7,7 @@ interface FrameTitleProps {
 
 export default function FrameTitle({ children, id } : FrameTitleProps) {
     return (
-        <h1 className={`${styles.title_block} container`} id={id}>{children}</h1>
+        <h1 className={styles.title_block} id={id}>{children}</h1>
     )
 }
 

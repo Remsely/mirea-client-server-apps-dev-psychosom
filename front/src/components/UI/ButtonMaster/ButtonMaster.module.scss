@@ -4,6 +4,7 @@ button {
     background: $button-bg-color;
     color: $title-font-color;
     font-weight: $font-weight-title;
+    box-shadow: $box-shadow-button;
     border: none;
     border-radius: $border-radius-inputs-form;
     font-size: $font-size-text;

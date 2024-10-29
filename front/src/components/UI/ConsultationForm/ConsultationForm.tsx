@@ -8,6 +8,7 @@ import TextareaForm from "./TextareaForm/TextareaForm.tsx";
 import ButtonMaster from "../ButtonMaster/ButtonMaster.tsx";
 import FrameTitle from "../FrameTitle/FrameTitle.tsx";
 import {Cookie} from "../../../enums/cookie.ts";
+import SubmitMessage from "../SubmitMessages/SubmitMessage.tsx";
 
 interface ConsultationFormProps {
     setIsOpen: (isOpen: boolean) => void;
@@ -24,7 +25,7 @@ export default function ConsultationForm({setIsOpen, isOpen}: ConsultationFormPr
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
     useEffect(() => {
-        const formSubmitted = Cookies.get(Cookie.formSubmitted);
+        const formSubmitted = Cookies.get(Cookie.consultationFormSubmitted);
         if (formSubmitted === 'true') {
             setIsSubmitted(true);
         }
@@ -35,7 +36,7 @@ export default function ConsultationForm({setIsOpen, isOpen}: ConsultationFormPr
         setIsOpen(true);
 
         setIsSubmitted(true);
-        Cookies.set(Cookie.formSubmitted, 'true', {expires: 1});
+        Cookies.set(Cookie.consultationFormSubmitted, 'true', {expires: 1});
 
         reset();
         setContactValue("");
@@ -43,15 +44,12 @@ export default function ConsultationForm({setIsOpen, isOpen}: ConsultationFormPr
 
     return (
         isSubmitted && !isOpen ? (
-            <div id="consultation" className={`${styles.success} container`}>
-                <h2 className={styles.title}>Вы уже записаны на консультацию!</h2>
-                <p className={styles.text}>Мы свяжемся с вами в ближайшее время.</p>
-            </div>
+            <SubmitMessage title="Вы уже записаны на консультацию!">Мы свяжемся с вами в ближайшее время</SubmitMessage>
         ) : (
             <>
                 <FrameTitle id="consultation">Запишитесь на консультацию</FrameTitle>
-                <form onSubmit={handleSubmit(onSubmit)} method="POST" className={`${styles.form} container`}>
-                    <div className={`${styles.inputs} block`}>
+                <form onSubmit={handleSubmit(onSubmit)} method="POST" className={styles.form}>
+                    <div className={`${styles.inputs} ${styles.block}`}>
                         <NameInputForm
                             label="Имя"
                             name="firstname"
@@ -76,7 +74,7 @@ export default function ConsultationForm({setIsOpen, isOpen}: ConsultationFormPr
                             clearErrors={clearErrors}
                         />
                     </div>
-                    <div className={`${styles.textarea} block`}>
+                    <div className={`${styles.textarea} ${styles.block}`}>
                         <TextareaForm
                             label="Опишите свою проблему"
                             name="message"

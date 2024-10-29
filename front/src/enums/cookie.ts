@@ -1,4 +1,5 @@
 export enum Cookie {
-    formSubmitted = 'formSubmitted',
+    consultationFormSubmitted = 'consultationFormSubmitted',
+    reviewFormSubmitted = 'reviewFormSubmitted',
     authToken = 'jwtToken',
 }

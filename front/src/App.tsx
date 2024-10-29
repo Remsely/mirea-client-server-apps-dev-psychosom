@@ -6,23 +6,29 @@ import ConsultationForm from "./components/UI/ConsultationForm/ConsultationForm.
 import FrameTitle from "./components/UI/FrameTitle/FrameTitle.tsx";
 import {useState} from "react";
 import MentorInfo from "./components/UI/MentorInfo/MentorInfo.tsx";
+import ReviewForm from "./components/UI/ReviewForm/ReviewForm.tsx";
+import SubmitMessage from "./components/UI/SubmitMessages/SubmitMessage.tsx";
 
 export default function App() {
     const [isOpenForm, setIsOpenForm] = useState(false)
 
     return (
         <>
-            <Header/>
+            <div className="container">
+                <Header/>
 
-            <MentorInfo/>
+                <MentorInfo/>
 
-            <ConsultationForm setIsOpen={setIsOpenForm} isOpen={isOpenForm}/>
-            <PopupModal isOpen={isOpenForm} setIsOpen={setIsOpenForm} title="Поздравляем, вы записаны!">Вы записались на консультацию к специалисту.
-                Скоро с вами свяжется специалист по методу связи, который вы указали.</PopupModal>
+                <ConsultationForm setIsOpen={setIsOpenForm} isOpen={isOpenForm}/>
+                <PopupModal isOpen={isOpenForm} setIsOpen={setIsOpenForm}> <SubmitMessage title="Поздравляем, вы записаны!"> Вы записались на консультацию к специалисту.
+                    Скоро с вами свяжется специалист по методу связи, который вы указали. </SubmitMessage> </PopupModal>
 
-            <FrameTitle id="reviews">Отзывы</FrameTitle>
+                <FrameTitle id="reviews">Отзывы</FrameTitle>
 
-            <SliderReview/>
+                <SliderReview/>
+
+                <ReviewForm/>
+            </div>
 
             <Footer/>
         </>

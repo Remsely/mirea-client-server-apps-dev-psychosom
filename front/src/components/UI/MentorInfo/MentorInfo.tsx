@@ -9,7 +9,7 @@ export default function MentorInfo() {
     const [isOpenCertificate, setIsOpenCertificate] = useState(false)
 
     return (
-        <main className={`${styles.main} container`}>
+        <main className={styles.main}>
             <div className={styles.description}>
                 <TextMentorInfo>Продолжается много текста Продолжается много текста Продолжается много текста Продолжается много
                     текста Продолжается много текста Продолжается много текста Продолжается много текста
@@ -20,7 +20,7 @@ export default function MentorInfo() {
                     Продолжается много текста Продолжается много текста Продолжается много текста</TextMentorInfo>
                 <HighlightInfo onLinkClick={() => setIsOpenCertificate(true)}><a id='important-link'>Инфа о дипломе</a> кнопка,
                     открывающая модальное окно с файлом диплома</HighlightInfo>
-                <PopupModal isOpen={isOpenCertificate} setIsOpen={setIsOpenCertificate} image="certificate.jpg"/>
+                <PopupModal isOpen={isOpenCertificate} setIsOpen={setIsOpenCertificate} > <img src="/certificate.jpg" alt=""/> </PopupModal>
             </div>
             <PhotoMentorInfo>specialist.jpg</PhotoMentorInfo>
         </main>

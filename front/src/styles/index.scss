@@ -54,16 +54,6 @@ html {
     margin: 0 auto;
 }
 
-.block {
-    height: 450px;
-    border-radius: $border-radius;
-    background: $background-div-color;
-    border-left: $border-shadow;
-    border-top: $border-shadow;
-    backdrop-filter: $backdrop-filter;
-    box-shadow: $box-shadow;
-}
-
 .wrapper {
     background-image: url("/public/background.svg");
 }

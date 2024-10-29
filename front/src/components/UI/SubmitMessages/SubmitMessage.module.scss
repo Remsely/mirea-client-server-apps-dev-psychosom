@@ -1,0 +1,14 @@
+@import "/src/styles/variables";
+
+.success {
+    text-align: center;
+
+    h2 {
+        font-size: $font-size-title;
+        font-weight: $font-weight-title;
+        color: $title-font-color;
+    }
+    p {
+        font-size: $font-size-text-title;
+    }
+}
