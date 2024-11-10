@@ -1,0 +1,85 @@
+@use "@/shared/styles/variables" as *;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    font-family: "Manrope", sans-serif;
+    font-size: $font-size-text;
+    color: $text-font-color;
+
+    input::placeholder {
+        opacity: 0.4;
+    }
+
+    a {
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    svg *[fill] { fill: currentColor }
+    svg *[stroke] { stroke: currentColor }
+}
+
+.container {
+    max-width: 1075px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.wrapper {
+    background-image: url("/background.svg");
+}
+
+.slick-slide {
+    > div {
+        margin-right: 20px;
+    }
+}
+
+.slick-list {
+    height: 455px;
+}
+
+.slick-arrow.slick-next,
+.slick-arrow.slick-prev {
+    background-color: $button-bg-color;
+    box-shadow: $box-shadow-button;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    opacity: 1;
+    height: 50px;
+    width: 50px;
+    transition: $transition-main;
+}
+
+.slick-arrow.slick-next {
+    background-image: url("/chevron-right.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    right: -85px;
+}
+
+.slick-arrow.slick-prev {
+    background-image: url("/chevron-left.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    left: -85px;
+}
+
+.slick-arrow.slick-next:hover,
+.slick-arrow.slick-prev:hover {
+    background: $button-hover-color;
+}
+
+.slick-prev::before,
+.slick-next::before {
+    display: none;
+}
