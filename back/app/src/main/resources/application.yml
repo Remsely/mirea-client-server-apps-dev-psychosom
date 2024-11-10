@@ -1,9 +1,10 @@
 spring:
   application:
-    name: psihosom
+    name: psyhosom
+
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5433/psihosom
+    url: jdbc:postgresql://localhost:5433/psyhosom
     username: test
     password: test
   jpa:
@@ -14,6 +15,7 @@ spring:
         format_sql: true
     open-in-view: false
     show-sql: true
+
   flyway:
     locations: classpath:db/migration
     clean-disabled: false
@@ -27,4 +29,4 @@ security:
     public-key-path: classpath:jwt/rsa/public_key.pem
 
 frontend:
-  url: ${PSIHOSOM_WEB_URL:http://localhost:3000}
+  url: ${PSYHOSOM_WEB_URL:http://localhost:3000}
