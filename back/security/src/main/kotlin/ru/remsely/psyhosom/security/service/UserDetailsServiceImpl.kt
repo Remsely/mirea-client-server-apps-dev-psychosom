@@ -11,14 +11,12 @@ import ru.remsely.psyhosom.security.user.toDetails
 class UserDetailsServiceImpl(
     private val userFinder: UserFinder
 ) : UserDetailsService {
-    override fun loadUserByUsername(username: String?): UserDetails {
-        if (username == null) {
-            throw UsernameNotFoundException("Username not found")
-        }
-        return userFinder.findUserByUsername(username)
-            .fold(
-                { throw UsernameNotFoundException("User not found") },
-                { it.toDetails() }
-            )
-    }
+    override fun loadUserByUsername(username: String?): UserDetails =
+        username?.let {
+            userFinder.findUserByUsername(it)
+                .fold(
+                    { throw UsernameNotFoundException("User $username not found.") },
+                    { user -> user.toDetails() }
+                )
+        } ?: throw UsernameNotFoundException("Username not found.")
 }

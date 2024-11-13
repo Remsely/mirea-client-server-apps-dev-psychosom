@@ -15,6 +15,7 @@ dependencies {
 
     implementation(Libs.spring_boot_starter_web)
     implementation(Libs.spring_boot_starter_validation)
+
     implementation(Libs.jackson_module_kotlin)
 
     implementation(Libs.arrow_core)

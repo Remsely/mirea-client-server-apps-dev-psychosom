@@ -19,30 +19,38 @@ import ru.remsely.psyhosom.usecase.auth.request.AuthRequest
 import java.time.LocalDateTime
 
 @RestController
-@RequestMapping("/v1/auth/admin")
+@RequestMapping("/api/v1/auth")
 class AuthController(
     private val authService: AuthService
 ) {
     private val log = logger()
 
-    @PostMapping("/register")
-    fun register(@Valid @RequestBody request: AuthRequest): ResponseEntity<*> {
-        log.info("POST /auth/register | AuthRequest: $request")
-        return authService.registerUser(request, User.Role.ADMIN)
-            .fold(
-                { handleError(it) },
-                {
-                    ResponseEntity
-                        .ok()
-                        .body(AuthResponse(it))
-                }
-            )
+    @PostMapping("/register/admin") // TODO: Подумать, как защитить
+    fun registerAdmin(@Valid @RequestBody request: AuthRequest): ResponseEntity<*> {
+        log.info("POST /auth/admin/register | AuthRequest: $request")
+        return register(request, User.Role.ADMIN)
+    }
+
+    @PostMapping("/register/patient")
+    fun registerPatient(@Valid @RequestBody request: AuthRequest): ResponseEntity<*> {
+        log.info("POST /auth/patient/register | AuthRequest: $request")
+        return register(request, User.Role.PATIENT)
+    }
+
+    @PostMapping("/register/psychologist")
+    fun registerPsychologist(@Valid @RequestBody request: AuthRequest): ResponseEntity<*> {
+        log.info("POST /auth/psychologist/register | AuthRequest: $request")
+        return register(request, User.Role.PSYCHOLOGIST)
     }
 
     @PostMapping("/login")
-    fun login(@Valid @RequestBody request: AuthRequest): ResponseEntity<*> {
+    fun loginAdmin(@Valid @RequestBody request: AuthRequest): ResponseEntity<*> {
         log.info("POST /auth/login | AuthRequest: $request")
-        return authService.loginUser(request)
+        return login(request)
+    }
+
+    private fun register(authRequest: AuthRequest, role: User.Role): ResponseEntity<*> =
+        authService.registerUser(authRequest, role)
             .fold(
                 { handleError(it) },
                 {
@@ -51,7 +59,17 @@ class AuthController(
                         .body(AuthResponse(it))
                 }
             )
-    }
+
+    private fun login(authRequest: AuthRequest): ResponseEntity<*> =
+        authService.loginUser(authRequest)
+            .fold(
+                { handleError(it) },
+                {
+                    ResponseEntity
+                        .ok()
+                        .body(AuthResponse(it))
+                }
+            )
 
     private fun handleError(error: DomainError): ResponseEntity<ErrorResponse> =
         when (error) {
