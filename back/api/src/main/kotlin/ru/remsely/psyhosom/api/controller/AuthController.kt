@@ -1,6 +1,5 @@
 package ru.remsely.psyhosom.api.controller
 
-import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -10,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController
 import ru.remsely.psyhosom.api.request.AuthRequest
 import ru.remsely.psyhosom.api.response.AuthResponse
 import ru.remsely.psyhosom.api.response.ErrorResponse
-import ru.remsely.psyhosom.domain.errors.DomainError
-import ru.remsely.psyhosom.domain.extentions.logger
-import ru.remsely.psyhosom.domain.user.User
-import ru.remsely.psyhosom.domain.user.dao.UserCreationError
+import ru.remsely.psyhosom.domain.account.Account
+import ru.remsely.psyhosom.domain.account.dao.UserCreationError
+import ru.remsely.psyhosom.domain.error.DomainError
+import ru.remsely.psyhosom.monitoring.log.logger
 import ru.remsely.psyhosom.usecase.auth.AuthService
 import ru.remsely.psyhosom.usecase.auth.UserLoginError
 import ru.remsely.psyhosom.usecase.auth.UserRegisterValidationError
@@ -27,32 +26,32 @@ class AuthController(
     private val log = logger()
 
     @PostMapping("/register/admin") // TODO: Подумать, как защитить
-    fun registerAdmin(@Valid @RequestBody request: AuthRequest): ResponseEntity<*> {
+    fun registerAdmin(@RequestBody request: AuthRequest): ResponseEntity<*> {
         log.info("POST /auth/admin/register | AuthRequest: $request")
-        return register(request, User.Role.ADMIN)
+        return register(request, Account.Role.ADMIN)
     }
 
     @PostMapping("/register/patient")
-    fun registerPatient(@Valid @RequestBody request: AuthRequest): ResponseEntity<*> {
+    fun registerPatient(@RequestBody request: AuthRequest): ResponseEntity<*> {
         log.info("POST /auth/patient/register | AuthRequest: $request")
-        return register(request, User.Role.PATIENT)
+        return register(request, Account.Role.PATIENT)
     }
 
     @PostMapping("/register/psychologist")
-    fun registerPsychologist(@Valid @RequestBody request: AuthRequest): ResponseEntity<*> {
+    fun registerPsychologist(@RequestBody request: AuthRequest): ResponseEntity<*> {
         log.info("POST /auth/psychologist/register | AuthRequest: $request")
-        return register(request, User.Role.PSYCHOLOGIST)
+        return register(request, Account.Role.PSYCHOLOGIST)
     }
 
     @PostMapping("/login")
-    fun loginAdmin(@Valid @RequestBody request: AuthRequest): ResponseEntity<*> {
+    fun loginAdmin(@RequestBody request: AuthRequest): ResponseEntity<*> {
         log.info("POST /auth/login | AuthRequest: $request")
         return login(request)
     }
 
-    private fun register(authRequest: AuthRequest, role: User.Role): ResponseEntity<*> =
+    private fun register(authRequest: AuthRequest, role: Account.Role): ResponseEntity<*> =
         authService.registerUser(
-            User(
+            Account(
                 username = authRequest.username,
                 password = authRequest.password,
                 role = role
@@ -68,7 +67,7 @@ class AuthController(
 
     private fun login(authRequest: AuthRequest): ResponseEntity<*> =
         authService.loginUser(
-            User(
+            Account(
                 username = authRequest.username,
                 password = authRequest.password
             )

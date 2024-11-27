@@ -1,22 +1,23 @@
 package ru.remsely.psyhosom.db.extensions
 
 import arrow.core.getOrElse
-import ru.remsely.psyhosom.db.entity.User
-import ru.remsely.psyhosom.db.entity.UserProfile
+import ru.remsely.psyhosom.db.entity.Account
+import ru.remsely.psyhosom.db.entity.Profile
 import ru.remsely.psyhosom.domain.value_object.PhoneNumber
 import ru.remsely.psyhosom.domain.value_object.TelegramUsername
-import ru.remsely.psyhosom.domain.user.User as DomainUser
+import ru.remsely.psyhosom.domain.account.Account as DomainAccount
+import ru.remsely.psyhosom.domain.profile.Profile as DomainProfile
 
-fun User.toDomain() = DomainUser(
+fun Account.toDomain() = DomainAccount(
     id = id,
     username = username,
     password = password,
     role = role
 )
 
-fun UserProfile.toDomain() = DomainUser.Profile(
+fun Profile.toDomain() = DomainProfile(
     id = id,
-    user = user.toDomain(),
+    account = account.toDomain(),
     phone = PhoneNumber(phone).getOrElse {
         throw RuntimeException("Invalid phone number.")
     },

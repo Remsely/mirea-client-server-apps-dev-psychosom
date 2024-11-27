@@ -4,16 +4,16 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Component
-import ru.remsely.psyhosom.domain.user.dao.UserFinder
+import ru.remsely.psyhosom.domain.account.dao.AccountFinder
 import ru.remsely.psyhosom.security.user.toDetails
 
 @Component
 class UserDetailsServiceImpl(
-    private val userFinder: UserFinder
+    private val accountFinder: AccountFinder
 ) : UserDetailsService {
     override fun loadUserByUsername(username: String?): UserDetails =
         username?.let {
-            userFinder.findUserByUsername(it)
+            accountFinder.findUserByUsername(it)
                 .fold(
                     { throw UsernameNotFoundException("User $username not found.") },
                     { user -> user.toDetails() }

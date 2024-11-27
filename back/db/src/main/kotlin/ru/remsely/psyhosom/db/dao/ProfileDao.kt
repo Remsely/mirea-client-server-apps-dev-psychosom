@@ -9,31 +9,31 @@ import arrow.core.singleOrNone
 import org.springframework.stereotype.Component
 import ru.remsely.psyhosom.db.extensions.toDomain
 import ru.remsely.psyhosom.db.extensions.toEntity
-import ru.remsely.psyhosom.db.repository.UserProfileRepository
-import ru.remsely.psyhosom.domain.errors.DomainError
-import ru.remsely.psyhosom.domain.extentions.logger
-import ru.remsely.psyhosom.domain.user.User
-import ru.remsely.psyhosom.domain.user.dao.ProfileCreator
-import ru.remsely.psyhosom.domain.user.dao.ProfileFinder
-import ru.remsely.psyhosom.domain.user.dao.ProfileUpdater
-import ru.remsely.psyhosom.domain.user.dao.UserProfileFindingError
+import ru.remsely.psyhosom.db.repository.ProfileRepository
+import ru.remsely.psyhosom.domain.account.dao.ProfileFinder
+import ru.remsely.psyhosom.domain.account.dao.UserProfileFindingError
+import ru.remsely.psyhosom.domain.error.DomainError
+import ru.remsely.psyhosom.domain.profile.Profile
+import ru.remsely.psyhosom.domain.profile.dao.ProfileCreator
+import ru.remsely.psyhosom.domain.profile.dao.ProfileUpdater
+import ru.remsely.psyhosom.monitoring.log.logger
 
 @Component
-class UserProfileDao(
-    private val userProfileRepository: UserProfileRepository
+class ProfileDao(
+    private val profileRepository: ProfileRepository
 ) : ProfileCreator, ProfileFinder, ProfileUpdater {
     private val log = logger()
 
-    override fun createProfile(profile: User.Profile): Either<DomainError, User.Profile> =
-        userProfileRepository.save(profile.toEntity())
+    override fun createProfile(profile: Profile): Either<DomainError, Profile> =
+        profileRepository.save(profile.toEntity())
             .toDomain()
             .right()
             .also {
-                log.info("Profile for user with id ${profile.user.id} successfully created in DB.")
+                log.info("Profile for user with id ${profile.account.id} successfully created in DB.")
             }
 
-    override fun findProfileByUserId(userId: Long): Either<DomainError, User.Profile> =
-        userProfileRepository.findByUser_Id(userId)
+    override fun findProfileByUserId(userId: Long): Either<DomainError, Profile> =
+        profileRepository.findByAccountId(userId)
             .singleOrNone()
             .fold(
                 { UserProfileFindingError.NotFoundByUserId(userId).left() },
@@ -48,7 +48,7 @@ class UserProfileDao(
     override fun checkNotExistsWithUsernameInContacts(username: String): Either<DomainError, Unit> =
         either {
             ensure(
-                !userProfileRepository.existsByTelegramEqualsIgnoreCaseOrPhoneEqualsIgnoreCase(
+                !profileRepository.existsByTelegramEqualsIgnoreCaseOrPhoneEqualsIgnoreCase(
                     username,
                     username
                 )
@@ -57,11 +57,11 @@ class UserProfileDao(
             }
         }
 
-    override fun updateProfile(profile: User.Profile): Either<DomainError, User.Profile> =
-        userProfileRepository.save(profile.toEntity())
+    override fun updateProfile(profile: Profile): Either<DomainError, Profile> =
+        profileRepository.save(profile.toEntity())
             .toDomain()
             .right()
             .also {
-                log.info("Profile for user with id ${profile.user.id} successfully updated in DB.")
+                log.info("Profile for user with id ${profile.account.id} successfully updated in DB.")
             }
 }

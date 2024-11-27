@@ -1,11 +1,11 @@
-package ru.remsely.psyhosom.domain.user.dao
+package ru.remsely.psyhosom.domain.account.dao
 
 import arrow.core.Either
-import ru.remsely.psyhosom.domain.errors.DomainError
-import ru.remsely.psyhosom.domain.user.User
+import ru.remsely.psyhosom.domain.account.Account
+import ru.remsely.psyhosom.domain.error.DomainError
 
-interface UserCreator {
-    fun createUser(user: User): Either<DomainError, User>
+interface AccountCreator {
+    fun createUser(account: Account): Either<DomainError, Account>
 }
 
 sealed class UserCreationError(override val message: String) : DomainError.BusinessLogicError {

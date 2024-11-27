@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     implementation(project(Modules.domain))
+    implementation(project(Modules.monitoring))
 
     implementation(Libs.spring_boot_starter)
     implementation(Libs.spring_tx)

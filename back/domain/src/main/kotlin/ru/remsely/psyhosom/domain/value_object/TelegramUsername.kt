@@ -3,7 +3,7 @@ package ru.remsely.psyhosom.domain.value_object
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
-import ru.remsely.psyhosom.domain.errors.DomainError
+import ru.remsely.psyhosom.domain.error.DomainError
 
 private const val pattern = "^@[a-zA-Z0-9](?:[a-zA-Z0-9_]{3,30}[a-zA-Z0-9])?\$"
 

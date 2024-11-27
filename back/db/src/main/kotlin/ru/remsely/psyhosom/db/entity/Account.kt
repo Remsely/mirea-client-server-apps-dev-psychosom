@@ -1,11 +1,11 @@
 package ru.remsely.psyhosom.db.entity
 
 import jakarta.persistence.*
-import ru.remsely.psyhosom.domain.user.User
+import ru.remsely.psyhosom.domain.account.Account
 
 @Entity
-@Table(name = "app_user")
-data class User(
+@Table(name = "account")
+data class Account(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long?,
@@ -18,5 +18,5 @@ data class User(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val role: User.Role,
+    val role: Account.Role,
 )

@@ -8,27 +8,28 @@ import arrow.core.raise.ensure
 import arrow.core.right
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import ru.remsely.psyhosom.domain.errors.DomainError
-import ru.remsely.psyhosom.domain.extentions.logger
-import ru.remsely.psyhosom.domain.user.User
-import ru.remsely.psyhosom.domain.user.dao.ProfileFinder
-import ru.remsely.psyhosom.domain.user.dao.ProfileUpdater
-import ru.remsely.psyhosom.domain.user.dao.UserFinder
-import ru.remsely.psyhosom.domain.user.event.UpdateUserProfileEvent
+import ru.remsely.psyhosom.domain.account.Account
+import ru.remsely.psyhosom.domain.account.dao.AccountFinder
+import ru.remsely.psyhosom.domain.account.dao.ProfileFinder
+import ru.remsely.psyhosom.domain.error.DomainError
+import ru.remsely.psyhosom.domain.profile.Profile
+import ru.remsely.psyhosom.domain.profile.dao.ProfileUpdater
+import ru.remsely.psyhosom.domain.profile.event.UpdateProfileEvent
 import ru.remsely.psyhosom.domain.value_object.PhoneNumber
 import ru.remsely.psyhosom.domain.value_object.TelegramUsername
+import ru.remsely.psyhosom.monitoring.log.logger
 
 @Component
-open class UserProfileManagerImpl(
-    private val userFinder: UserFinder,
+open class ProfileManagerImpl(
+    private val accountFinder: AccountFinder,
     private val profileFinder: ProfileFinder,
     private val profileUpdater: ProfileUpdater
-) : UserProfileManager {
+) : ProfileManager {
     private val log = logger()
 
     @Transactional
-    override fun createOrUpdateProfile(event: UpdateUserProfileEvent): Either<DomainError, User.Profile> =
-        userFinder.findUserById(event.userId)
+    override fun createOrUpdateProfile(event: UpdateProfileEvent): Either<DomainError, Profile> =
+        accountFinder.findUserById(event.userId)
             .flatMap {
                 validatePossibleUsernameChange(event, it)
             }
@@ -47,9 +48,9 @@ open class UserProfileManagerImpl(
             }
             .flatMap { (user, profile) ->
                 profileUpdater.updateProfile(
-                    User.Profile(
+                    Profile(
                         id = profile.id,
-                        user = user,
+                        account = user,
                         firstName = event.firstName ?: profile.firstName,
                         lastName = event.lastName ?: profile.lastName,
                         phone = if (event.phone?.value != null) event.phone else profile.phone,
@@ -61,25 +62,25 @@ open class UserProfileManagerImpl(
             }
 
     @Transactional(readOnly = true)
-    override fun findProfileByUserId(userId: Long): Either<DomainError, User.Profile> =
-        userFinder.findUserById(userId)
+    override fun findProfileByUserId(userId: Long): Either<DomainError, Profile> =
+        accountFinder.findUserById(userId)
             .flatMap {
                 profileFinder.findProfileByUserId(userId)
             }.also {
                 log.info("Profile for user with id $userId successfully found.")
             }
 
-    private fun validatePossibleUsernameChange(event: UpdateUserProfileEvent, user: User) = either {
-        if (event.phone?.value != null && PhoneNumber(user.username).isRight()) {
-            ensure(user.username == event.phone?.value) {
+    private fun validatePossibleUsernameChange(event: UpdateProfileEvent, account: Account) = either {
+        if (event.phone?.value != null && PhoneNumber(account.username).isRight()) {
+            ensure(account.username == event.phone?.value) {
                 UserProfileManagingError.ProfileUsernameMustBeInContacts
             }
         }
-        if (event.telegram?.value != null && TelegramUsername(user.username).isRight()) {
-            ensure(user.username == event.telegram?.value) {
+        if (event.telegram?.value != null && TelegramUsername(account.username).isRight()) {
+            ensure(account.username == event.telegram?.value) {
                 UserProfileManagingError.ProfileUsernameMustBeInContacts
             }
         }
-        user
+        account
     }
 }

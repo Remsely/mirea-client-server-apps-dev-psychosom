@@ -12,9 +12,9 @@ repositories {
 dependencies {
     implementation(project(Modules.domain))
     implementation(project(Modules.use_case))
+    implementation(project(Modules.monitoring))
 
     implementation(Libs.spring_boot_starter_web)
-    implementation(Libs.spring_boot_starter_validation)
 
     implementation(Libs.jackson_module_kotlin)
 

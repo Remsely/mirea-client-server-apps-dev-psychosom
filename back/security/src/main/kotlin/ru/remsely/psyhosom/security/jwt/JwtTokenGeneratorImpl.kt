@@ -5,7 +5,7 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters
 import org.springframework.stereotype.Component
-import ru.remsely.psyhosom.domain.extentions.logger
+import ru.remsely.psyhosom.monitoring.log.logger
 import ru.remsely.psyhosom.security.user.User
 import java.time.Instant
 
@@ -13,6 +13,8 @@ import java.time.Instant
 class JwtTokenGeneratorImpl(
     private val jwtEncoder: JwtEncoder
 ) : JwtTokenGenerator {
+    private val log = logger()
+
     override fun generate(auth: Authentication): String =
         JwtClaimsSet.builder()
             .issuer("self")
@@ -24,6 +26,6 @@ class JwtTokenGeneratorImpl(
             .let { claims ->
                 jwtEncoder.encode(JwtEncoderParameters.from(claims)).tokenValue
             }.also {
-                logger().info("Token was generated successfully.")
+                log.info("Token was generated successfully.")
             }
 }

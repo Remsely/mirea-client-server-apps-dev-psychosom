@@ -1,15 +1,15 @@
 package ru.remsely.psyhosom.api.response
 
-import ru.remsely.psyhosom.domain.user.User
+import ru.remsely.psyhosom.domain.profile.Profile
 
-data class UserProfileResponse(
+data class ProfileResponse(
     val firstName: String?,
     val lastName: String?,
     val phone: String?,
     val telegram: String?
 )
 
-fun User.Profile.toResponse() = UserProfileResponse(
+fun Profile.toResponse() = ProfileResponse(
     phone = phone?.value,
     telegram = telegram?.value,
     firstName = firstName,

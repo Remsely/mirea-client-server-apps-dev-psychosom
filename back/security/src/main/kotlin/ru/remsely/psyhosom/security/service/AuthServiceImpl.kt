@@ -8,14 +8,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import ru.remsely.psyhosom.domain.errors.DomainError
-import ru.remsely.psyhosom.domain.extentions.logger
-import ru.remsely.psyhosom.domain.user.User
-import ru.remsely.psyhosom.domain.user.dao.ProfileCreator
-import ru.remsely.psyhosom.domain.user.dao.ProfileFinder
-import ru.remsely.psyhosom.domain.user.dao.UserCreator
+import ru.remsely.psyhosom.domain.account.Account
+import ru.remsely.psyhosom.domain.account.dao.AccountCreator
+import ru.remsely.psyhosom.domain.account.dao.ProfileFinder
+import ru.remsely.psyhosom.domain.error.DomainError
+import ru.remsely.psyhosom.domain.profile.Profile
+import ru.remsely.psyhosom.domain.profile.dao.ProfileCreator
 import ru.remsely.psyhosom.domain.value_object.PhoneNumber
 import ru.remsely.psyhosom.domain.value_object.TelegramUsername
+import ru.remsely.psyhosom.monitoring.log.logger
 import ru.remsely.psyhosom.security.jwt.JwtTokenGenerator
 import ru.remsely.psyhosom.usecase.auth.AuthService
 import ru.remsely.psyhosom.usecase.auth.UserLoginError
@@ -23,7 +24,7 @@ import ru.remsely.psyhosom.usecase.auth.UserRegisterValidationError
 
 @Service
 open class AuthServiceImpl(
-    private val userCreator: UserCreator,
+    private val accountCreator: AccountCreator,
     private val authManager: AuthenticationManager,
     private val tokenGenerator: JwtTokenGenerator,
     private val passwordEncoder: PasswordEncoder,
@@ -33,48 +34,48 @@ open class AuthServiceImpl(
     private val log = logger()
 
     @Transactional
-    override fun registerUser(user: User): Either<DomainError, String> = either {
+    override fun registerUser(account: Account): Either<DomainError, String> = either {
         ensure(
-            !(PhoneNumber(user.username).getOrNone().isNone() &&
-                    TelegramUsername(user.username).getOrNone().isNone())
+            !(PhoneNumber(account.username).getOrNone().isNone() &&
+                    TelegramUsername(account.username).getOrNone().isNone())
         ) {
             UserRegisterValidationError.InvalidUsername
         }
-        profileFinder.checkNotExistsWithUsernameInContacts(user.username).bind()
-        userCreator.createUser(
-            User(
+        profileFinder.checkNotExistsWithUsernameInContacts(account.username).bind()
+        accountCreator.createUser(
+            Account(
                 0L,
-                user.username,
-                passwordEncoder.encode(user.password),
-                user.role
+                account.username,
+                passwordEncoder.encode(account.password),
+                account.role
             )
         ).bind().let {
             profileCreator.createProfile(
-                User.Profile(
+                Profile(
                     id = null,
-                    user = it,
+                    account = it,
                     firstName = null,
                     lastName = null,
                     phone = PhoneNumber(it.username).getOrNull(),
                     telegram = TelegramUsername(it.username).getOrNull()
                 )
             ).bind()
-            loginUser(user).bind()
+            loginUser(account).bind()
                 .also {
-                    log.info("User with username ${user.username} successfully registered.")
+                    log.info("User with username ${account.username} successfully registered.")
                 }
         }
     }
 
-    override fun loginUser(user: User): Either<DomainError, String> = Either.catch {
+    override fun loginUser(account: Account): Either<DomainError, String> = Either.catch {
         authManager.authenticate(
-            UsernamePasswordAuthenticationToken(user.username, user.password)
+            UsernamePasswordAuthenticationToken(account.username, account.password)
         ).let { auth ->
             tokenGenerator.generate(auth)
         }.also {
-            log.info("User with username ${user.username} successfully logged in.")
+            log.info("User with username ${account.username} successfully logged in.")
         }
     }.mapLeft {
-        UserLoginError.AuthenticationError(user.username)
+        UserLoginError.AuthenticationError(account.username)
     }
 }

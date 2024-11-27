@@ -1,14 +1,14 @@
 package ru.remsely.psyhosom.usecase.user
 
 import arrow.core.Either
-import ru.remsely.psyhosom.domain.errors.DomainError
-import ru.remsely.psyhosom.domain.user.User
-import ru.remsely.psyhosom.domain.user.event.UpdateUserProfileEvent
+import ru.remsely.psyhosom.domain.error.DomainError
+import ru.remsely.psyhosom.domain.profile.Profile
+import ru.remsely.psyhosom.domain.profile.event.UpdateProfileEvent
 
-interface UserProfileManager {
-    fun createOrUpdateProfile(event: UpdateUserProfileEvent): Either<DomainError, User.Profile>
+interface ProfileManager {
+    fun createOrUpdateProfile(event: UpdateProfileEvent): Either<DomainError, Profile>
 
-    fun findProfileByUserId(userId: Long): Either<DomainError, User.Profile>
+    fun findProfileByUserId(userId: Long): Either<DomainError, Profile>
 }
 
 sealed class UserProfileManagingError(override val message: String) : DomainError.BusinessLogicError {

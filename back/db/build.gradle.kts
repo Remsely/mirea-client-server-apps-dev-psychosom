@@ -13,6 +13,7 @@ repositories {
 dependencies {
     implementation(project(Modules.domain))
     implementation(project(Modules.use_case))
+    implementation(project(Modules.monitoring))
 
     implementation(Libs.spring_boot_starter_data_jpa)
 

@@ -1,8 +1,8 @@
 package ru.remsely.psyhosom.security.user
 
-import ru.remsely.psyhosom.domain.user.User as DomainUser
+import ru.remsely.psyhosom.domain.account.Account
 
-fun DomainUser.toDetails() = User(
+fun Account.toDetails() = User(
     id = id!!,
     username = username,
     password = password,

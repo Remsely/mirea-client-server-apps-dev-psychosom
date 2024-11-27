@@ -1,11 +1,11 @@
-package ru.remsely.psyhosom.domain.user.dao
+package ru.remsely.psyhosom.domain.account.dao
 
 import arrow.core.Either
-import ru.remsely.psyhosom.domain.errors.DomainError
-import ru.remsely.psyhosom.domain.user.User
+import ru.remsely.psyhosom.domain.error.DomainError
+import ru.remsely.psyhosom.domain.profile.Profile
 
 interface ProfileFinder {
-    fun findProfileByUserId(userId: Long): Either<DomainError, User.Profile>
+    fun findProfileByUserId(userId: Long): Either<DomainError, Profile>
 
     fun checkNotExistsWithUsernameInContacts(username: String): Either<DomainError, Unit>
 }
