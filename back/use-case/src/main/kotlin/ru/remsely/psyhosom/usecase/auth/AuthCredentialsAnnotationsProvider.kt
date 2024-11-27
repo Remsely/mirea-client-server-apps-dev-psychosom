@@ -1,4 +1,4 @@
-package ru.remsely.psyhosom.domain.auth
+package ru.remsely.psyhosom.usecase.auth
 
 interface AuthCredentialsAnnotationsProvider {
     fun getAuthUserId(): Long

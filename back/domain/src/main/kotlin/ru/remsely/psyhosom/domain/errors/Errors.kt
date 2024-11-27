@@ -1,4 +1,4 @@
-package ru.remsely.psyhosom.domain.error
+package ru.remsely.psyhosom.domain.errors
 
 sealed interface DomainError {
     val message: String

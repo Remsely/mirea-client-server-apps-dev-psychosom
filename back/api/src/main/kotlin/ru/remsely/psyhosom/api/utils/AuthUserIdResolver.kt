@@ -6,7 +6,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
-import ru.remsely.psyhosom.domain.auth.AuthCredentialsAnnotationsProvider
+import ru.remsely.psyhosom.usecase.auth.AuthCredentialsAnnotationsProvider
 
 @Component
 class AuthUserIdResolver(

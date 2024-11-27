@@ -1,4 +1,4 @@
-package ru.remsely.psyhosom.usecase.auth.request
+package ru.remsely.psyhosom.api.request
 
 data class AuthRequest(
     val username: String,

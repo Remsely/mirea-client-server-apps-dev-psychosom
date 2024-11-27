@@ -7,15 +7,16 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import ru.remsely.psyhosom.api.request.AuthRequest
 import ru.remsely.psyhosom.api.response.AuthResponse
 import ru.remsely.psyhosom.api.response.ErrorResponse
-import ru.remsely.psyhosom.domain.error.DomainError
+import ru.remsely.psyhosom.domain.errors.DomainError
 import ru.remsely.psyhosom.domain.extentions.logger
 import ru.remsely.psyhosom.domain.user.User
 import ru.remsely.psyhosom.domain.user.dao.UserCreationError
 import ru.remsely.psyhosom.usecase.auth.AuthService
 import ru.remsely.psyhosom.usecase.auth.UserLoginError
-import ru.remsely.psyhosom.usecase.auth.request.AuthRequest
+import ru.remsely.psyhosom.usecase.auth.UserRegisterValidationError
 import java.time.LocalDateTime
 
 @RestController
@@ -50,30 +51,40 @@ class AuthController(
     }
 
     private fun register(authRequest: AuthRequest, role: User.Role): ResponseEntity<*> =
-        authService.registerUser(authRequest, role)
-            .fold(
-                { handleError(it) },
-                {
-                    ResponseEntity
-                        .ok()
-                        .body(AuthResponse(it))
-                }
+        authService.registerUser(
+            User(
+                username = authRequest.username,
+                password = authRequest.password,
+                role = role
             )
+        ).fold(
+            { handleError(it) },
+            {
+                ResponseEntity
+                    .ok()
+                    .body(AuthResponse(it))
+            }
+        )
 
     private fun login(authRequest: AuthRequest): ResponseEntity<*> =
-        authService.loginUser(authRequest)
-            .fold(
-                { handleError(it) },
-                {
-                    ResponseEntity
-                        .ok()
-                        .body(AuthResponse(it))
-                }
+        authService.loginUser(
+            User(
+                username = authRequest.username,
+                password = authRequest.password
             )
+        ).fold(
+            { handleError(it) },
+            {
+                ResponseEntity
+                    .ok()
+                    .body(AuthResponse(it))
+            }
+        )
 
     private fun handleError(error: DomainError): ResponseEntity<ErrorResponse> =
         when (error) {
             is UserCreationError.AlreadyExists -> HttpStatus.BAD_REQUEST
+            is UserRegisterValidationError.InvalidUsername -> HttpStatus.BAD_REQUEST
             is UserLoginError.AuthenticationError -> HttpStatus.UNAUTHORIZED
             else -> HttpStatus.INTERNAL_SERVER_ERROR
         }.let {
@@ -85,6 +96,8 @@ class AuthController(
                         timestamp = LocalDateTime.now(),
                         status = it.name
                     )
-                )
+                ).also {
+                    log.warn(error.message)
+                }
         }
 }

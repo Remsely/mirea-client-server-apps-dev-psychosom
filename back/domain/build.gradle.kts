@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     implementation(Libs.spring_boot_starter_validation)
+
     implementation(Libs.arrow_core)
     implementation(Libs.arrow_optics)
     ksp(Libs.arrow_optics_ksp)

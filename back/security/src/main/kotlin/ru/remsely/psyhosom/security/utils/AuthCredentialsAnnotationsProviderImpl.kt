@@ -3,7 +3,7 @@ package ru.remsely.psyhosom.security.utils
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Component
-import ru.remsely.psyhosom.domain.auth.AuthCredentialsAnnotationsProvider
+import ru.remsely.psyhosom.usecase.auth.AuthCredentialsAnnotationsProvider
 
 @Component
 class AuthCredentialsAnnotationsProviderImpl : AuthCredentialsAnnotationsProvider {
