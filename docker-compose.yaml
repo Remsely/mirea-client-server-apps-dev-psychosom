@@ -1,0 +1,35 @@
+services:
+  back:
+    build: ./back
+    ports:
+      - '8080:8080'
+    environment:
+      - DB_NAME=psyhosom
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+      - DB_HOST=db
+      - DB_PORT=5432
+      - PSYHOSOM_WEB_URL=http://localhost:3000
+      - PSYHOSOM_BOT_TOKEN=7849359674:AAGu7dC2hjt6JwchT6UIqjt64XHat5UrUH8
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:latest
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "test" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    environment:
+      POSTGRES_DB: psyhosom
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+volumes:
+  postgres_data:
