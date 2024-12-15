@@ -10,17 +10,23 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.remsely.psyhosom.domain.account.Account
 import ru.remsely.psyhosom.domain.account.dao.AccountCreator
-import ru.remsely.psyhosom.domain.account.dao.ProfileFinder
+import ru.remsely.psyhosom.domain.account.event.LoginAccountEvent
+import ru.remsely.psyhosom.domain.account.event.RegisterAccountEvent
 import ru.remsely.psyhosom.domain.error.DomainError
 import ru.remsely.psyhosom.domain.profile.Profile
 import ru.remsely.psyhosom.domain.profile.dao.ProfileCreator
+import ru.remsely.psyhosom.domain.profile.dao.ProfileFinder
 import ru.remsely.psyhosom.domain.value_object.PhoneNumber
+import ru.remsely.psyhosom.domain.value_object.TelegramBotToken
+import ru.remsely.psyhosom.domain.value_object.TelegramChatId
 import ru.remsely.psyhosom.domain.value_object.TelegramUsername
 import ru.remsely.psyhosom.monitoring.log.logger
 import ru.remsely.psyhosom.security.jwt.JwtTokenGenerator
 import ru.remsely.psyhosom.usecase.auth.AuthService
 import ru.remsely.psyhosom.usecase.auth.UserLoginError
 import ru.remsely.psyhosom.usecase.auth.UserRegisterValidationError
+import ru.remsely.psyhosom.usecase.telegram.TelegramBotConfirmationUris
+import java.time.LocalDateTime
 
 @Service
 open class AuthServiceImpl(
@@ -29,53 +35,55 @@ open class AuthServiceImpl(
     private val tokenGenerator: JwtTokenGenerator,
     private val passwordEncoder: PasswordEncoder,
     private val profileCreator: ProfileCreator,
-    private val profileFinder: ProfileFinder
+    private val profileFinder: ProfileFinder,
+    private val telegramBotConfirmationUris: TelegramBotConfirmationUris
 ) : AuthService {
     private val log = logger()
 
     @Transactional
-    override fun registerUser(account: Account): Either<DomainError, String> = either {
+    override fun registerUser(event: RegisterAccountEvent): Either<DomainError, String> = either {
         ensure(
-            !(PhoneNumber(account.username).getOrNone().isNone() &&
-                    TelegramUsername(account.username).getOrNone().isNone())
+            !(PhoneNumber(event.username).getOrNone().isNone() &&
+                    TelegramUsername(event.username).getOrNone().isNone())
         ) {
             UserRegisterValidationError.InvalidUsername
         }
-        profileFinder.checkNotExistsWithUsernameInContacts(account.username).bind()
+        profileFinder.checkNotExistsWithUsernameInContacts(event.username).bind()
         accountCreator.createUser(
             Account(
-                0L,
-                account.username,
-                passwordEncoder.encode(account.password),
-                account.role
+                id = 0L,
+                username = event.username,
+                password = passwordEncoder.encode(event.password),
+                role = event.role,
+                isConfirmed = false,
+                tgBotToken = TelegramBotToken.generate(),
+                tgChatId = TelegramChatId(null).bind(),
+                registrationDate = LocalDateTime.now()
             )
-        ).bind().let {
+        ).bind().let { account ->
             profileCreator.createProfile(
                 Profile(
                     id = null,
-                    account = it,
+                    account = account,
                     firstName = null,
                     lastName = null,
-                    phone = PhoneNumber(it.username).getOrNull(),
-                    telegram = TelegramUsername(it.username).getOrNull()
+                    phone = PhoneNumber(account.username).getOrNull(),
+                    telegram = TelegramUsername(account.username).getOrNull()
                 )
             ).bind()
-            loginUser(account).bind()
-                .also {
-                    log.info("User with username ${account.username} successfully registered.")
-                }
+            telegramBotConfirmationUris.getTelegramConfirmationUri(account.tgBotToken)
         }
     }
 
-    override fun loginUser(account: Account): Either<DomainError, String> = Either.catch {
+    override fun loginUser(event: LoginAccountEvent): Either<DomainError, String> = Either.catch {
         authManager.authenticate(
-            UsernamePasswordAuthenticationToken(account.username, account.password)
+            UsernamePasswordAuthenticationToken(event.username, event.password)
         ).let { auth ->
             tokenGenerator.generate(auth)
         }.also {
-            log.info("User with username ${account.username} successfully logged in.")
+            log.info("User with username ${event.username} successfully logged in.")
         }
     }.mapLeft {
-        UserLoginError.AuthenticationError(account.username)
+        UserLoginError.AuthenticationError(event.username)
     }
 }

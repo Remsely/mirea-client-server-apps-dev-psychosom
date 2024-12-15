@@ -11,4 +11,6 @@ interface ProfileRepository : JpaRepository<Profile, Long> {
     fun findByAccountId(accountId: Long): List<Profile>
 
     fun existsByTelegramEqualsIgnoreCaseOrPhoneEqualsIgnoreCase(telegram: String, phone: String): Boolean
+
+    fun deleteByAccountIdIn(accountIds: List<Long>)
 }

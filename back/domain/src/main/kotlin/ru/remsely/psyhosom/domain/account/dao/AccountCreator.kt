@@ -8,8 +8,8 @@ interface AccountCreator {
     fun createUser(account: Account): Either<DomainError, Account>
 }
 
-sealed class UserCreationError(override val message: String) : DomainError.BusinessLogicError {
-    data class AlreadyExists(private val username: String) : UserCreationError(
+sealed class AccountCreationError(override val message: String) : DomainError.BusinessLogicError {
+    data class AlreadyExists(private val username: String) : AccountCreationError(
         "User with username $username already exists."
     )
 }

@@ -1,7 +1,3 @@
-plugins {
-
-}
-
 group = Project.groupId
 version = Project.version
 

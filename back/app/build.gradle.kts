@@ -23,11 +23,15 @@ dependencies {
     implementation(project(Modules.api))
     implementation(project(Modules.db))
     implementation(project(Modules.security))
+    implementation(project(Modules.telegram))
+    implementation(project(Modules.monitoring))
+    implementation(project(Modules.scheduled))
 
     implementation(Libs.spring_boot_starter_security)
     implementation(Libs.spring_boot_starter_oauth2_resource_server)
     implementation(Libs.spring_boot_starter_web)
     implementation(Libs.spring_boot_starter_data_jpa)
+    implementation(Libs.spring_boot_starter_web_socket)
 
     implementation(Libs.jackson_module_kotlin)
     implementation(Libs.jetbrains_kotlin_reflect)

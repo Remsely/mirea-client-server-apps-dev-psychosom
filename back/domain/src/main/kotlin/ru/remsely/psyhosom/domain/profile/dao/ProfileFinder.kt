@@ -1,4 +1,4 @@
-package ru.remsely.psyhosom.domain.account.dao
+package ru.remsely.psyhosom.domain.profile.dao
 
 import arrow.core.Either
 import ru.remsely.psyhosom.domain.error.DomainError

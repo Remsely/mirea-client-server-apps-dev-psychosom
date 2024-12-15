@@ -2,6 +2,7 @@ object Libs {
     // Spring Boot
     const val spring_boot_starter = "org.springframework.boot:spring-boot-starter:${LibVersions.spring_boot_starter}"
     const val spring_boot_starter_web = "org.springframework.boot:spring-boot-starter-web:${LibVersions.spring_boot_starter}"
+    const val spring_boot_starter_web_socket = "org.springframework.boot:spring-boot-starter-websocket:${LibVersions.spring_boot_starter}"
     const val spring_boot_starter_data_jpa = "org.springframework.boot:spring-boot-starter-data-jpa:${LibVersions.spring_boot_starter}"
     const val spring_boot_starter_security = "org.springframework.boot:spring-boot-starter-security:${LibVersions.spring_boot_starter}"
     const val spring_boot_starter_oauth2_resource_server = "org.springframework.boot:spring-boot-starter-oauth2-resource-server:${LibVersions.spring_boot_starter}"
@@ -12,6 +13,10 @@ object Libs {
     const val arrow_core = "io.arrow-kt:arrow-core:${LibVersions.arrow}"
     const val arrow_optics = "io.arrow-kt:arrow-optics:${LibVersions.arrow}"
     const val arrow_optics_ksp = "io.arrow-kt:arrow-optics-ksp-plugin:${LibVersions.arrow}"
+
+    // Telegram
+    const val telegrambots_spring_boot_starter = "org.telegram:telegrambots-spring-boot-starter:${LibVersions.telegrambots_spring_boot_starter}"
+    const val telegrambots_extensions = "org.telegram:telegrambotsextensions:${LibVersions.telegrambots_spring_boot_starter}"
 
     // Monitoring
     const val slf2j = "org.slf4j:slf4j-api:${LibVersions.slf4j}"
@@ -41,6 +46,7 @@ object LibVersions {
     const val flyway = "10.17.3"
     const val slf4j = "2.0.16"
     const val logback = "1.5.12"
+    const val telegrambots_spring_boot_starter = "6.9.7.1"
 }
 
 object Plugins {
@@ -56,7 +62,7 @@ object Plugins {
 object PluginVersions {
     const val kotlin_jvm = "2.0.10"
     const val kotlin_spring = "1.9.24"
-    const val spring_boot = "3.3.2"
+    const val spring_boot = "3.4.0"
     const val spring_dependency_management = "1.1.6"
     const val kotlin_jpa = "1.9.24"
     const val ksp = "2.0.10-1.0.24"

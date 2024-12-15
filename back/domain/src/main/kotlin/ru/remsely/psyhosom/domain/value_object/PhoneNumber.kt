@@ -15,15 +15,15 @@ value class PhoneNumber private constructor(val value: String?) {
                 return@either PhoneNumber(null)
             }
             ensure(value.matches(pattern.toRegex())) {
-                PhoneNumberCreationError.InvalidPhoneNumber
+                PhoneNumberValidationError.InvalidPhoneNumber
             }
             PhoneNumber(value)
         }
     }
 }
 
-sealed class PhoneNumberCreationError(override val message: String) : DomainError.ValidationError {
-    data object InvalidPhoneNumber : PhoneNumberCreationError(
+sealed class PhoneNumberValidationError(override val message: String) : DomainError.ValidationError {
+    data object InvalidPhoneNumber : PhoneNumberValidationError(
         "Phone number is invalid."
     )
 }

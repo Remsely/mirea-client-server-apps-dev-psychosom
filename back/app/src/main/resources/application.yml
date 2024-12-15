@@ -28,5 +28,12 @@ security:
     private-key-path: classpath:jwt/rsa/private_key.pem
     public-key-path: classpath:jwt/rsa/public_key.pem
 
+telegram:
+  bot:
+    endpoints:
+      confirmation: https://t.me/psyhosom_test_1_bot?start=
+    token: ${PSYHOSOM_BOT_TOKEN:7849359674:AAGu7dC2hjt6JwchT6UIqjt64XHat5UrUH8}
+    username: psyhosom_test_1_bot
+
 frontend:
   url: ${PSYHOSOM_WEB_URL:http://localhost:3000}

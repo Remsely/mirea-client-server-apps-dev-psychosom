@@ -13,7 +13,7 @@ class UserDetailsServiceImpl(
 ) : UserDetailsService {
     override fun loadUserByUsername(username: String?): UserDetails =
         username?.let {
-            accountFinder.findUserByUsername(it)
+            accountFinder.findAccountByUsername(it)
                 .fold(
                     { throw UsernameNotFoundException("User $username not found.") },
                     { user -> user.toDetails() }

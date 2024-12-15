@@ -10,8 +10,11 @@ import ru.remsely.psyhosom.api.request.AuthRequest
 import ru.remsely.psyhosom.api.response.AuthResponse
 import ru.remsely.psyhosom.api.response.ErrorResponse
 import ru.remsely.psyhosom.domain.account.Account
-import ru.remsely.psyhosom.domain.account.dao.UserCreationError
+import ru.remsely.psyhosom.domain.account.dao.AccountCreationError
+import ru.remsely.psyhosom.domain.account.event.LoginAccountEvent
+import ru.remsely.psyhosom.domain.account.event.RegisterAccountEvent
 import ru.remsely.psyhosom.domain.error.DomainError
+import ru.remsely.psyhosom.domain.profile.dao.UserProfileFindingError
 import ru.remsely.psyhosom.monitoring.log.logger
 import ru.remsely.psyhosom.usecase.auth.AuthService
 import ru.remsely.psyhosom.usecase.auth.UserLoginError
@@ -51,7 +54,7 @@ class AuthController(
 
     private fun register(authRequest: AuthRequest, role: Account.Role): ResponseEntity<*> =
         authService.registerUser(
-            Account(
+            RegisterAccountEvent(
                 username = authRequest.username,
                 password = authRequest.password,
                 role = role
@@ -67,7 +70,7 @@ class AuthController(
 
     private fun login(authRequest: AuthRequest): ResponseEntity<*> =
         authService.loginUser(
-            Account(
+            LoginAccountEvent(
                 username = authRequest.username,
                 password = authRequest.password
             )
@@ -82,8 +85,9 @@ class AuthController(
 
     private fun handleError(error: DomainError): ResponseEntity<ErrorResponse> =
         when (error) {
-            is UserCreationError.AlreadyExists -> HttpStatus.BAD_REQUEST
+            is AccountCreationError.AlreadyExists -> HttpStatus.BAD_REQUEST
             is UserRegisterValidationError.InvalidUsername -> HttpStatus.BAD_REQUEST
+            is UserProfileFindingError.ProfileWithUsernameAlreadyExists -> HttpStatus.BAD_REQUEST
             is UserLoginError.AuthenticationError -> HttpStatus.UNAUTHORIZED
             else -> HttpStatus.INTERNAL_SERVER_ERROR
         }.let {
@@ -92,6 +96,7 @@ class AuthController(
                 .body(
                     ErrorResponse(
                         message = error.message,
+                        source = error.javaClass.name,
                         timestamp = LocalDateTime.now(),
                         status = it.name
                     )

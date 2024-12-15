@@ -9,7 +9,8 @@ data class User(
     val id: Long,
     private val username: String,
     private val password: String,
-    val role: Account.Role
+    val role: Account.Role,
+    private val isConfirmed: Boolean
 ) : UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> =
         mutableListOf(SimpleGrantedAuthority(role.name))
@@ -17,4 +18,6 @@ data class User(
     override fun getPassword(): String = password
 
     override fun getUsername(): String = username
+
+    override fun isEnabled(): Boolean = isConfirmed
 }

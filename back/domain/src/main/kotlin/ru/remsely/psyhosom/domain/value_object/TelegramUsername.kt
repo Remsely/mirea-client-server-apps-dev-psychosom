@@ -15,15 +15,15 @@ value class TelegramUsername private constructor(val value: String?) {
                 return@either TelegramUsername(null)
             }
             ensure(value.matches(pattern.toRegex())) {
-                TelegramUsernameCreationError.InvalidTelegramUsername
+                TelegramUsernameValidationError.InvalidTelegramUsername
             }
             TelegramUsername(value)
         }
     }
 }
 
-sealed class TelegramUsernameCreationError(override val message: String) : DomainError.ValidationError {
-    data object InvalidTelegramUsername : TelegramUsernameCreationError(
+sealed class TelegramUsernameValidationError(override val message: String) : DomainError.ValidationError {
+    data object InvalidTelegramUsername : TelegramUsernameValidationError(
         "Telegram username is invalid."
     )
 }

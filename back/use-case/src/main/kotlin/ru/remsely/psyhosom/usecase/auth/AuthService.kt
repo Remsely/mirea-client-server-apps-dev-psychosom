@@ -1,13 +1,14 @@
 package ru.remsely.psyhosom.usecase.auth
 
 import arrow.core.Either
-import ru.remsely.psyhosom.domain.account.Account
+import ru.remsely.psyhosom.domain.account.event.LoginAccountEvent
+import ru.remsely.psyhosom.domain.account.event.RegisterAccountEvent
 import ru.remsely.psyhosom.domain.error.DomainError
 
 interface AuthService {
-    fun registerUser(account: Account): Either<DomainError, String>
+    fun registerUser(event: RegisterAccountEvent): Either<DomainError, String>
 
-    fun loginUser(account: Account): Either<DomainError, String>
+    fun loginUser(event: LoginAccountEvent): Either<DomainError, String>
 }
 
 sealed class UserLoginError(override val message: String) : DomainError.ValidationError {

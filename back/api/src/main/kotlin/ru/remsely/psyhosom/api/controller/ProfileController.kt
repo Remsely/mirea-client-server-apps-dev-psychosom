@@ -9,39 +9,41 @@ import ru.remsely.psyhosom.api.request.UpdateProfileRequest
 import ru.remsely.psyhosom.api.response.ErrorResponse
 import ru.remsely.psyhosom.api.response.toResponse
 import ru.remsely.psyhosom.api.utils.AuthUserId
-import ru.remsely.psyhosom.domain.account.dao.UserFindingError
-import ru.remsely.psyhosom.domain.account.dao.UserProfileFindingError
+import ru.remsely.psyhosom.domain.account.dao.AccountFindingError
 import ru.remsely.psyhosom.domain.error.DomainError
+import ru.remsely.psyhosom.domain.profile.dao.UserProfileFindingError
 import ru.remsely.psyhosom.domain.profile.event.UpdateProfileEvent
 import ru.remsely.psyhosom.domain.value_object.PhoneNumber
-import ru.remsely.psyhosom.domain.value_object.PhoneNumberCreationError
+import ru.remsely.psyhosom.domain.value_object.PhoneNumberValidationError
 import ru.remsely.psyhosom.domain.value_object.TelegramUsername
-import ru.remsely.psyhosom.domain.value_object.TelegramUsernameCreationError
+import ru.remsely.psyhosom.domain.value_object.TelegramUsernameValidationError
 import ru.remsely.psyhosom.monitoring.log.logger
-import ru.remsely.psyhosom.usecase.user.ProfileManager
-import ru.remsely.psyhosom.usecase.user.UserProfileManagingError
+import ru.remsely.psyhosom.usecase.profile.FindProfileCommand
+import ru.remsely.psyhosom.usecase.profile.ProfileUpdateError
+import ru.remsely.psyhosom.usecase.profile.UpdateProfileCommand
 import java.time.LocalDateTime
 
 @RestController
-@RequestMapping("/api/v1/profiles")
+@RequestMapping("/api/v1/patients/profile")
 class ProfileController(
-    private val profileManager: ProfileManager
+    private val updateProfileCommand: UpdateProfileCommand,
+    private val findProfileCommand: FindProfileCommand
 ) {
     private val log = logger()
 
     @PutMapping
-    fun updateUserProfile(@AuthUserId userId: Long, @RequestBody request: UpdateProfileRequest): ResponseEntity<*> {
-        log.info("PUT /api/v1/users/profile | userId: $userId.")
+    fun updateUserProfile(@AuthUserId accountId: Long, @RequestBody request: UpdateProfileRequest): ResponseEntity<*> {
+        log.info("PUT /api/v1/patients/profile | userId: $accountId.")
         return either {
             UpdateProfileEvent(
-                userId = userId,
+                accountId = accountId,
                 firstName = request.firstName,
                 lastName = request.lastName,
                 phone = PhoneNumber(request.phone).bind(),
                 telegram = TelegramUsername(request.telegram).bind()
             )
         }.flatMap {
-            profileManager.createOrUpdateProfile(it)
+            updateProfileCommand.execute(it)
         }.fold(
             { handleError(it) },
             {
@@ -53,9 +55,9 @@ class ProfileController(
     }
 
     @GetMapping
-    fun findUserProfile(@AuthUserId userId: Long): ResponseEntity<*> {
-        log.info("GET /api/v1/users/profile | userId: $userId.")
-        return profileManager.findProfileByUserId(userId)
+    fun findUserProfile(@AuthUserId accountId: Long): ResponseEntity<*> {
+        log.info("GET /api/v1/patients/profile | userId: $accountId.")
+        return findProfileCommand.execute(accountId)
             .fold(
                 { handleError(it) },
                 {
@@ -68,10 +70,10 @@ class ProfileController(
 
     private fun handleError(error: DomainError): ResponseEntity<ErrorResponse> =
         when (error) {
-            is PhoneNumberCreationError.InvalidPhoneNumber -> HttpStatus.BAD_REQUEST
-            is TelegramUsernameCreationError.InvalidTelegramUsername -> HttpStatus.BAD_REQUEST
-            is UserProfileManagingError.ProfileUsernameMustBeInContacts -> HttpStatus.BAD_REQUEST
-            is UserFindingError.NotFoundById -> HttpStatus.NOT_FOUND
+            is PhoneNumberValidationError.InvalidPhoneNumber -> HttpStatus.BAD_REQUEST
+            is TelegramUsernameValidationError.InvalidTelegramUsername -> HttpStatus.BAD_REQUEST
+            is ProfileUpdateError.ProfileUsernameMustBeInContacts -> HttpStatus.BAD_REQUEST
+            is AccountFindingError.NotFoundById -> HttpStatus.NOT_FOUND
             is UserProfileFindingError.NotFoundByUserId -> HttpStatus.NOT_FOUND
             else -> HttpStatus.INTERNAL_SERVER_ERROR
         }.let {
@@ -80,6 +82,7 @@ class ProfileController(
                 .body(
                     ErrorResponse(
                         message = error.message,
+                        source = error.javaClass.name,
                         timestamp = LocalDateTime.now(),
                         status = it.name
                     )
