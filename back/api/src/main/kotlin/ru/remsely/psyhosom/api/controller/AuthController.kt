@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import ru.remsely.psyhosom.api.request.AuthRequest
-import ru.remsely.psyhosom.api.response.AuthResponse
 import ru.remsely.psyhosom.api.response.ErrorResponse
+import ru.remsely.psyhosom.api.response.LoginResponse
+import ru.remsely.psyhosom.api.response.RegisterResponse
 import ru.remsely.psyhosom.domain.account.Account
 import ru.remsely.psyhosom.domain.account.dao.AccountCreationError
 import ru.remsely.psyhosom.domain.account.event.LoginAccountEvent
@@ -64,7 +65,12 @@ class AuthController(
             {
                 ResponseEntity
                     .ok()
-                    .body(AuthResponse(it))
+                    .body(
+                        RegisterResponse(
+                            tbBotConfirmationUrl = it,
+                            webSocketToken = it.substring(it.indexOf("=") + 1) // TODO: Сделать нормально
+                        )
+                    )
             }
         )
 
@@ -79,7 +85,7 @@ class AuthController(
             {
                 ResponseEntity
                     .ok()
-                    .body(AuthResponse(it))
+                    .body(LoginResponse(it))
             }
         )
 
