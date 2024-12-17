@@ -17,16 +17,16 @@ data class ReviewResponse(
 
     data class Patient(
         val id: Long,
-        val name: String,
-        val secondName: String
+        val firstName: String,
+        val lastName: String
     )
 }
 
 fun Review.toResponse() = ReviewResponse(
     patient = ReviewResponse.Patient(
         id = patient.id,
-        name = patient.firstName!!,
-        secondName = patient.lastName!!
+        firstName = patient.firstName!!,
+        lastName = patient.lastName!!
     ),
     psychologist = ReviewResponse.Psychologist(
         id = psychologist.id

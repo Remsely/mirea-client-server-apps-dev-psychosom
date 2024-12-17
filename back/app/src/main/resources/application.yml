@@ -31,9 +31,9 @@ security:
 telegram:
   bot:
     endpoints:
-      confirmation: https://t.me/psyhosom_test_2_bot?start=
+      confirmation: https://t.me/${PSYHOSOM_BOT_USERNAME:psyhosom_test_2_bot}?start=
     token: ${PSYHOSOM_BOT_TOKEN:8199547612:AAHOhfzIyITbm6XYe_3Wr4rUcVqC867c-C4}
-    username: psyhosom_test_2_bot
+    username: ${PSYHOSOM_BOT_USERNAME:psyhosom_test_2_bot}
 
 frontend:
   url: ${PSYHOSOM_WEB_URL:http://localhost:3000}
