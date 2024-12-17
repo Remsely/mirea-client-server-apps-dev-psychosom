@@ -30,9 +30,9 @@ class WebSocketSessionManager : WebSocketAccountConfirmationNotifier {
         if (session != null) {
             session.sendMessage(TextMessage(jsonMessage))
             session.close()
-            log.info("Notification for token ${token.value} successfully sent.")
+            log.info("Notification for web socket session with token ${token.value} successfully sent.")
         } else {
-            log.warn("Session for token ${token.value} not found.")
+            log.warn("Web socket session for token ${token.value} not found.")
         }
     }
 }

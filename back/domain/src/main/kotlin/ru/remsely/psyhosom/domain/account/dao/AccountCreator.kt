@@ -5,7 +5,7 @@ import ru.remsely.psyhosom.domain.account.Account
 import ru.remsely.psyhosom.domain.error.DomainError
 
 interface AccountCreator {
-    fun createUser(account: Account): Either<DomainError, Account>
+    fun createAccount(account: Account): Either<DomainError, Account>
 }
 
 sealed class AccountCreationError(override val message: String) : DomainError.BusinessLogicError {

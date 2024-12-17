@@ -15,7 +15,7 @@ import ru.remsely.psyhosom.db.repository.AccountRepository
 import ru.remsely.psyhosom.domain.account.Account
 import ru.remsely.psyhosom.domain.account.dao.*
 import ru.remsely.psyhosom.domain.error.DomainError
-import ru.remsely.psyhosom.domain.profile.dao.ProfileEraser
+import ru.remsely.psyhosom.domain.patient.dao.PatientEraser
 import ru.remsely.psyhosom.domain.value_object.TelegramBotToken
 import ru.remsely.psyhosom.domain.value_object.TelegramChatId
 import ru.remsely.psyhosom.monitoring.log.logger
@@ -25,12 +25,12 @@ import kotlin.jvm.optionals.getOrNull
 @Component
 open class AccountDao(
     private val accountRepository: AccountRepository,
-    private val profileEraser: ProfileEraser
+    private val patientEraser: PatientEraser
 ) : AccountCreator, AccountFinder, AccountUpdater, AccountEraser {
     private val log = logger()
 
     @Transactional
-    override fun createUser(account: Account): Either<DomainError, Account> = either {
+    override fun createAccount(account: Account): Either<DomainError, Account> = either {
         ensure(!accountRepository.existsByUsername(account.username)) {
             AccountCreationError.AlreadyExists(account.username)
         }
@@ -107,7 +107,7 @@ open class AccountDao(
 
     @Transactional
     override fun eraseAccountsByIds(ids: List<Long>): Either<DomainError, Unit> =
-        profileEraser.eraseProfilesByAccountIds(ids)
+        patientEraser.erasePatientsByAccountIds(ids)
             .let {
                 accountRepository.deleteAllById(ids).right()
             }
