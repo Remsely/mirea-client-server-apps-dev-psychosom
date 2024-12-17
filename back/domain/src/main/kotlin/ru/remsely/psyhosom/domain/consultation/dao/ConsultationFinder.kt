@@ -9,6 +9,8 @@ interface ConsultationFinder {
 
     fun existActiveConsultationByPatientAndPsychologist(patientId: Long, psychologistId: Long): Boolean
 
+    fun existFinishedConsultationByPatientAndPsychologist(patientId: Long, psychologistId: Long): Boolean
+
     fun findActiveSessionByPatientIdAndPsychologistId(
         patientId: Long,
         psychologistId: Long

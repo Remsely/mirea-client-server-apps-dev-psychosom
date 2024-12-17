@@ -6,10 +6,16 @@ import ru.remsely.psyhosom.db.entity.Consultation
 import ru.remsely.psyhosom.domain.consultation.Consultation as DomainConsultation
 
 interface ConsultationRepository : JpaRepository<Consultation, Long> {
-    fun existsSessionByPatientIdAndPsychologistIdAndStatusNotIn(
+    fun existsByPatientIdAndPsychologistIdAndStatusNotIn(
         patientId: Long,
         psychologistId: Long,
         statuses: List<DomainConsultation.Status>
+    ): Boolean
+
+    fun existsByPatientIdAndPsychologistIdAndStatus(
+        patientId: Long,
+        psychologistId: Long,
+        status: DomainConsultation.Status
     ): Boolean
 
     @EntityGraph(attributePaths = ["patient", "psychologist"])

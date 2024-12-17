@@ -3,12 +3,12 @@ package ru.remsely.psyhosom.api.controller
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import ru.remsely.psyhosom.api.request.CreateConsultationRequest
 import ru.remsely.psyhosom.api.response.CreateConsultationResponse
 import ru.remsely.psyhosom.api.response.ErrorResponse
 import ru.remsely.psyhosom.api.response.FindActiveConsultationsResponse
 import ru.remsely.psyhosom.api.utils.annotation.AuthPatientId
 import ru.remsely.psyhosom.domain.consultation.dao.ConsultationFindingError
+import ru.remsely.psyhosom.domain.consultation.dao.ConsultationUpdater
 import ru.remsely.psyhosom.domain.consultation.event.CreateConsultationEvent
 import ru.remsely.psyhosom.domain.consultation.event.FindActiveConsultationsEvent
 import ru.remsely.psyhosom.domain.error.DomainError
@@ -21,23 +21,24 @@ import ru.remsely.psyhosom.usecase.consultation.FindActiveConsultationCommand
 import java.time.LocalDateTime
 
 @RestController
-@RequestMapping("/api/v1/consultations")
+@RequestMapping("/api/v1/psychologists")
 class ConsultationController(
     private val createConsultationCommand: CreateConsultationCommand,
-    private val findActiveConsultationCommand: FindActiveConsultationCommand
+    private val findActiveConsultationCommand: FindActiveConsultationCommand,
+    private val consultationUpdater: ConsultationUpdater // TODO: убрать
 ) {
     private val log = logger()
 
-    @PostMapping
-    fun createSession(
+    @PostMapping("/{psychologistId}/consultations")
+    fun createConsultation(
         @AuthPatientId patientId: Long,
-        @RequestBody request: CreateConsultationRequest
+        @PathVariable psychologistId: Long,
     ): ResponseEntity<*> {
         log.info("POST /api/v1/consultations | patientId: $patientId.")
         return createConsultationCommand.execute(
             CreateConsultationEvent(
                 patientId = patientId,
-                psychologistId = request.psychologistId
+                psychologistId = psychologistId
             )
         ).fold(
             { handleError(it) },
@@ -57,10 +58,10 @@ class ConsultationController(
         )
     }
 
-    @GetMapping("/active")
-    fun findActiveSession(
+    @GetMapping("/{psychologistId}/consultations/active")
+    fun findActiveConsultation(
         @AuthPatientId patientId: Long,
-        @RequestParam(required = true) psychologistId: Long
+        @PathVariable(required = true) psychologistId: Long
     ): ResponseEntity<*> {
         log.info("GET /api/v1/consultations/active | patientId: $patientId.")
         return findActiveConsultationCommand.execute(
@@ -86,6 +87,20 @@ class ConsultationController(
                     )
             }
         )
+    }
+
+    @PatchMapping("/{psychologistId}/consultations/{consultationId}/finish") // TODO: убрать
+    fun finishConsultation(
+        @AuthPatientId patientId: Long,
+        @PathVariable(required = true) psychologistId: Long,
+        @PathVariable(required = true) consultationId: Long
+    ): ResponseEntity<*> {
+        log.info("PATCH /api/v1/consultations/$consultationId/finish | patientId: $patientId.")
+        return if (consultationUpdater.finishConsultation(consultationId)) {
+            ResponseEntity.ok().body(mapOf("status" to "success"))
+        } else {
+            ResponseEntity.ok().body(mapOf("status" to "failed"))
+        }
     }
 
     private fun handleError(error: DomainError): ResponseEntity<ErrorResponse> =

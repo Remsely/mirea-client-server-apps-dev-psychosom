@@ -1,18 +1,13 @@
 package ru.remsely.psyhosom.db.extensions
 
 import arrow.core.getOrElse
-import ru.remsely.psyhosom.db.entity.Account
-import ru.remsely.psyhosom.db.entity.Patient
-import ru.remsely.psyhosom.db.entity.Psychologist
-import ru.remsely.psyhosom.db.entity.Consultation
-import ru.remsely.psyhosom.domain.value_object.PhoneNumber
-import ru.remsely.psyhosom.domain.value_object.TelegramBotToken
-import ru.remsely.psyhosom.domain.value_object.TelegramChatId
-import ru.remsely.psyhosom.domain.value_object.TelegramUsername
+import ru.remsely.psyhosom.db.entity.*
+import ru.remsely.psyhosom.domain.value_object.*
 import ru.remsely.psyhosom.domain.account.Account as DomainAccount
 import ru.remsely.psyhosom.domain.patient.Patient as DomainPatient
 import ru.remsely.psyhosom.domain.psychologist.Psychologist as DomainPsychologist
 import ru.remsely.psyhosom.domain.consultation.Consultation as DomainConsultation
+import ru.remsely.psyhosom.domain.review.Review as DomainReview
 
 fun Account.toDomain() = DomainAccount(
     id = id,
@@ -57,4 +52,15 @@ fun Consultation.toDomain() = DomainConsultation(
     orderDate = orderDate,
     confirmationDate = confirmationDate,
     startDate = startDate,
+)
+
+fun Review.toDomain() = DomainReview(
+    id = id,
+    psychologist = psychologist.toDomain(),
+    patient = patient.toDomain(),
+    rating = ReviewRating(rating).getOrElse {
+        throw RuntimeException("Invalid review rating.")
+    },
+    text = text,
+    date = date
 )

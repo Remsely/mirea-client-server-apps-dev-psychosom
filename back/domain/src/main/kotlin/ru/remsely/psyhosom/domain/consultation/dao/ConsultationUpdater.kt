@@ -6,6 +6,8 @@ import ru.remsely.psyhosom.domain.error.DomainError
 
 interface ConsultationUpdater {
     fun cancelConsultation(consultation: Consultation): Either<DomainError, Consultation>
+
+    fun finishConsultation(consultationId: Long): Boolean // TODO: убрать
 }
 
 sealed class ConsultationUpdateError(override val message: String) : DomainError.ValidationError {
