@@ -1,8 +1,23 @@
 export type Review = {
+    id?: number;
+    name?: string;
+    rating?: number;
+    text?: string;
+    date?: string;
+}
+
+export interface ServerReview {
     id: number;
-    name: string;
-    star: number;
-    message: string;
+    patient: {
+        id: number;
+        firstName: string;
+        lastName: string;
+    };
+    psychologist: {
+        id: number;
+    };
+    rating: number;
+    text: string;
     date: string;
 }
 

@@ -22,7 +22,7 @@ export function AuthForm() {
     useEffect(() => {
         if (session?.user.webSocketToken) {
             signOut({redirect: false})
-            const ws = new WebSocket(`ws://${process.env.NEXT_PUBLIC_BACKEND_URL}/ws/auth/confirmation?token=${session.user.webSocketToken}`);
+            const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/ws/auth/confirmation?token=${session.user.webSocketToken}`);
             ws.onopen = () => console.log("WebSocket подключен");
             ws.onclose = async () => {
                 console.log("WebSocket отключён");

@@ -1,13 +1,11 @@
 "use client";
 
 import {FieldError, FieldValues, SubmitHandler, useForm} from "react-hook-form";
-import {useEffect, useState} from "react";
-import Cookies from "js-cookie";
+import {useState} from "react";
 import styles from "./ConsultationForm.module.scss";
 import {Button} from "@/shared/componetns/ui";
 import {ContactInput, NameInput, TextInput} from "@/shared/componetns/shared/Inputs";
-import {Cookie} from "@/shared/enums/cookie";
-import {FrameTitle, SubmitMessage} from "@/shared/componetns/shared";
+import {FrameTitle} from "@/shared/componetns/shared";
 import {useSession} from "next-auth/react";
 import {toast} from "react-hot-toast";
 import {CircleAlert} from "lucide-react";
@@ -24,28 +22,49 @@ export function ConsultationForm(props: ConsultationFormProps) {
     });
 
     const [contactValue, setContactValue] = useState<string>("");
-    const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
-    useEffect(() => {
-        const formSubmitted = Cookies.get(Cookie.consultationFormSubmitted);
-        if (formSubmitted === 'true') {
-            setIsSubmitted(true);
-        }
-    }, []);
-
-    const onSubmit: SubmitHandler<FieldValues> = (data: FieldValues) => {
+    const onSubmit: SubmitHandler<FieldValues> = async (data: FieldValues) => {
         if (session) {
-            if (data.phone) {
-                data.phone = data.phone.replace(/[^0-9]/g, "");
+            const phone = data.contact.startsWith("+7") ? "+" + data.contact.replace(/[^0-9]/g, "") : data.contact;
+            const telegram = data.contact.startsWith("@") ? data.contact : null
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_REST_URL}/api/v1/psychologists/1/consultations`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${session.user.jwtToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Не удалось записать на консультацию!');
+                }
+
+                const userData = { firstName: data.firstName, lastName: data.lastName, phone: phone, telegram: telegram};
+                const userDataResponse = await fetch(`${process.env.NEXT_PUBLIC_REST_URL}/api/v1/patients`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${session.user.jwtToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData),
+                });
+
+                if (!userDataResponse.ok) {
+                    throw new Error('Не удалось обновить данные клиента!');
+                }
+
+                props.setIsOpen(true);
+                reset();
+                setContactValue("");
+                toast.success("Вы успешно записаны на консультацию!");
+            } catch (error) {
+                console.error(error);
+                toast.error("Произошла ошибка при записи на консультацию. Пожалуйста, попробуйте позже.");
             }
-            props.setIsOpen(true);
-            setIsSubmitted(true);
-            Cookies.set(Cookie.consultationFormSubmitted, 'true', {expires: 1});
-            reset();
-            setContactValue("");
         } else {
             props.setIsOpen(true);
-            toast("Прежде чем записаться на консультацию, пожалуйста, войдите в аккаунт", {
+            toast("Прежде чем записаться к консультанту, пожалуйста, войдите в аккаунт", {
                 icon: <CircleAlert />,
                 duration: 3000,
                 className: styles.toast
@@ -54,13 +73,6 @@ export function ConsultationForm(props: ConsultationFormProps) {
     };
 
     return (
-        isSubmitted && !props.isOpen ? (
-            <>
-                <i id="consultation"></i>
-                <SubmitMessage title="Вы уже записаны на консультацию!">Мы свяжемся с вами в ближайшее
-                    время</SubmitMessage>
-            </>
-        ) : (
             <>
                 <FrameTitle id="consultation">Запишитесь на консультацию</FrameTitle>
                 <div className={styles.formWrapper}>
@@ -69,14 +81,14 @@ export function ConsultationForm(props: ConsultationFormProps) {
                             <div className={styles.inputs}>
                                 <NameInput
                                     label="Имя"
-                                    name="firstname"
+                                    name="firstName"
                                     register={register}
                                     errors={errors as Record<string, FieldError | undefined>}
                                     clearErrors={clearErrors}
                                 />
                                 <NameInput
                                     label="Фамилия"
-                                    name="lastname"
+                                    name="lastName"
                                     register={register}
                                     errors={errors as Record<string, FieldError | undefined>}
                                     clearErrors={clearErrors}
@@ -103,6 +115,5 @@ export function ConsultationForm(props: ConsultationFormProps) {
                     </form>
                 </div>
             </>
-        )
     );
 }
