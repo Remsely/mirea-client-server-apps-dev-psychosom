@@ -1,0 +1,48 @@
+@use "@/shared/styles/variables" as *;
+
+.button {
+    margin-top: 35px;
+    width: 100%;
+    height: 50px;
+}
+
+.buttonRegistration {
+    width: 100%;
+    margin-top: 10px;
+    height: 40px;
+    background: inherit;
+    border: 1px solid $title-font-color;
+
+    &:hover {
+        border: 1px solid $button-hover-color;
+    }
+}
+
+.paragraph {
+    font-size: 18px;
+    font-weight: $font-weight-subtitle;
+    text-align: center;
+
+    .switchMode {
+        color: $title-font-color;
+        font-weight: $font-weight-subtitle;
+
+        &:hover {
+            color: $title-hover-color;
+        }
+    }
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 340px;
+    gap: 10px;
+
+    .inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 35px;
+    }
+}

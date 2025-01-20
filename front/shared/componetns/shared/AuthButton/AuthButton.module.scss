@@ -1,0 +1,24 @@
+@use "@/shared/styles/variables" as *;
+
+.svg {
+    stroke: $title-font-color;
+    cursor: pointer;
+
+    &:hover {
+        stroke: $title-hover-color;
+    }
+}
+
+.button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    span {
+        margin-top: 3px;
+        font-size: 14px;
+        color: $title-font-color;
+        font-weight: $font-weight-subtitle;
+    }
+}

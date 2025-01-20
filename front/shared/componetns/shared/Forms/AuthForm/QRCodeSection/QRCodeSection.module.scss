@@ -1,0 +1,28 @@
+@use "@/shared/styles/variables" as *;
+
+.block {
+    width: 520px;
+    text-align: center;
+
+    h2 {
+        margin-bottom: 20px;
+    }
+
+    p {
+        margin-top: 20px;
+
+        b {
+            color: $title-font-color;
+            font-weight: $font-weight-title;
+        }
+    }
+
+    .link {
+        color: $title-font-color;
+        transition: $transition-main;
+
+        &:hover {
+            color: $title-hover-color;
+        }
+    }
+}

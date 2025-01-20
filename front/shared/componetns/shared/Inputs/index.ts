@@ -1,0 +1,5 @@
+export { PasswordInput } from "./PasswordInput/PasswordInput"
+export { StarRatingInput } from "./StarRatingInput/StarRatingInput"
+export { ContactInput } from "./ContactInput/ContactInput"
+export { NameInput } from "./NameInput/NameInput"
+export { TextInput } from "./TextInput/TextInput"

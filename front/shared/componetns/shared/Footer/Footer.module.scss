@@ -11,6 +11,16 @@
         padding-top: 50px;
         height: 300px;
 
+        .logo {
+            display: flex;
+            height: fit-content;
+            align-items: center;
+
+            img {
+                margin-right: 5px;
+            }
+        }
+
         .important {
 
             ul {

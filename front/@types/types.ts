@@ -11,3 +11,10 @@ export type Navigation = {
     name: string;
     link: string;
 }
+
+export type User = {
+    firstname: string | null;
+    lastname: string | null;
+    phone: string | null;
+    telegram: string | null
+}

@@ -1,0 +1,88 @@
+@use "@/shared/styles/variables" as *;
+
+.form {
+    display: flex;
+
+    .leftColumn {
+        flex-shrink: 0;
+        width: 301px;
+        padding: 15px 18px;
+        margin-right: 10px;
+
+        .inputs {
+            height: calc(450px - 135px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    }
+
+    .textarea {
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        position: relative;
+        width: calc(100% - 311px);
+        padding: 16px 20px;
+
+        button {
+            width: 100%;
+            height: 60px;
+            margin-top: auto;
+
+            &:hover {
+                background-color: $button-hover-color;
+            }
+        }
+    }
+}
+
+.block {
+    height: 450px;
+    border-radius: $border-radius;
+    background: $background-div-color;
+    border-left: $border-shadow;
+    border-top: $border-shadow;
+    backdrop-filter: $backdrop-filter;
+    box-shadow: $box-shadow;
+}
+
+.success {
+    padding: 230px 0;
+}
+
+.blurOverlay {
+    position: absolute;
+    top: -10px;
+    left: -12px;
+    width: 1100px;
+    height: 470px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    text-align: center;
+
+    p {
+        width: 800px;
+        font-size: $font-size-subtitle;
+        font-weight: $font-weight-title;
+        color: $title-font-color;
+    }
+}
+
+.formWrapper {
+    position: relative;
+}
+
+.toast {
+    font-size: $font-size-subtitle;
+
+    svg {
+        stroke: $title-font-color;
+        width: 100px;
+
+    }
+}

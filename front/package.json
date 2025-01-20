@@ -10,23 +10,28 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
-    "@types/js-cookie": "^3.0.6",
-    "@types/react-scroll": "^1.8.10",
-    "@types/react-slick": "^0.23.13",
     "js-cookie": "^3.0.5",
+    "lucide-react": "^0.456.0",
     "next": "15.0.3",
+    "next-auth": "^4.24.11",
+    "qrcode.react": "^4.2.0",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "react-hook-form": "^7.53.1",
+    "react-hot-toast": "^2.4.1",
     "react-scroll": "^1.9.0",
     "react-slick": "^0.30.2",
     "sass": "^1.80.6",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/js-cookie": "^3.0.5",
+    "@types/react-scroll": "^1.8.10",
+    "@types/react-slick": "^0.23.13",
     "eslint": "^8",
     "eslint-config-next": "15.0.3",
     "typescript": "^5"

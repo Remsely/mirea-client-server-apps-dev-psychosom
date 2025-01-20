@@ -3,19 +3,32 @@
     padding-top: 25px;
     padding-bottom: 50px;
 
-    .title {
-        color: $title-font-color;
-        font-weight: $font-weight-title;
-        font-size: $font-size-title;
-        text-align: center;
+    .logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         margin-bottom: 12px;
+
+        .title {
+            color: $title-font-color;
+            font-weight: $font-weight-title;
+            font-size: $font-size-title;
+            text-align: center;
+        }
+
+        img {
+            margin-right: 5px;
+        }
     }
 
     .navbar {
-        display: flex;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
 
         ul {
+            grid-column: 1 / 2;
+            justify-self: center;
             background: $button-bg-color;
             width: fit-content;
             border-radius: $border-radius-inputs-form;
@@ -41,6 +54,11 @@
                     margin-right: 0;
                 }
             }
+        }
+
+        .authButton {
+            grid-column: 2 / 3;
+            justify-self: end;
         }
     }
 }
