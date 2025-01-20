@@ -1,5 +1,4 @@
 import {AuthOptions} from "next-auth";
-import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 const apiRequest = async (url: string, body: Record<string, unknown>) => {
@@ -14,10 +13,6 @@ const apiRequest = async (url: string, body: Record<string, unknown>) => {
 
 export const authConfig: AuthOptions = {
     providers: [
-        GitHubProvider({
-            clientId: process.env.GITHUB_ID || "",
-            clientSecret: process.env.GITHUB_SECRET || "",
-        }),
         CredentialsProvider({
             name: "Credentials",
             credentials: {
@@ -28,8 +23,8 @@ export const authConfig: AuthOptions = {
                 if (!credentials?.username || !credentials?.password) return null;
 
                 const endpoint = req.body?.isRegister
-                    ? "http://localhost:8080/api/v1/auth/register/patient"
-                    : "http://localhost:8080/api/v1/auth/login";
+                    ? process.env.BACKEND_URL + "/api/v1/auth/register/patient"
+                    : process.env.BACKEND_URL + "/api/v1/auth/login";
 
                 const { ok, data } = await apiRequest(endpoint, {
                     username: credentials.username,
