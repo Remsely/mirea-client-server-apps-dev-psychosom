@@ -64,7 +64,7 @@ export function ConsultationForm(props: ConsultationFormProps) {
             }
         } else {
             props.setIsOpen(true);
-            toast("Прежде чем записаться к консультанту, пожалуйста, войдите в аккаунт", {
+            toast("Прежде чем записаться к специалисту, пожалуйста, войдите в аккаунт", {
                 icon: <CircleAlert />,
                 duration: 3000,
                 className: styles.toast
