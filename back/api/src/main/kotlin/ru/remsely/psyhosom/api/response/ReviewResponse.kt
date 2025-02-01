@@ -25,8 +25,8 @@ data class ReviewResponse(
 fun Review.toResponse() = ReviewResponse(
     patient = ReviewResponse.Patient(
         id = patient.id,
-        firstName = patient.firstName!!,
-        lastName = patient.lastName!!
+        firstName = patient.firstName,
+        lastName = patient.lastName
     ),
     psychologist = ReviewResponse.Psychologist(
         id = psychologist.id

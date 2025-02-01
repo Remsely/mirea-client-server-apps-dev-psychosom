@@ -8,8 +8,6 @@ interface PatientFinder {
     fun findPatientByAccountId(accountId: Long): Either<DomainError, Patient>
 
     fun findPatientById(id: Long): Either<DomainError, Patient>
-
-    fun checkNotExistsWithUsernameInContacts(username: String): Either<DomainError, Unit>
 }
 
 sealed class PatientFindingError(override val message: String) : DomainError.ValidationError {

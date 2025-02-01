@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import ru.remsely.psyhosom.api.request.AuthRequest
+import ru.remsely.psyhosom.api.request.LoginRequest
+import ru.remsely.psyhosom.api.request.RegisterRequest
 import ru.remsely.psyhosom.api.response.ErrorResponse
 import ru.remsely.psyhosom.api.response.LoginResponse
 import ru.remsely.psyhosom.api.response.RegisterResponse
@@ -30,34 +31,36 @@ class AuthController(
     private val log = logger()
 
     @PostMapping("/register/admin") // TODO: Подумать, как защитить
-    fun registerAdmin(@RequestBody request: AuthRequest): ResponseEntity<*> {
+    fun registerAdmin(@RequestBody request: RegisterRequest): ResponseEntity<*> {
         log.info("POST /auth/admin/register | AuthRequest: $request")
         return register(request, Account.Role.ADMIN)
     }
 
     @PostMapping("/register/patient")
-    fun registerPatient(@RequestBody request: AuthRequest): ResponseEntity<*> {
+    fun registerPatient(@RequestBody request: RegisterRequest): ResponseEntity<*> {
         log.info("POST /auth/patient/register | AuthRequest: $request")
         return register(request, Account.Role.PATIENT)
     }
 
     @PostMapping("/register/psychologist")
-    fun registerPsychologist(@RequestBody request: AuthRequest): ResponseEntity<*> {
+    fun registerPsychologist(@RequestBody request: RegisterRequest): ResponseEntity<*> {
         log.info("POST /auth/psychologist/register | AuthRequest: $request")
         return register(request, Account.Role.PSYCHOLOGIST)
     }
 
     @PostMapping("/login")
-    fun loginAdmin(@RequestBody request: AuthRequest): ResponseEntity<*> {
+    fun loginAccount(@RequestBody request: LoginRequest): ResponseEntity<*> {
         log.info("POST /auth/login | AuthRequest: $request")
         return login(request)
     }
 
-    private fun register(authRequest: AuthRequest, role: Account.Role): ResponseEntity<*> =
+    private fun register(registerRequest: RegisterRequest, role: Account.Role): ResponseEntity<*> =
         authService.registerUser(
             RegisterAccountEvent(
-                username = authRequest.username,
-                password = authRequest.password,
+                username = registerRequest.username,
+                password = registerRequest.password,
+                firstName = registerRequest.firstName,
+                lastName = registerRequest.lastName,
                 role = role
             )
         ).fold(
@@ -67,18 +70,18 @@ class AuthController(
                     .ok()
                     .body(
                         RegisterResponse(
-                            tbBotConfirmationUrl = it,
-                            webSocketToken = it.substring(it.indexOf("=") + 1) // TODO: Сделать нормально
+                            accountConfirmationUrl = it.confirmationUrl,
+                            webSocketToken = it.webSocketToken.value
                         )
                     )
             }
         )
 
-    private fun login(authRequest: AuthRequest): ResponseEntity<*> =
+    private fun login(loginRequest: LoginRequest): ResponseEntity<*> =
         authService.loginUser(
             LoginAccountEvent(
-                username = authRequest.username,
-                password = authRequest.password
+                username = loginRequest.username,
+                password = loginRequest.password
             )
         ).fold(
             { handleError(it) },

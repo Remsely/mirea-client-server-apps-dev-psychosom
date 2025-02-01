@@ -2,11 +2,13 @@ package ru.remsely.psyhosom.db.extensions
 
 import arrow.core.getOrElse
 import ru.remsely.psyhosom.db.entity.*
-import ru.remsely.psyhosom.domain.value_object.*
+import ru.remsely.psyhosom.domain.value_object.ReviewRating
+import ru.remsely.psyhosom.domain.value_object.TelegramBotToken
+import ru.remsely.psyhosom.domain.value_object.TelegramChatId
 import ru.remsely.psyhosom.domain.account.Account as DomainAccount
+import ru.remsely.psyhosom.domain.consultation.Consultation as DomainConsultation
 import ru.remsely.psyhosom.domain.patient.Patient as DomainPatient
 import ru.remsely.psyhosom.domain.psychologist.Psychologist as DomainPsychologist
-import ru.remsely.psyhosom.domain.consultation.Consultation as DomainConsultation
 import ru.remsely.psyhosom.domain.review.Review as DomainReview
 
 fun Account.toDomain() = DomainAccount(
@@ -27,14 +29,8 @@ fun Account.toDomain() = DomainAccount(
 fun Patient.toDomain() = DomainPatient(
     id = id,
     account = account.toDomain(),
-    phone = PhoneNumber(phone).getOrElse {
-        throw RuntimeException("Invalid phone number.")
-    },
-    telegram = TelegramUsername(telegram).getOrElse {
-        throw RuntimeException("Invalid telegram username.")
-    },
     firstName = firstName,
-    lastName = lastName,
+    lastName = lastName
 )
 
 fun Psychologist.toDomain() = DomainPsychologist(

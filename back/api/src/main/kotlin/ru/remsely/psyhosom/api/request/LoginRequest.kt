@@ -1,6 +1,6 @@
 package ru.remsely.psyhosom.api.request
 
-data class AuthRequest(
+data class LoginRequest(
     val username: String,
     val password: String
 ) {

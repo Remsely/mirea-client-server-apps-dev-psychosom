@@ -13,15 +13,9 @@ data class Patient(
     @OneToOne(fetch = FetchType.EAGER)
     val account: Account,
 
-    @Column(name = "phone_number", nullable = true)
-    val phone: String?,
+    @Column(name = "first_name", nullable = false)
+    val firstName: String,
 
-    @Column(name = "telegram_username", nullable = true)
-    val telegram: String?,
-
-    @Column(name = "first_name", nullable = true)
-    val firstName: String?,
-
-    @Column(name = "last_name", nullable = true)
-    val lastName: String?
+    @Column(name = "last_name", nullable = false)
+    val lastName: String
 )

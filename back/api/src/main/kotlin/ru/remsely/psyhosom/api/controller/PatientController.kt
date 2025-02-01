@@ -1,7 +1,5 @@
 package ru.remsely.psyhosom.api.controller
 
-import arrow.core.flatMap
-import arrow.core.raise.either
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -13,9 +11,7 @@ import ru.remsely.psyhosom.domain.account.dao.AccountFindingError
 import ru.remsely.psyhosom.domain.error.DomainError
 import ru.remsely.psyhosom.domain.patient.dao.PatientFindingError
 import ru.remsely.psyhosom.domain.patient.event.UpdatePatientEvent
-import ru.remsely.psyhosom.domain.value_object.PhoneNumber
 import ru.remsely.psyhosom.domain.value_object.PhoneNumberValidationError
-import ru.remsely.psyhosom.domain.value_object.TelegramUsername
 import ru.remsely.psyhosom.domain.value_object.TelegramUsernameValidationError
 import ru.remsely.psyhosom.monitoring.log.logger
 import ru.remsely.psyhosom.usecase.patient.FindPatientCommand
@@ -34,17 +30,13 @@ class PatientController(
     @PutMapping
     fun updatePatient(@AuthAccountId accountId: Long, @RequestBody request: UpdatePatientRequest): ResponseEntity<*> {
         log.info("PUT /api/v1/patients | userId: $accountId.")
-        return either {
+        return updatePatientCommand.execute(
             UpdatePatientEvent(
                 accountId = accountId,
                 firstName = request.firstName,
-                lastName = request.lastName,
-                phone = PhoneNumber(request.phone).bind(),
-                telegram = TelegramUsername(request.telegram).bind()
+                lastName = request.lastName
             )
-        }.flatMap {
-            updatePatientCommand.execute(it)
-        }.fold(
+        ).fold(
             { handleError(it) },
             {
                 ResponseEntity

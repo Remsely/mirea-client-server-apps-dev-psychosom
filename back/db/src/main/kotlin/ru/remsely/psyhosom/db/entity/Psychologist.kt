@@ -13,9 +13,9 @@ data class Psychologist(
     @OneToOne
     val account: Account,
 
-    @Column(name = "first_name")
-    val firstName: String?,
+    @Column(name = "first_name", nullable = false)
+    val firstName: String,
 
-    @Column(name = "last_name")
-    val lastName: String?
+    @Column(name = "last_name", nullable = false)
+    val lastName: String
 )

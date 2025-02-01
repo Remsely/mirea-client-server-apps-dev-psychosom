@@ -5,7 +5,7 @@ import arrow.core.raise.either
 import arrow.core.raise.ensure
 import ru.remsely.psyhosom.domain.error.DomainError
 
-private const val pattern = "^@[a-zA-Z0-9](?:[a-zA-Z0-9_]{3,30}[a-zA-Z0-9])?\$"
+private const val pattern = "^@[a-zA-Z0-9][a-zA-Z0-9_]{3,30}[a-zA-Z0-9]$"
 
 @JvmInline
 value class TelegramUsername private constructor(val value: String?) {
@@ -24,6 +24,7 @@ value class TelegramUsername private constructor(val value: String?) {
 
 sealed class TelegramUsernameValidationError(override val message: String) : DomainError.ValidationError {
     data object InvalidTelegramUsername : TelegramUsernameValidationError(
-        "Telegram username is invalid."
+        "Telegram username must be 5-32 characters, start with @, contain A-Z, 0-9 and underscores, " +
+                "and cannot end with underscore."
     )
 }

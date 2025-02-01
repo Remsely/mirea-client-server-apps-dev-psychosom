@@ -15,7 +15,6 @@ import ru.remsely.psyhosom.domain.account.event.RegisterAccountEvent
 import ru.remsely.psyhosom.domain.error.DomainError
 import ru.remsely.psyhosom.domain.patient.Patient
 import ru.remsely.psyhosom.domain.patient.dao.PatientCreator
-import ru.remsely.psyhosom.domain.patient.dao.PatientFinder
 import ru.remsely.psyhosom.domain.psychologist.Psychologist
 import ru.remsely.psyhosom.domain.psychologist.dao.PsychologistCreator
 import ru.remsely.psyhosom.domain.value_object.PhoneNumber
@@ -24,10 +23,11 @@ import ru.remsely.psyhosom.domain.value_object.TelegramChatId
 import ru.remsely.psyhosom.domain.value_object.TelegramUsername
 import ru.remsely.psyhosom.monitoring.log.logger
 import ru.remsely.psyhosom.security.jwt.JwtTokenGenerator
+import ru.remsely.psyhosom.usecase.auth.AccountCreatedEvent
 import ru.remsely.psyhosom.usecase.auth.AuthService
 import ru.remsely.psyhosom.usecase.auth.UserLoginError
 import ru.remsely.psyhosom.usecase.auth.UserRegisterValidationError
-import ru.remsely.psyhosom.usecase.telegram.TelegramBotConfirmationUris
+import ru.remsely.psyhosom.usecase.telegram.TgBotUtils
 import java.time.LocalDateTime
 
 @Service
@@ -37,21 +37,19 @@ open class AuthServiceImpl(
     private val tokenGenerator: JwtTokenGenerator,
     private val passwordEncoder: PasswordEncoder,
     private val patientCreator: PatientCreator,
-    private val patientFinder: PatientFinder,
     private val psychologistCreator: PsychologistCreator,
-    private val telegramBotConfirmationUris: TelegramBotConfirmationUris
+    private val tgBotUtils: TgBotUtils
 ) : AuthService {
     private val log = logger()
 
     @Transactional
-    override fun registerUser(event: RegisterAccountEvent): Either<DomainError, String> = either {
+    override fun registerUser(event: RegisterAccountEvent): Either<DomainError, AccountCreatedEvent> = either {
         ensure(
             !(PhoneNumber(event.username).getOrNone().isNone() &&
                     TelegramUsername(event.username).getOrNone().isNone())
         ) {
             UserRegisterValidationError.InvalidUsername
         }
-        patientFinder.checkNotExistsWithUsernameInContacts(event.username).bind()
         accountCreator.createAccount(
             Account(
                 id = 0L,
@@ -69,10 +67,8 @@ open class AuthServiceImpl(
                     Patient(
                         id = 0L,
                         account = account,
-                        firstName = null,
-                        lastName = null,
-                        phone = PhoneNumber(account.username).getOrNull(),
-                        telegram = TelegramUsername(account.username).getOrNull()
+                        firstName = event.firstName,
+                        lastName = event.lastName
                     )
                 ).bind()
 
@@ -80,14 +76,17 @@ open class AuthServiceImpl(
                     Psychologist(
                         id = 0L,
                         account = account,
-                        firstName = null,
-                        lastName = null
+                        firstName = event.firstName,
+                        lastName = event.lastName
                     )
                 ).bind()
 
                 Account.Role.ADMIN -> Unit
             }
-            telegramBotConfirmationUris.getTelegramConfirmationUri(account.tgBotToken)
+            AccountCreatedEvent(
+                confirmationUrl = tgBotUtils.getConfirmationUrl(account.tgBotToken),
+                webSocketToken = account.tgBotToken
+            )
         }
     }
 

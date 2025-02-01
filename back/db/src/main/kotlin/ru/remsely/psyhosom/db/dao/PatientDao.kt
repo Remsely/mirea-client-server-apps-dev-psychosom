@@ -1,8 +1,6 @@
 package ru.remsely.psyhosom.db.dao
 
 import arrow.core.*
-import arrow.core.raise.either
-import arrow.core.raise.ensure
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import ru.remsely.psyhosom.db.extensions.toDomain
@@ -57,19 +55,6 @@ open class PatientDao(
                         }
                 }
             )
-
-    @Transactional(readOnly = true)
-    override fun checkNotExistsWithUsernameInContacts(username: String): Either<DomainError, Unit> =
-        either {
-            ensure(
-                !patientRepository.existsByTelegramEqualsIgnoreCaseOrPhoneEqualsIgnoreCase(
-                    username,
-                    username
-                )
-            ) {
-                PatientFindingError.PatientWithUsernameAlreadyExists
-            }
-        }
 
     @Transactional
     override fun updatePatient(patient: Patient): Either<DomainError, Patient> =
