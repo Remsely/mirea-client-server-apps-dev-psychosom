@@ -32,6 +32,7 @@ dependencies {
     implementation(Libs.spring_boot_starter_web)
     implementation(Libs.spring_boot_starter_data_jpa)
     implementation(Libs.spring_boot_starter_web_socket)
+    implementation(Libs.springdoc_openapi_starter)
 
     implementation(Libs.jackson_module_kotlin)
     implementation(Libs.jetbrains_kotlin_reflect)

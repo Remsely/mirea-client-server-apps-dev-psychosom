@@ -3,6 +3,7 @@ package ru.remsely.psyhosom.api.controller
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import ru.remsely.psyhosom.api.controller.open_api.ConsultationControllerContract
 import ru.remsely.psyhosom.api.response.CreateConsultationResponse
 import ru.remsely.psyhosom.api.response.ErrorResponse
 import ru.remsely.psyhosom.api.response.FindActiveConsultationsResponse
@@ -26,11 +27,11 @@ class ConsultationController(
     private val createConsultationCommand: CreateConsultationCommand,
     private val findActiveConsultationCommand: FindActiveConsultationCommand,
     private val consultationUpdater: ConsultationUpdater // TODO: убрать
-) {
+) : ConsultationControllerContract {
     private val log = logger()
 
     @PostMapping("/{psychologistId}/consultations")
-    fun createConsultation(
+    override fun createConsultation(
         @AuthPatientId patientId: Long,
         @PathVariable psychologistId: Long,
     ): ResponseEntity<*> {
@@ -59,7 +60,7 @@ class ConsultationController(
     }
 
     @GetMapping("/{psychologistId}/consultations/active")
-    fun findActiveConsultation(
+    override fun findActiveConsultation(
         @AuthPatientId patientId: Long,
         @PathVariable(required = true) psychologistId: Long
     ): ResponseEntity<*> {
@@ -89,8 +90,8 @@ class ConsultationController(
         )
     }
 
-    @PatchMapping("/{psychologistId}/consultations/{consultationId}/finish") // TODO: убрать
-    fun finishConsultation(
+    @PatchMapping("/{psychologistId}/consultations/{consultationId}/finish")
+    override fun finishConsultation(
         @AuthPatientId patientId: Long,
         @PathVariable(required = true) psychologistId: Long,
         @PathVariable(required = true) consultationId: Long

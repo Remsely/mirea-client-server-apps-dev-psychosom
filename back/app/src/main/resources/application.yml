@@ -37,3 +37,7 @@ telegram:
 
 frontend:
   url: ${PSYHOSOM_WEB_URL:http://localhost:3000}
+
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha

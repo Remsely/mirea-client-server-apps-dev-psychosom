@@ -5,6 +5,7 @@ import arrow.core.raise.either
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import ru.remsely.psyhosom.api.controller.open_api.ReviewControllerContract
 import ru.remsely.psyhosom.api.request.CreateReviewRequest
 import ru.remsely.psyhosom.api.response.ErrorResponse
 import ru.remsely.psyhosom.api.response.toResponse
@@ -26,11 +27,11 @@ import java.time.LocalDateTime
 class ReviewController(
     private val createReviewCommand: CreateReviewCommand,
     private val findPsychologistsReviewsCommand: FindPsychologistsReviewsCommand
-) {
+) : ReviewControllerContract {
     private val log = logger()
 
     @PostMapping("/{psychologistId}/reviews")
-    fun createReview(
+    override fun createReview(
         @AuthPatientId patientId: Long,
         @PathVariable psychologistId: Long,
         @RequestBody request: CreateReviewRequest
@@ -58,7 +59,7 @@ class ReviewController(
     }
 
     @GetMapping("/{psychologistId}/reviews")
-    fun getPsychologistsReviews(@PathVariable psychologistId: Long): ResponseEntity<*> {
+    override fun getPsychologistsReviews(@PathVariable psychologistId: Long): ResponseEntity<*> {
         log.info("GET /api/v1/reviews/$psychologistId.")
         return findPsychologistsReviewsCommand.execute(psychologistId)
             .fold(

@@ -27,6 +27,9 @@ object Libs {
     const val flyway_core = "org.flywaydb:flyway-core:${LibVersions.flyway}"
     const val flyway_database_postgresql = "org.flywaydb:flyway-database-postgresql:${LibVersions.flyway}"
 
+    // Swagger
+    const val springdoc_openapi_starter = "org.springdoc:springdoc-openapi-starter-webmvc-ui:${LibVersions.springdoc_openapi_starter}"
+
     // Utils
     const val jetbrains_kotlin_reflect = "org.jetbrains.kotlin:kotlin-reflect"
     const val jackson_module_kotlin = "com.fasterxml.jackson.module:jackson-module-kotlin"
@@ -47,6 +50,7 @@ object LibVersions {
     const val slf4j = "2.0.16"
     const val logback = "1.5.12"
     const val telegrambots_spring_boot_starter = "6.9.7.1"
+    const val springdoc_openapi_starter = "2.8.4"
 }
 
 object Plugins {

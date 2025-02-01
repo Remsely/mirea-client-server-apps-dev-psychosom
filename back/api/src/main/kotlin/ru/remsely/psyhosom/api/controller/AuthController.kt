@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import ru.remsely.psyhosom.api.controller.open_api.AuthControllerContract
 import ru.remsely.psyhosom.api.request.LoginRequest
 import ru.remsely.psyhosom.api.request.RegisterRequest
 import ru.remsely.psyhosom.api.response.ErrorResponse
@@ -27,29 +28,29 @@ import java.time.LocalDateTime
 @RequestMapping("/api/v1/auth")
 class AuthController(
     private val authService: AuthService
-) {
+) : AuthControllerContract {
     private val log = logger()
 
     @PostMapping("/register/admin") // TODO: Подумать, как защитить
-    fun registerAdmin(@RequestBody request: RegisterRequest): ResponseEntity<*> {
+    override fun registerAdmin(@RequestBody request: RegisterRequest): ResponseEntity<*> {
         log.info("POST /auth/admin/register | AuthRequest: $request")
         return register(request, Account.Role.ADMIN)
     }
 
     @PostMapping("/register/patient")
-    fun registerPatient(@RequestBody request: RegisterRequest): ResponseEntity<*> {
+    override fun registerPatient(@RequestBody request: RegisterRequest): ResponseEntity<*> {
         log.info("POST /auth/patient/register | AuthRequest: $request")
         return register(request, Account.Role.PATIENT)
     }
 
     @PostMapping("/register/psychologist")
-    fun registerPsychologist(@RequestBody request: RegisterRequest): ResponseEntity<*> {
+    override fun registerPsychologist(@RequestBody request: RegisterRequest): ResponseEntity<*> {
         log.info("POST /auth/psychologist/register | AuthRequest: $request")
         return register(request, Account.Role.PSYCHOLOGIST)
     }
 
     @PostMapping("/login")
-    fun loginAccount(@RequestBody request: LoginRequest): ResponseEntity<*> {
+    override fun loginAccount(@RequestBody request: LoginRequest): ResponseEntity<*> {
         log.info("POST /auth/login | AuthRequest: $request")
         return login(request)
     }
