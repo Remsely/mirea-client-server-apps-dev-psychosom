@@ -4,6 +4,7 @@ import styles from "./PasswordInput.module.scss"
 import {useState} from "react";
 import {Eye, EyeOff} from "lucide-react";
 import {FieldError, FieldValues, UseFormRegister, UseFormWatch} from "react-hook-form";
+import {Input} from "@/shared/componetns/ui";
 
 interface PasswordInputProps {
     register: UseFormRegister<FieldValues>;
@@ -24,7 +25,8 @@ export function PasswordInput(props: PasswordInputProps) {
             <div className={styles.row}>
                 <h2 className={styles.title}>{props.mode === "again" ? "Повторите пароль" : "Пароль"}</h2>
                 <div className={styles.input}>
-                    <input
+                    <Input
+                        placeholder={props.mode === "again" ? "Повторите пароль" : "Пароль"}
                         type={showPassword ? "text" : "password"}
                         {...props.register(
                             props.mode === "again" ? "passwordAgain" : "password",

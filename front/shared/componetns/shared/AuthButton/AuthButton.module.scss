@@ -14,11 +14,34 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 
     span {
         margin-top: 3px;
         font-size: 14px;
         color: $title-font-color;
         font-weight: $font-weight-subtitle;
+    }
+}
+
+.authList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .authItem, a {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        font-weight: $font-weight-subtitle;
+        transition: $transition-fastest;
+
+        svg {
+            margin-right: 10px;
+        }
+
+        &:hover {
+            color: $title-hover-color;
+        }
     }
 }

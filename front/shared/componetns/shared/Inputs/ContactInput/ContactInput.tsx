@@ -3,6 +3,7 @@
 import { ChangeEvent, useState } from "react";
 import { FieldError, FieldValues, UseFormClearErrors, UseFormRegister } from "react-hook-form";
 import styles from "./ContactInput.module.scss";
+import {Input} from "@/shared/componetns/ui";
 
 interface ContactInputProps {
     contactValue?: string;
@@ -84,7 +85,7 @@ export function ContactInput(props: ContactInputProps) {
                     Telegram
                 </a>
             </h2>
-            <input
+            <Input
                 type={isTelegram ? "text" : "tel"}
                 placeholder={isTelegram ? "Telegram" : "Телефон"}
                 maxLength={isTelegram ? 32 : 18}

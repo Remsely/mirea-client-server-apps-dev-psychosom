@@ -7,6 +7,7 @@ import {CSSProperties, FC, useEffect, useState} from "react";
 import { Review, ServerReview } from "@/@types/types";
 import Slider from "react-slick";
 import { ReviewCard } from "../ReviewCard/ReviewCard";
+import {LoadingSpinner} from "@/shared/componetns/shared";
 
 interface ArrowProps {
     className?: string;
@@ -65,21 +66,15 @@ export const SliderReview: FC = () => {
     };
 
     if (loading) {
-        return (
-            <Slider {...sliderSettings}>
-                {Array.from({ length: 4 }).map((_, index) => (
-                    <ReviewCard key={index} isLoading />
-                ))}
-            </Slider>
-        );
+        return <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}><LoadingSpinner/></div>;
     }
 
     if (error) {
-        return <div style={{ color: "red" }}>{error}</div>;
+        return <div style={{color: "red" }}>{error}</div>;
     }
 
     if (!reviews.length) {
-        return <div>Отзывов пока нет.</div>;
+        return <div style={{height: "50px"}}>Отзывов пока нет.</div>;
     }
 
     return (

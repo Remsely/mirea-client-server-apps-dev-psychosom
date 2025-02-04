@@ -1,12 +1,10 @@
 "use client";
 
-import {NavbarItem} from "./NavbarItem/NavbarItem";
-import {scroller} from "react-scroll";
-import {useEffect} from "react";
-import {Navigation} from "@/@types/types";
+import { NavbarItem } from "./NavbarItem/NavbarItem";
+import { Navigation } from "@/@types/types";
 
 export function Navbar() {
-    const navigations : Navigation[]  = [
+    const navigations: Navigation[] = [
         {
             id: 1,
             name: "Главная",
@@ -22,22 +20,15 @@ export function Navbar() {
             name: "Отзывы",
             link: "reviews",
         },
-    ]
-
-    useEffect(() => {
-        const params = new URLSearchParams(location.search);
-        const section = params.get('section');
-        if (section) {
-            scroller.scrollTo(section,
-                { duration: 800, delay: 0, smooth: 'easeInOutQuart', });
-        }
-    }, []);
+    ];
 
     return (
-        <ul>
+        <ul className="flex gap-8">
             {navigations.map((navigation) => (
-                <NavbarItem key={navigation.id} link={navigation.link} >{navigation.name}</NavbarItem>
+                <NavbarItem key={navigation.id} link={navigation.link}>
+                    {navigation.name}
+                </NavbarItem>
             ))}
         </ul>
-    )
+    );
 }

@@ -36,7 +36,7 @@ export function ReviewForm() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${session?.user.jwtToken}`,
+                    Authorization: `Bearer ${session?.token}`,
                 },
                 body: JSON.stringify(reviewData),
             });

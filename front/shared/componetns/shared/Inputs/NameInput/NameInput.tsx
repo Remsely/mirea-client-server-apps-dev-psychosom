@@ -1,6 +1,7 @@
 import {ChangeEvent, KeyboardEvent} from "react";
 import {FieldError, FieldValues, UseFormClearErrors, UseFormRegister} from "react-hook-form";
 import styles from "./NameInput.module.scss";
+import {Input} from "@/shared/componetns/ui";
 
 interface NameInputProps {
     label: string;
@@ -46,7 +47,7 @@ export function NameInput(props: NameInputProps) {
     return (
         <div className={styles.row}>
             <h2 className={styles.title}>{props.label}</h2>
-            <input
+            <Input
                 type="text"
                 placeholder={props.label}
                 onKeyDown={handleKeyDown}

@@ -1,4 +1,5 @@
-import { Link } from "react-scroll";
+import {usePathname, useRouter} from "next/navigation";
+import {scroller} from "react-scroll";
 
 interface NavbarItemProps {
     children: string;
@@ -6,7 +7,27 @@ interface NavbarItemProps {
 }
 
 export function NavbarItem(props : NavbarItemProps) {
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const handleScroll = (section: string) => {
+        scroller.scrollTo(section, {
+            duration: 800,
+            delay: 0,
+            smooth: "easeInOutQuart",
+            offset: -100,
+        });
+    };
+
+    const handleClick = () => {
+        if (pathname !== "/") {
+            router.push(`/?section=${props.link}`);
+        } else {
+            handleScroll(props.link);
+        }
+    };
+
     return (
-        <li><Link to={props.link} smooth={true} duration={500}>{props.children}</Link></li>
+        <li><a onClick={handleClick}>{props.children}</a></li>
     )
 }

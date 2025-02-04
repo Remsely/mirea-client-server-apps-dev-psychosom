@@ -3,6 +3,7 @@
 import styles from "./Header.module.scss"
 import {AuthButton, Navbar} from "@/shared/componetns/shared";
 import Image from "next/image";
+import Link from "next/link";
 
 export function Header() {
     return (
@@ -10,7 +11,7 @@ export function Header() {
             <header id="head" className={`${styles.header} container`}>
                 <div className={styles.logo}>
                     <Image src="/logo-without-bg.svg" alt="" width={50} height={50}/>
-                    <h1 className={styles.title}>Психосоматика</h1>
+                    <Link href="/"><h1 className={styles.title}>Психосоматика</h1></Link>
                 </div>
                 <nav className={styles.navbar}>
                     <Navbar/>

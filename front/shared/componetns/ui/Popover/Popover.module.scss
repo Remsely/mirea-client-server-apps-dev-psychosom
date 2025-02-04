@@ -1,0 +1,105 @@
+@use "@/shared/styles/variables" as *;
+
+.popoverUi {
+    z-index: 50;
+    border-radius: $border-radius-inputs-form;
+    background-color: $background-modal-color;
+    padding: 8px 16px;
+    outline: none;
+
+    &[data-state="open"] {
+        animation: fadeIn 0.1s ease, zoomIn 0.1s ease;
+    }
+
+    &[data-state="closed"] {
+        animation: fadeOut 0.1s ease, zoomOut 0.1s ease;
+    }
+
+    &[data-side="bottom"] {
+        animation: slideInFromTop 0.2s ease;
+    }
+
+    &[data-side="left"] {
+        animation: slideInFromRight 0.2s ease;
+    }
+
+    &[data-side="right"] {
+        animation: slideInFromLeft 0.2s ease;
+    }
+
+    &[data-side="top"] {
+        animation: slideInFromBottom 0.2s ease;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.95);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes zoomOut {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(0.95);
+    }
+}
+
+@keyframes slideInFromTop {
+    from {
+        transform: translateY(-0.5rem);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(0.5rem);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        transform: translateX(-0.5rem);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromBottom {
+    from {
+        transform: translateY(0.5rem);
+    }
+    to {
+        transform: translateY(0);
+    }
+}

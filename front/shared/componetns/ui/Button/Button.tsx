@@ -1,12 +1,28 @@
-import styles from "./Button.module.scss";
-import {ButtonHTMLAttributes, ReactNode} from "react";
+import * as React from 'react';
+import { Slot } from '@radix-ui/react-slot';
+import { cn } from '@/shared/lib/utils';
+import styles from './Button.module.scss'
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    children: ReactNode;
+export interface ButtonProps
+    extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    asChild?: boolean;
 }
 
-export function Button(props : ButtonProps) {
-    return (
-        <button className={`${styles.button} ${props.className}`} type={props.type} onClick={props.onClick} disabled={props.disabled}>{props.children}</button>
-    )
-}
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+    ({ className, asChild = false, ...props }, ref) => {
+        const Comp = asChild ? Slot : 'button';
+
+        return (
+            <Comp
+                className={cn(
+                    styles.buttonUi,
+                    className
+                )}
+                ref={ref}
+                {...props}
+            />
+        );
+    }
+);
+
+Button.displayName = 'Button';
