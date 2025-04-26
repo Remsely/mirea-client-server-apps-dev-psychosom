@@ -2,37 +2,35 @@
 
 import styles from "./ReviewButton.module.scss"
 import {useEffect, useState} from "react";
-import {Button, Dialog} from "@/shared/componetns/ui";
-import {AuthForm, ReviewForm} from "@/shared/componetns/shared/Forms";
-import useDialogStore from "@/shared/stores/dialogStore";
+import {Button} from "@/shared/componetns/ui";
+import {ReviewModalForm} from "@/shared/componetns/shared/Forms";
 import {useSession} from "next-auth/react";
 import {toast} from "react-hot-toast";
 import {CircleAlert} from "lucide-react";
 
-export function ReviewButton() {
-    const [isOpenReviewModalForm, setIsOpenReviewModalForm] = useState(false);
-    const setTitle = useDialogStore((state) => state.setTitle);
+interface ReviewButtonProps {
+    setIsOpenAuthModal: (isOpenAuthModal: boolean) => void;
+}
+
+export function ReviewButton(props: ReviewButtonProps) {
+    const [isOpen, setIsOpen] = useState(false);
+    const {setIsOpenAuthModal} = props;
     const {data: session} = useSession();
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         if (params.get('review') === 'true') {
-            setIsOpenReviewModalForm(true);
+            setIsOpen(true);
         }
-        if (isOpenReviewModalForm) {
-            setTitle("Оставить отзыв")
-        } else {
-            setTitle("")
-        }
-    }, [isOpenReviewModalForm, setTitle]);
+    }, [isOpen]);
 
     const onOpen = () => {
         if (session) {
-            setIsOpenReviewModalForm(true)
+            setIsOpen(true)
         } else {
-            setIsOpenReviewModalForm(true)
+            setIsOpenAuthModal(true);
             toast("Прежде чем оставить отзыв, пожалуйста, войдите в аккаунт", {
-                icon: <CircleAlert />,
+                icon: <CircleAlert/>,
                 duration: 3000,
                 className: styles.toast
             })
@@ -47,10 +45,7 @@ export function ReviewButton() {
                     Оставить отзыв
                 </Button>
             </div>
-            <Dialog isOpen={isOpenReviewModalForm}
-                    setIsOpen={setIsOpenReviewModalForm}>
-                {session ? <ReviewForm/> : <AuthForm/>}
-            </Dialog>
+            <ReviewModalForm isOpen={isOpen} onClose={() => setIsOpen(false)}/>
         </>
     )
 }

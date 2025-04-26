@@ -4,7 +4,7 @@ import {useState} from "react";
 import styles from "./MentorInfo.module.scss";
 import {HighlightInfo, PhotoMentorInfo, TextMentorInfo} from "@/shared/componetns/shared/MentorInfo";
 import Image from "next/image";
-import {Dialog} from "@/shared/componetns/ui";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/shared/componetns/ui";
 
 export function MentorInfo() {
     const [isOpenCertificate, setIsOpenCertificate] = useState(false)
@@ -23,9 +23,18 @@ export function MentorInfo() {
                     Института Психосоматики.</TextMentorInfo>
                 <HighlightInfo onLinkClick={() => setIsOpenCertificate(true)}><a id='important-link'>Диплом</a>
                     : нажмите, чтобы открыть модальное окно и ознакомиться с моим дипломом.</HighlightInfo>
-                <Dialog isOpen={isOpenCertificate} setIsOpen={setIsOpenCertificate}> <Image src="/certificate.jpg"
-                                                                                            alt="" width={533}
-                                                                                            height={750}/> </Dialog>
+                <Dialog open={isOpenCertificate} onOpenChange={() => setIsOpenCertificate(false)}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>
+                               Сертификат
+                            </DialogTitle>
+                            <Image src="/certificate.jpg"
+                                   alt="Сертификат" width={1200}
+                                   height={750}/>
+                        </DialogHeader>
+                    </DialogContent>
+                </Dialog>
             </div>
             <PhotoMentorInfo>specialist.jpg</PhotoMentorInfo>
         </main>

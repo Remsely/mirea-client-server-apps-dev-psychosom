@@ -1,6 +1,6 @@
 "use client";
 
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import styles from './StarRatingInput.module.scss';
 
 interface StarRatingInputProps {
@@ -10,6 +10,10 @@ interface StarRatingInputProps {
 export function StarRatingInput(props: StarRatingInputProps) {
     const [rating, setRating] = useState(0);
     const [hover, setHover] = useState(0);
+
+    useEffect(() => {
+        props.onRatingSelect(0);
+    }, []);
 
     const handleClick = (index: number) => {
         setRating(index);

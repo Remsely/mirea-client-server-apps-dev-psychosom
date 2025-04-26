@@ -1,0 +1,210 @@
+@use "@/shared/styles/variables" as *;
+
+.calendar {
+    padding: 0.75rem; // p-3
+
+    .months {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; // space-y-4
+    }
+
+    .month {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; // space-y-4
+    }
+
+    .caption {
+        display: flex;
+        justify-content: center;
+        padding-top: 0.25rem; // pt-1
+        position: relative;
+        align-items: center;
+    }
+
+    .caption-label {
+        font-size: 0.875rem; // text-sm
+        font-weight: 500; // font-medium
+    }
+
+    .nav {
+        display: flex;
+        gap: 0.25rem; // space-x-1
+        align-items: center;
+    }
+
+    .nav-button {
+        height: 1.75rem; // h-7
+        width: 1.75rem; // w-7
+        background: transparent;
+        padding: 0; // p-0
+        opacity: 0.5;
+        border: 1px solid #e5e7eb; // outline variant border
+        border-radius: 0.25rem;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    .nav-button-previous {
+        position: absolute;
+        left: 0.25rem; // left-1
+    }
+
+    .nav-button-next {
+        position: absolute;
+        right: 0.25rem; // right-1
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem; // space-y-1
+    }
+
+    .head-row {
+        display: flex;
+    }
+
+    .head-cell {
+        color: #6b7280; // text-muted-foreground
+        border-radius: 0.25rem; // rounded-md
+        width: 2rem; // w-8
+        font-weight: 400; // font-normal
+        font-size: 0.8rem; // text-[0.8rem]
+    }
+
+    .row {
+        display: flex;
+        width: 100%;
+        margin-top: 0.5rem; // mt-2
+    }
+
+    .cell {
+        position: relative;
+        padding: 0; // p-0
+        text-align: center;
+        font-size: 0.875rem; // text-sm
+
+        &:focus-within {
+            position: relative;
+            z-index: 20;
+        }
+
+        &[aria-selected] {
+            background-color: #e5e7eb; // bg-accent
+        }
+
+        &.day-outside[aria-selected] {
+            background-color: rgba(#e5e7eb, 0.5); // bg-accent/50
+        }
+
+        &.day-range-end[aria-selected] {
+            border-top-right-radius: 0.25rem; // rounded-r-md
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        // Логика для mode === "range"
+        &.day-range-start[aria-selected] {
+            border-top-left-radius: 0.25rem; // rounded-l-md
+            border-bottom-left-radius: 0.25rem;
+        }
+
+        &.day-range-end[aria-selected] {
+            border-top-right-radius: 0.25rem; // rounded-r-md
+            border-bottom-right-radius: 0.25rem;
+        }
+    }
+
+    .day {
+        position: relative;
+        height: 2rem;
+        width: 2rem;
+        padding: 0;
+        font-weight: 400;
+        background: transparent;
+        border-radius: 0.25rem;
+
+        .rdp-day_button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: none;
+            border: none;
+        }
+
+        &[aria-selected] {
+            opacity: 1;
+        }
+
+        &:hover {
+            background-color: $button-hover-color;
+        }
+    }
+
+    .rdp-selected {
+        background-color: $title-font-color;
+        color: $button-bg-color;
+        transition: $transition-fastest;
+        font-weight: $font-weight-title;
+
+        &:hover,
+        &:focus {
+            background-color: $button-hover-color;
+            color: $button-bg-color;
+        }
+    }
+
+    .rdp-today {
+        background-color: #e5e7eb;
+    }
+
+    .rdp-outside {
+        color: #6b7280;
+
+        &[aria-selected] {
+            background-color: rgba(#e5e7eb, 0.5);
+            color: #6b7280;
+        }
+    }
+
+    .rdp-disabled {
+        color: #6b7280;
+        opacity: 0.5;
+    }
+
+    .rdp-range-middle {
+        &[aria-selected] {
+            background-color: #e5e7eb;
+            color: #111827;
+        }
+    }
+
+    .rdp-hidden {
+        visibility: hidden;
+    }
+
+    .rdp-button_previous,
+    .rdp-button_next {
+        border: none;
+        background: $button-bg-color;
+        box-shadow: $box-shadow-button;
+        border-radius: $border-radius-inputs-form;
+        padding: 5px;
+        transition: $transition-fastest;
+
+        &:hover {
+            transform: scale(1.1);
+        }
+
+        svg {
+            fill: $title-font-color;
+            display: block;
+        }
+    }
+}

@@ -1,15 +1,7 @@
 import styles from "./QRCodeSection.module.scss";
-import useDialogStore from "@/shared/stores/dialogStore";
-import { useEffect } from "react";
 import {QRCodeSVG} from "qrcode.react";
 
 export function QRCodeSection(props: { qrLink: string }) {
-    const setTitle = useDialogStore((state) => state.setTitle);
-
-    useEffect(() => {
-        setTitle("Подтвердите аккаунт");
-    }, [setTitle]);
-
     return (
         <div className={styles.block}>
             <h2>Подтвердите аккаунт при помощи Telegram.

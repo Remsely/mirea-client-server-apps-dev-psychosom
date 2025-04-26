@@ -24,10 +24,12 @@
         .important {
 
             ul {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+
                 li {
                     font-weight: $font-weight-subtitle;
-                    padding: 5px 10px;
-                    margin-right: 5px;
 
                     a {
                         font-size: $font-size-text;
@@ -49,6 +51,7 @@
         h2 {
             color: $title-font-color;
             margin-bottom: 20px;
+            font-weight: $font-weight-title;
         }
 
         .title {
