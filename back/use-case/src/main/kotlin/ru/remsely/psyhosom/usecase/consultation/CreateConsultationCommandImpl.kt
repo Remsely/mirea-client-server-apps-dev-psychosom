@@ -34,7 +34,7 @@ open class CreateConsultationCommandImpl(
         val psychologist = psychologistFinder.findPsychologistById(psychologistId).bind()
 
         ensure(!consultationFinder.existActiveConsultationByPatientAndPsychologist(patientId, psychologistId)) {
-            ConsultationCreationError.ActiveConsultationExist(patientId, psychologistId)
+            ConsultationCreationValidationError.ActiveConsultationExist(patientId, psychologistId)
         }
 
         val patient = patientFinder.findPatientById(patientId).bind()
@@ -44,10 +44,14 @@ open class CreateConsultationCommandImpl(
                 id = 0L,
                 patient = patient,
                 psychologist = psychologist,
+                problemDescription = event.problemDescription,
+                period = Consultation.Period(
+                    start = event.startDtTm,
+                    end = event.endDtTm
+                ).bind(),
                 status = Consultation.Status.PENDING,
-                orderDate = LocalDateTime.now(),
-                confirmationDate = null,
-                startDate = null
+                orderDtTm = LocalDateTime.now(),
+                confirmationDtTm = null
             )
         ).bind()
 

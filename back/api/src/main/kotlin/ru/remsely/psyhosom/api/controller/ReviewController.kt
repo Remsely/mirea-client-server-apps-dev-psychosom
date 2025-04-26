@@ -2,25 +2,23 @@ package ru.remsely.psyhosom.api.controller
 
 import arrow.core.flatMap
 import arrow.core.raise.either
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import ru.remsely.psyhosom.api.controller.open_api.ReviewControllerContract
-import ru.remsely.psyhosom.api.request.CreateReviewRequest
-import ru.remsely.psyhosom.api.response.ErrorResponse
-import ru.remsely.psyhosom.api.response.toResponse
-import ru.remsely.psyhosom.api.utils.annotation.AuthPatientId
-import ru.remsely.psyhosom.domain.error.DomainError
-import ru.remsely.psyhosom.domain.patient.dao.PatientFindingError
-import ru.remsely.psyhosom.domain.psychologist.dao.PsychologistFindingError
+import ru.remsely.psyhosom.api.dto.request.CreateReviewRequest
+import ru.remsely.psyhosom.api.extensions.error_handling.toResponse
+import ru.remsely.psyhosom.api.extensions.mapping.toDto
+import ru.remsely.psyhosom.api.utils.annotations.AuthPatientId
 import ru.remsely.psyhosom.domain.review.event.CreateReviewEvent
 import ru.remsely.psyhosom.domain.value_object.ReviewRating
-import ru.remsely.psyhosom.domain.value_object.ReviewRatingValidationError
 import ru.remsely.psyhosom.monitoring.log.logger
 import ru.remsely.psyhosom.usecase.review.CreateReviewCommand
 import ru.remsely.psyhosom.usecase.review.FindPsychologistsReviewsCommand
-import ru.remsely.psyhosom.usecase.review.ReviewCreationError
-import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/api/v1/psychologists")
@@ -47,13 +45,12 @@ class ReviewController(
         }.flatMap {
             createReviewCommand.execute(it)
         }.fold(
-            { handleError(it) },
+            { err ->
+                err.toResponse()
+                    .also { log.warn(err.message) }
+            },
             {
-                ResponseEntity
-                    .ok()
-                    .body(
-                        it.toResponse()
-                    )
+                ResponseEntity.ok(it.toDto())
             }
         )
     }
@@ -63,38 +60,15 @@ class ReviewController(
         log.info("GET /api/v1/reviews/$psychologistId.")
         return findPsychologistsReviewsCommand.execute(psychologistId)
             .fold(
-                { handleError(it) },
+                { err ->
+                    err.toResponse()
+                        .also { log.warn(err.message) }
+                },
                 { reviews ->
-                    ResponseEntity
-                        .ok()
-                        .body(
-                            reviews.map { it.toResponse() }
-                        )
+                    ResponseEntity.ok(
+                        reviews.map { it.toDto() }
+                    )
                 }
             )
     }
-
-    private fun handleError(error: DomainError): ResponseEntity<ErrorResponse> =
-        when (error) {
-            is PatientFindingError.NotFoundById -> HttpStatus.BAD_REQUEST
-            is ReviewCreationError.ReviewForPsychologistAlreadyExists -> HttpStatus.BAD_REQUEST
-            is ReviewCreationError.FinishedConsultationWithPsychologistNotFound -> HttpStatus.BAD_REQUEST
-            is ReviewRatingValidationError.InvalidReviewRation -> HttpStatus.BAD_REQUEST
-            is PsychologistFindingError.NotFoundById -> HttpStatus.NOT_FOUND
-            is ReviewCreationError.PatientPersonalDataNotFilled -> HttpStatus.CONFLICT
-            else -> HttpStatus.INTERNAL_SERVER_ERROR
-        }.let {
-            ResponseEntity
-                .status(it)
-                .body(
-                    ErrorResponse(
-                        message = error.message,
-                        source = error.javaClass.name,
-                        timestamp = LocalDateTime.now(),
-                        status = it.name
-                    )
-                ).also {
-                    log.warn(error.message)
-                }
-        }
 }

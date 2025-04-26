@@ -1,4 +1,4 @@
-package ru.remsely.psyhosom.api.utils.annotation.resolver
+package ru.remsely.psyhosom.api.utils.annotations.resolver
 
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
@@ -6,7 +6,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
-import ru.remsely.psyhosom.api.utils.annotation.AuthPatientId
+import ru.remsely.psyhosom.api.utils.annotations.AuthPatientId
 import ru.remsely.psyhosom.usecase.auth.AuthCredentialsAnnotationsProvider
 
 @Component

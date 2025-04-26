@@ -9,9 +9,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import ru.remsely.psyhosom.api.response.CreateConsultationResponse
-import ru.remsely.psyhosom.api.response.ErrorResponse
-import ru.remsely.psyhosom.api.response.FindActiveConsultationsResponse
+import ru.remsely.psyhosom.api.dto.request.CreateConsultationRequest
+import ru.remsely.psyhosom.api.dto.response.ErrorResponse
+import ru.remsely.psyhosom.api.dto.response.ConsultationResponse
 
 @Tag(name = "Консультации", description = "Эндпоинты для оперирования консультациями")
 interface ConsultationControllerContract {
@@ -24,7 +24,7 @@ interface ConsultationControllerContract {
                 content = [
                     Content(
                         mediaType = "application/json",
-                        schema = Schema(implementation = CreateConsultationResponse::class)
+                        schema = Schema(implementation = ConsultationResponse::class)
                     )
                 ]
             ),
@@ -66,7 +66,10 @@ interface ConsultationControllerContract {
         patientId: Long,
 
         @Parameter(description = "ID психолога, к которому записывается пациент")
-        psychologistId: Long
+        psychologistId: Long,
+
+        @Schema(description = "Запрос на создание консультации")
+        request: CreateConsultationRequest
     ): ResponseEntity<*>
 
     @Operation(summary = "Поиск активной консультации пациента у психолога")
@@ -78,7 +81,7 @@ interface ConsultationControllerContract {
                 content = [
                     Content(
                         mediaType = "application/json",
-                        schema = Schema(implementation = FindActiveConsultationsResponse::class)
+                        schema = Schema(implementation = ConsultationResponse::class)
                     )
                 ]
             ),

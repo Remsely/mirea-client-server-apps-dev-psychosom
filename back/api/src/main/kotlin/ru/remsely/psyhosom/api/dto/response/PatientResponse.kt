@@ -1,7 +1,6 @@
-package ru.remsely.psyhosom.api.response
+package ru.remsely.psyhosom.api.dto.response
 
 import io.swagger.v3.oas.annotations.media.Schema
-import ru.remsely.psyhosom.domain.patient.Patient
 
 @Schema(description = "Информация о пациенте")
 data class PatientResponse(
@@ -22,10 +21,4 @@ data class PatientResponse(
         example = "Иванов"
     )
     val lastName: String,
-)
-
-fun Patient.toResponse() = PatientResponse(
-    username = account.username,
-    firstName = firstName,
-    lastName = lastName
 )

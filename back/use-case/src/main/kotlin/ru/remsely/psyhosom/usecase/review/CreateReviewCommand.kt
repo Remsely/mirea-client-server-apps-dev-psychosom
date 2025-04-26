@@ -9,24 +9,18 @@ interface CreateReviewCommand {
     fun execute(event: CreateReviewEvent): Either<DomainError, Review>
 }
 
-sealed class ReviewCreationError(override val message: String) : DomainError.BusinessLogicError {
+sealed class ReviewCreationValidationError(override val message: String) : DomainError.ValidationError {
     data class ReviewForPsychologistAlreadyExists(
         private val psychologistId: Long,
         private val patientId: Long
-    ) : ReviewCreationError(
+    ) : ReviewCreationValidationError(
         "Review from patient $patientId for psychologist $psychologistId already exist."
     )
 
     data class FinishedConsultationWithPsychologistNotFound(
         private val psychologistId: Long,
         private val patientId: Long
-    ) : ReviewCreationError(
+    ) : ReviewCreationValidationError(
         "Finished consultation with psychologist $psychologistId for patient $patientId not found."
-    )
-
-    data class PatientPersonalDataNotFilled(
-        private val patientId: Long
-    ) : ReviewCreationError(
-        "Patient $patientId personal data not filled."
     )
 }

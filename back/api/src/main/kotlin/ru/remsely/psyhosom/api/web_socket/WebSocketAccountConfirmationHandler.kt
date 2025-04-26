@@ -1,10 +1,10 @@
 package ru.remsely.psyhosom.api.web_socket
 
-import arrow.core.getOrElse
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
+import ru.remsely.psyhosom.domain.error.getOrThrowUnexpectedBehavior
 import ru.remsely.psyhosom.domain.value_object.TelegramBotToken
 import ru.remsely.psyhosom.monitoring.log.logger
 
@@ -17,9 +17,7 @@ class WebSocketAccountConfirmationHandler(
     override fun afterConnectionEstablished(session: WebSocketSession) {
         val token = TelegramBotToken(
             session.uri!!.query!!.split("=")[1]
-        ).getOrElse {
-            throw RuntimeException("Invalid token.")
-        }
+        ).getOrThrowUnexpectedBehavior()
 
         session.attributes["token"] = token.value
         sessionManager.addSession(
@@ -32,9 +30,7 @@ class WebSocketAccountConfirmationHandler(
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
         val token = session.attributes["token"] as String
         sessionManager.removeSession(
-            token = TelegramBotToken(token).getOrElse {
-                throw RuntimeException("Invalid token.")
-            }
+            token = TelegramBotToken(token).getOrThrowUnexpectedBehavior()
         )
         log.info("Web socket session with token $token was closed.")
     }

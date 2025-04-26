@@ -1,12 +1,12 @@
 package ru.remsely.psyhosom.telegram.command
 
-import arrow.core.getOrElse
 import arrow.core.raise.either
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand
 import org.telegram.telegrambots.meta.api.objects.Chat
 import org.telegram.telegrambots.meta.api.objects.User
 import org.telegram.telegrambots.meta.bots.AbsSender
+import ru.remsely.psyhosom.domain.error.getOrThrowUnexpectedBehavior
 import ru.remsely.psyhosom.domain.value_object.TelegramBotToken
 import ru.remsely.psyhosom.domain.value_object.TelegramChatId
 import ru.remsely.psyhosom.monitoring.log.logger
@@ -59,7 +59,7 @@ open class StartCommand(
                 log.info("Command ${Command.START.value} successfully executed in chat ${chat.id} with args: $args.")
 
                 accountConfirmationNotifier.sendNotification(
-                    token = TelegramBotToken(token).getOrElse { throw RuntimeException("Invalid token.") },
+                    token = TelegramBotToken(token).getOrThrowUnexpectedBehavior(),
                     status = WebSocketAccountConfirmationNotifier.Status.CONFIRMED
                 )
 

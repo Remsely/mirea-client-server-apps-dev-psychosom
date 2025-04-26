@@ -17,8 +17,8 @@ data class AccountCreatedEvent(
     val confirmationUrl: String
 )
 
-sealed class UserLoginError(override val message: String) : DomainError.ValidationError {
-    data class AuthenticationError(private val username: String) : UserLoginError(
+sealed class UserLoginAuthError(override val message: String) : DomainError.AuthenticationError {
+    data class AuthenticationError(private val username: String) : UserLoginAuthError(
         "Incorrect username or password."
     )
 }

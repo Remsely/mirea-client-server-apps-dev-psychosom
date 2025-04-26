@@ -35,7 +35,9 @@ open class ConsultationDao(
             .getOrNull()
             .toOption()
             .fold(
-                { ConsultationFindingError.NotFoundById(consultationId).left() },
+                {
+                    ConsultationMissingError.NotFoundById(consultationId).left()
+                },
                 {
                     it.toDomain().right().also {
                         log.info("Consultation with id $consultationId successfully found in DB.")
@@ -87,7 +89,7 @@ open class ConsultationDao(
         ).toNonEmptyListOrNone()
             .fold(
                 {
-                    ConsultationFindingError.NotFoundActiveByPatientAndPsychologist(
+                    ConsultationMissingError.NotFoundActiveByPatientAndPsychologist(
                         patientId = patientId,
                         psychologistId = psychologistId
                     ).left()
@@ -136,5 +138,4 @@ open class ConsultationDao(
                     true
                 }
             )
-
 }

@@ -30,10 +30,6 @@ open class CreateReviewCommandImpl(
     override fun execute(event: CreateReviewEvent): Either<DomainError, Review> = either {
         val patient = patientFinder.findPatientById(event.patientId).bind()
 
-        ensure(patient.firstName != null && patient.lastName != null) {
-            ReviewCreationError.PatientPersonalDataNotFilled(patientId = patient.id)
-        }
-
         val psychologist = psychologistFinder.findPsychologistById(event.psychologistId).bind()
 
         ensure(
@@ -42,7 +38,7 @@ open class CreateReviewCommandImpl(
                 psychologistId = psychologist.id
             )
         ) {
-            ReviewCreationError.ReviewForPsychologistAlreadyExists(
+            ReviewCreationValidationError.ReviewForPsychologistAlreadyExists(
                 patientId = patient.id,
                 psychologistId = psychologist.id
             )
@@ -54,7 +50,7 @@ open class CreateReviewCommandImpl(
                 psychologistId = psychologist.id
             )
         ) {
-            ReviewCreationError.FinishedConsultationWithPsychologistNotFound(
+            ReviewCreationValidationError.FinishedConsultationWithPsychologistNotFound(
                 patientId = patient.id,
                 psychologistId = psychologist.id
             )

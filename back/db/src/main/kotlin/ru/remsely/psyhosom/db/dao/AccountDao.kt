@@ -32,7 +32,7 @@ open class AccountDao(
     @Transactional
     override fun createAccount(account: Account): Either<DomainError, Account> = either {
         ensure(!accountRepository.existsByUsername(account.username)) {
-            AccountCreationError.AlreadyExists(account.username)
+            AccountCreationValidationError.AlreadyExists(account.username)
         }
         accountRepository.save(account.toEntity()).toDomain()
             .also {
@@ -44,7 +44,7 @@ open class AccountDao(
     override fun findAccountByUsername(username: String): Either<DomainError, Account> = either {
         accountRepository.findByUsername(username)
             .let {
-                ensureNotNull(it) { AccountFindingError.NotFoundByUsername(username) }
+                ensureNotNull(it) { AccountMissingError.NotFoundByUsername(username) }
                 it.toDomain()
             }
             .also {
@@ -58,7 +58,7 @@ open class AccountDao(
             .getOrNull()
             .toOption()
             .fold(
-                { AccountFindingError.NotFoundById(id).left() },
+                { AccountMissingError.NotFoundById(id).left() },
                 {
                     it.toDomain().right().also {
                         log.info("Account with id $id successfully found by id in DB.")
@@ -71,7 +71,7 @@ open class AccountDao(
         accountRepository.findByTgBotToken(tgBotToken.value)
             .toOption()
             .fold(
-                { AccountFindingError.NotFoundByTgBotToken(tgBotToken).left() },
+                { AccountMissingError.NotFoundByTgBotToken(tgBotToken).left() },
                 {
                     it.toDomain().right().also {
                         log.info("Account with token ${tgBotToken.value} successfully found by in DB.")
@@ -91,19 +91,22 @@ open class AccountDao(
 
     @Transactional
     override fun confirmAccount(id: Long, tgChatId: TelegramChatId): Either<DomainError, Account> =
-        findAccountById(id).fold(
-            { AccountUpdatingError.NotFoundById(id).left() },
-            {
-                accountRepository.save(
-                    it.toEntity().copy(
-                        isConfirmed = true,
-                        tgChatId = tgChatId.value
-                    )
-                ).toDomain().right().also {
-                    log.info("Account with id $id successfully confirmed in DB.")
+        accountRepository.findById(id)
+            .getOrNull()
+            .toOption()
+            .fold(
+                { AccountUpdatingError.NotFoundById(id).left() },
+                {
+                    accountRepository.save(
+                        it.copy(
+                            isConfirmed = true,
+                            tgChatId = tgChatId.value
+                        )
+                    ).toDomain().right().also {
+                        log.info("Account with id $id successfully confirmed in DB.")
+                    }
                 }
-            }
-        )
+            )
 
     @Transactional
     override fun eraseAccountsByIds(ids: List<Long>): Either<DomainError, Unit> =

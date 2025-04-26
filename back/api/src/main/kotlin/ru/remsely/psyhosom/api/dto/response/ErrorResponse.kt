@@ -1,4 +1,4 @@
-package ru.remsely.psyhosom.api.response
+package ru.remsely.psyhosom.api.dto.response
 
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
@@ -19,7 +19,8 @@ data class ErrorResponse(
 
     @field:Schema(
         description = "Дата и время возникновения ошибки",
-        example = "2025-02-01T16:43:50.2130582"
+        pattern = "dd-MM-yyyy HH:mm:ss.SSS",
+        example = "25-12-2025 13:00:00.000"
     )
     val timestamp: LocalDateTime,
 

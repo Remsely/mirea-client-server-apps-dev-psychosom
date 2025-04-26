@@ -10,16 +10,12 @@ interface PatientFinder {
     fun findPatientById(id: Long): Either<DomainError, Patient>
 }
 
-sealed class PatientFindingError(override val message: String) : DomainError.ValidationError {
-    data class NotFoundByAccountId(private val accountId: Long) : PatientFindingError(
+sealed class PatientMissingError(override val message: String) : DomainError.MissingError {
+    data class NotFoundByAccountId(private val accountId: Long) : PatientMissingError(
         "Patient with for account $accountId not found."
     )
 
-    data class NotFoundById(private val id: Long) : PatientFindingError(
+    data class NotFoundById(private val id: Long) : PatientMissingError(
         "Patient with id $id not found."
-    )
-
-    data object PatientWithUsernameAlreadyExists : PatientFindingError(
-        "Patient with such username already exists."
     )
 }

@@ -9,9 +9,3 @@ import ru.remsely.psyhosom.domain.value_object.TelegramChatId
 interface ConfirmAccountCommand {
     fun execute(token: TelegramBotToken, chatId: TelegramChatId): Either<DomainError, Account>
 }
-
-sealed class AccountConfirmationError(override val message: String) : DomainError.IntegrationError {
-    data object ConfirmationAttemptIsOutdated : UserLoginError(
-        "Confirmation attempt for user is outdated."
-    )
-}

@@ -1,7 +1,6 @@
-package ru.remsely.psyhosom.api.response
+package ru.remsely.psyhosom.api.dto.response
 
 import io.swagger.v3.oas.annotations.media.Schema
-import ru.remsely.psyhosom.domain.review.Review
 import java.time.LocalDate
 
 @Schema(description = "Отзыв")
@@ -80,20 +79,3 @@ data class ReviewResponse(
         val lastName: String
     )
 }
-
-fun Review.toResponse() = ReviewResponse(
-    patient = ReviewResponse.Patient(
-        id = patient.id,
-        firstName = patient.firstName,
-        lastName = patient.lastName
-    ),
-    psychologist = ReviewResponse.Psychologist(
-        id = psychologist.id,
-        firstName = psychologist.firstName,
-        lastName = psychologist.lastName
-    ),
-    id = id,
-    rating = rating.value,
-    text = text,
-    date = date
-)

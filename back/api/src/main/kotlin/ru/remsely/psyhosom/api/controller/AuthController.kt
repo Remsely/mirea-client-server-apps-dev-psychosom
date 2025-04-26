@@ -1,28 +1,21 @@
 package ru.remsely.psyhosom.api.controller
 
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import ru.remsely.psyhosom.api.controller.open_api.AuthControllerContract
-import ru.remsely.psyhosom.api.request.LoginRequest
-import ru.remsely.psyhosom.api.request.RegisterRequest
-import ru.remsely.psyhosom.api.response.ErrorResponse
-import ru.remsely.psyhosom.api.response.LoginResponse
-import ru.remsely.psyhosom.api.response.RegisterResponse
+import ru.remsely.psyhosom.api.dto.request.LoginRequest
+import ru.remsely.psyhosom.api.dto.request.RegisterRequest
+import ru.remsely.psyhosom.api.dto.response.LoginResponse
+import ru.remsely.psyhosom.api.dto.response.RegisterResponse
+import ru.remsely.psyhosom.api.extensions.error_handling.toResponse
 import ru.remsely.psyhosom.domain.account.Account
-import ru.remsely.psyhosom.domain.account.dao.AccountCreationError
 import ru.remsely.psyhosom.domain.account.event.LoginAccountEvent
 import ru.remsely.psyhosom.domain.account.event.RegisterAccountEvent
-import ru.remsely.psyhosom.domain.error.DomainError
-import ru.remsely.psyhosom.domain.patient.dao.PatientFindingError
 import ru.remsely.psyhosom.monitoring.log.logger
 import ru.remsely.psyhosom.usecase.auth.AuthService
-import ru.remsely.psyhosom.usecase.auth.UserLoginError
-import ru.remsely.psyhosom.usecase.auth.UserRegisterValidationError
-import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -65,7 +58,10 @@ class AuthController(
                 role = role
             )
         ).fold(
-            { handleError(it) },
+            { err ->
+                err.toResponse()
+                    .also { log.warn(err.message) }
+            },
             {
                 ResponseEntity
                     .ok()
@@ -85,33 +81,14 @@ class AuthController(
                 password = loginRequest.password
             )
         ).fold(
-            { handleError(it) },
+            { err ->
+                err.toResponse()
+                    .also { log.warn(err.message) }
+            },
             {
                 ResponseEntity
                     .ok()
                     .body(LoginResponse(it))
             }
         )
-
-    private fun handleError(error: DomainError): ResponseEntity<ErrorResponse> =
-        when (error) {
-            is AccountCreationError.AlreadyExists -> HttpStatus.BAD_REQUEST
-            is UserRegisterValidationError.InvalidUsername -> HttpStatus.BAD_REQUEST
-            is PatientFindingError.PatientWithUsernameAlreadyExists -> HttpStatus.BAD_REQUEST
-            is UserLoginError.AuthenticationError -> HttpStatus.UNAUTHORIZED
-            else -> HttpStatus.INTERNAL_SERVER_ERROR
-        }.let {
-            ResponseEntity
-                .status(it)
-                .body(
-                    ErrorResponse(
-                        message = error.message,
-                        source = error.javaClass.name,
-                        timestamp = LocalDateTime.now(),
-                        status = it.name
-                    )
-                ).also {
-                    log.warn(error.message)
-                }
-        }
 }

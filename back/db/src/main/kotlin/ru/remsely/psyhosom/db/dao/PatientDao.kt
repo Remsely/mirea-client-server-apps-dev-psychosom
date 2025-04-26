@@ -32,7 +32,9 @@ open class PatientDao(
         patientRepository.findByAccountId(accountId)
             .singleOrNone()
             .fold(
-                { PatientFindingError.NotFoundByAccountId(accountId).left() },
+                {
+                    PatientMissingError.NotFoundByAccountId(accountId).left()
+                },
                 {
                     it.toDomain().right()
                         .also {
@@ -47,7 +49,9 @@ open class PatientDao(
             .getOrNull()
             .toOption()
             .fold(
-                { PatientFindingError.NotFoundById(id).left() },
+                {
+                    PatientMissingError.NotFoundById(id).left()
+                },
                 {
                     it.toDomain().right()
                         .also {

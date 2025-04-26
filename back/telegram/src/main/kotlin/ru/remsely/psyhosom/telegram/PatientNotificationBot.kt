@@ -1,7 +1,6 @@
 package ru.remsely.psyhosom.telegram
 
 
-import arrow.core.getOrElse
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand
@@ -9,6 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
+import ru.remsely.psyhosom.domain.error.getOrThrowUnexpectedBehavior
 import ru.remsely.psyhosom.domain.value_object.TelegramChatId
 import ru.remsely.psyhosom.monitoring.log.logger
 import ru.remsely.psyhosom.telegram.callback.Callback
@@ -46,9 +46,7 @@ class PatientNotificationBot(
         if (update.hasCallbackQuery()) {
             val callbackQuery = update.callbackQuery
             val data = callbackQuery.data
-            val chatId = TelegramChatId(callbackQuery.message.chatId).getOrElse {
-                throw RuntimeException("Invalid chat id.")
-            }
+            val chatId = TelegramChatId(callbackQuery.message.chatId).getOrThrowUnexpectedBehavior()
 
             when {
                 data.startsWith("/${Callback.CANCEL_CONSULTATION.value}") -> {

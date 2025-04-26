@@ -2,8 +2,6 @@ package ru.remsely.psyhosom.usecase.patient
 
 import arrow.core.Either
 import arrow.core.flatMap
-import arrow.core.left
-import arrow.core.right
 import org.springframework.stereotype.Component
 import ru.remsely.psyhosom.domain.account.dao.AccountFinder
 import ru.remsely.psyhosom.domain.error.DomainError
@@ -25,15 +23,9 @@ class UpdatePatientCommandImpl(
         accountFinder.findAccountById(event.accountId)
             .flatMap { user ->
                 patientFinder.findPatientByAccountId(user.id)
-                    .fold(
-                        {
-                            log.error("Profile with for user with id ${event.accountId} not found.")
-                            PatientUpdateError.PatientNotFound(event.accountId).left()
-                        },
-                        {
-                            (user to it).right()
-                        }
-                    )
+                    .map { profile ->
+                        (user to profile)
+                    }
             }
             .flatMap { (user, profile) ->
                 patientUpdater.updatePatient(

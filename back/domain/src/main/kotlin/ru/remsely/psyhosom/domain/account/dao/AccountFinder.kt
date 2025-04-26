@@ -15,16 +15,16 @@ interface AccountFinder {
     fun findOutdatedAccounts(): List<Account>
 }
 
-sealed class AccountFindingError(override val message: String) : DomainError.ValidationError {
-    data class NotFoundByUsername(private val username: String) : AccountFindingError(
+sealed class AccountMissingError(override val message: String) : DomainError.MissingError {
+    data class NotFoundByUsername(private val username: String) : AccountMissingError(
         "User with username $username not found."
     )
 
-    data class NotFoundById(private val id: Long) : AccountFindingError(
+    data class NotFoundById(private val id: Long) : AccountMissingError(
         "User with id $id not found."
     )
 
-    data class NotFoundByTgBotToken(private val token: TelegramBotToken) : AccountFindingError(
+    data class NotFoundByTgBotToken(private val token: TelegramBotToken) : AccountMissingError(
         "User with token ${token.value} not found."
     )
 }

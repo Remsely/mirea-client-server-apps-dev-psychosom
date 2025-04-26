@@ -9,11 +9,11 @@ interface CreateConsultationCommand {
     fun execute(event: CreateConsultationEvent): Either<DomainError, Consultation>
 }
 
-sealed class ConsultationCreationError(override val message: String) : DomainError.ValidationError {
+sealed class ConsultationCreationValidationError(override val message: String) : DomainError.ValidationError {
     data class ActiveConsultationExist(
         private val psychologistId: Long,
         private val patientId: Long
-    ) : ConsultationCreationError(
+    ) : ConsultationCreationValidationError(
         "Patient $patientId already has an active consultation with psychologist $psychologistId."
     )
 }

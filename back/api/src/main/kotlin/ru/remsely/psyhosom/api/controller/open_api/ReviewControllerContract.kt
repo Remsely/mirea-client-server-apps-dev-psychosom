@@ -9,9 +9,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import ru.remsely.psyhosom.api.request.CreateReviewRequest
-import ru.remsely.psyhosom.api.response.ErrorResponse
-import ru.remsely.psyhosom.api.response.ReviewResponse
+import ru.remsely.psyhosom.api.dto.request.CreateReviewRequest
+import ru.remsely.psyhosom.api.dto.response.ErrorResponse
+import ru.remsely.psyhosom.api.dto.response.ReviewResponse
 
 @Tag(name = "Отзывы", description = "Эндпоинты для оперирования данными психологов")
 interface ReviewControllerContract {

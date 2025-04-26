@@ -13,7 +13,7 @@ import ru.remsely.psyhosom.domain.error.DomainError
 import ru.remsely.psyhosom.domain.psychologist.Psychologist
 import ru.remsely.psyhosom.domain.psychologist.dao.PsychologistCreator
 import ru.remsely.psyhosom.domain.psychologist.dao.PsychologistFinder
-import ru.remsely.psyhosom.domain.psychologist.dao.PsychologistFindingError
+import ru.remsely.psyhosom.domain.psychologist.dao.PsychologistMissingError
 
 import ru.remsely.psyhosom.monitoring.log.logger
 import kotlin.jvm.optionals.getOrNull
@@ -39,7 +39,7 @@ open class PsychologistDao(
             .getOrNull()
             .toOption()
             .fold(
-                { PsychologistFindingError.NotFoundById(id).left() },
+                { PsychologistMissingError.NotFoundById(id).left() },
                 {
                     it.toDomain().right().also {
                         log.info("Psychologist with id $id successfully found by id in DB.")

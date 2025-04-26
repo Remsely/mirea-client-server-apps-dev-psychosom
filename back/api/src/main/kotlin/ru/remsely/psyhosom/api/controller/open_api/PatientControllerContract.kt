@@ -9,9 +9,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import ru.remsely.psyhosom.api.request.UpdatePatientRequest
-import ru.remsely.psyhosom.api.response.ErrorResponse
-import ru.remsely.psyhosom.api.response.PatientResponse
+import ru.remsely.psyhosom.api.dto.request.UpdatePatientRequest
+import ru.remsely.psyhosom.api.dto.response.ErrorResponse
+import ru.remsely.psyhosom.api.dto.response.PatientResponse
 import ru.remsely.psyhosom.domain.patient.event.UpdatePatientEvent
 
 @Tag(name = "Пациенты", description = "Эндпоинты для оперирования данными пациентов")

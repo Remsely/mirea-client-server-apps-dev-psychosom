@@ -7,11 +7,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import ru.remsely.psyhosom.api.request.LoginRequest
-import ru.remsely.psyhosom.api.request.RegisterRequest
-import ru.remsely.psyhosom.api.response.ErrorResponse
-import ru.remsely.psyhosom.api.response.LoginResponse
-import ru.remsely.psyhosom.api.response.RegisterResponse
+import ru.remsely.psyhosom.api.dto.request.LoginRequest
+import ru.remsely.psyhosom.api.dto.request.RegisterRequest
+import ru.remsely.psyhosom.api.dto.response.ErrorResponse
+import ru.remsely.psyhosom.api.dto.response.LoginResponse
+import ru.remsely.psyhosom.api.dto.response.RegisterResponse
 
 @Tag(name = "Авторизация", description = "Эндпоинты для авторизации пользователей")
 interface AuthControllerContract {

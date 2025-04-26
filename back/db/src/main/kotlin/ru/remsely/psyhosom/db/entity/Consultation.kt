@@ -23,12 +23,18 @@ data class Consultation(
     @Enumerated(EnumType.STRING)
     val status: Consultation.Status,
 
+    @Column(name = "problem_description", nullable = true)
+    val problemDescription: String?,
+
+    @Column(name = "start_dttm", nullable = false)
+    val startDtTm: LocalDateTime,
+
+    @Column(name = "end_dttm", nullable = false)
+    val endDtTm: LocalDateTime,
+
     @Column(name = "order_dttm", nullable = false)
-    val orderDate: LocalDateTime,
+    val orderDtTm: LocalDateTime,
 
     @Column(name = "confirmation_dttm", nullable = true)
-    val confirmationDate: LocalDateTime?,
-
-    @Column(name = "start_dttm", nullable = true)
-    val startDate: LocalDateTime?
+    val confirmationDtTm: LocalDateTime?,
 )

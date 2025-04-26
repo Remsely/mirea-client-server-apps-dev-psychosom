@@ -8,8 +8,8 @@ interface PsychologistFinder {
     fun findPsychologistById(id: Long): Either<DomainError, Psychologist>
 }
 
-sealed class PsychologistFindingError(override val message: String) : DomainError.ValidationError {
-    data class NotFoundById(private val userId: Long) : PsychologistFindingError(
+sealed class PsychologistMissingError(override val message: String) : DomainError.MissingError {
+    data class NotFoundById(private val userId: Long) : PsychologistMissingError(
         "Psychologist with id $userId not found."
     )
 }

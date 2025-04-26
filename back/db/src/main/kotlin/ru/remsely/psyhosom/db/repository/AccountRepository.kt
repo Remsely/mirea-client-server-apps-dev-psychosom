@@ -14,6 +14,6 @@ interface AccountRepository : JpaRepository<Account, Long> {
 
     fun findByTgBotToken(tgBotToken: String): Account?
 
-    @Query("select a from Account a where a.isConfirmed = false and a.registrationDate < :outdatedDate")
+    @Query("select a from Account a where a.isConfirmed = false and a.registrationDtTm < :outdatedDate")
     fun findOutdatedAccounts(outdatedDate: LocalDateTime): List<Account>
 }

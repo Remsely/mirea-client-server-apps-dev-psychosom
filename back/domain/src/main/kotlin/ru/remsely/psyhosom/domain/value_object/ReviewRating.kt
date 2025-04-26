@@ -10,7 +10,7 @@ value class ReviewRating private constructor(val value: Int) {
     companion object {
         operator fun invoke(value: Int): Either<DomainError.ValidationError, ReviewRating> = either {
             ensure(value in 1..5) {
-                ReviewRatingValidationError.InvalidReviewRation
+                ReviewRatingValidationError.InvalidReviewRating
             }
             ReviewRating(value)
         }
@@ -18,7 +18,7 @@ value class ReviewRating private constructor(val value: Int) {
 }
 
 sealed class ReviewRatingValidationError(override val message: String) : DomainError.ValidationError {
-    data object InvalidReviewRation : ReviewRatingValidationError(
+    data object InvalidReviewRating : ReviewRatingValidationError(
         "Review rating must be between 1 and 5."
     )
 }

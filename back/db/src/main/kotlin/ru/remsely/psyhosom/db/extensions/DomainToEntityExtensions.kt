@@ -1,6 +1,10 @@
 package ru.remsely.psyhosom.db.extensions
 
-import ru.remsely.psyhosom.db.entity.*
+import ru.remsely.psyhosom.db.entity.Account
+import ru.remsely.psyhosom.db.entity.Consultation
+import ru.remsely.psyhosom.db.entity.Patient
+import ru.remsely.psyhosom.db.entity.Psychologist
+import ru.remsely.psyhosom.db.entity.Review
 import ru.remsely.psyhosom.domain.account.Account as DomainAccount
 import ru.remsely.psyhosom.domain.consultation.Consultation as DomainConsultation
 import ru.remsely.psyhosom.domain.patient.Patient as DomainPatient
@@ -15,7 +19,7 @@ fun DomainAccount.toEntity() = Account(
     isConfirmed = isConfirmed,
     tgBotToken = tgBotToken.value,
     tgChatId = tgChatId.value,
-    registrationDate = registrationDate
+    registrationDtTm = registrationDate
 )
 
 fun DomainPatient.toEntity() = Patient(
@@ -37,9 +41,11 @@ fun DomainConsultation.toEntity() = Consultation(
     psychologist = psychologist.toEntity(),
     patient = patient.toEntity(),
     status = status,
-    orderDate = orderDate,
-    confirmationDate = confirmationDate,
-    startDate = startDate
+    problemDescription = problemDescription,
+    startDtTm = period.start,
+    endDtTm = period.end,
+    orderDtTm = orderDtTm,
+    confirmationDtTm = confirmationDtTm
 )
 
 fun DomainReview.toEntity() = Review(

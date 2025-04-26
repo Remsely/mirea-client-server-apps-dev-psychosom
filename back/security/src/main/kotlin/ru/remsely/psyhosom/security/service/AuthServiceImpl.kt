@@ -25,7 +25,7 @@ import ru.remsely.psyhosom.monitoring.log.logger
 import ru.remsely.psyhosom.security.jwt.JwtTokenGenerator
 import ru.remsely.psyhosom.usecase.auth.AccountCreatedEvent
 import ru.remsely.psyhosom.usecase.auth.AuthService
-import ru.remsely.psyhosom.usecase.auth.UserLoginError
+import ru.remsely.psyhosom.usecase.auth.UserLoginAuthError
 import ru.remsely.psyhosom.usecase.auth.UserRegisterValidationError
 import ru.remsely.psyhosom.usecase.telegram.TgBotUtils
 import java.time.LocalDateTime
@@ -99,6 +99,6 @@ open class AuthServiceImpl(
             log.info("User with username ${event.username} successfully logged in.")
         }
     }.mapLeft {
-        UserLoginError.AuthenticationError(event.username)
+        UserLoginAuthError.AuthenticationError(event.username)
     }
 }

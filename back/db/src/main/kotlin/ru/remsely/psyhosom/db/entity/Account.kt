@@ -31,5 +31,5 @@ data class Account(
     val tgChatId: Long?,
 
     @Column(name = "registration_dttm", nullable = false)
-    val registrationDate: LocalDateTime
+    val registrationDtTm: LocalDateTime
 )
