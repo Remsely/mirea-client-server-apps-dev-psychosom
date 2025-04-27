@@ -6,6 +6,7 @@ import arrow.core.raise.ensure
 import ru.remsely.psyhosom.domain.error.DomainError
 import ru.remsely.psyhosom.domain.patient.Patient
 import ru.remsely.psyhosom.domain.psychologist.Psychologist
+import ru.remsely.psyhosom.domain.value_object.MeetingLink
 import java.time.LocalDateTime
 
 data class Consultation(
@@ -17,10 +18,13 @@ data class Consultation(
     val status: Status,
     val orderDtTm: LocalDateTime,
     val confirmationDtTm: LocalDateTime?,
+    val meetingLink: MeetingLink?,
 ) {
     enum class Status {
         PENDING,
+        REJECTED,
         CONFIRMED,
+        NOTIFIED,
         CANCELED,
         FINISHED
     }
@@ -32,10 +36,6 @@ data class Consultation(
         companion object {
             operator fun invoke(start: LocalDateTime, end: LocalDateTime): Either<DomainError.ValidationError, Period> =
                 either {
-                    ensure(start.isAfter(LocalDateTime.now())) {
-                        PeriodValidationError.StartDateMustBeInFuture
-                    }
-
                     ensure(start.isBefore(end)) {
                         PeriodValidationError.StartIsNotBeforeEnd
                     }
@@ -48,9 +48,6 @@ data class Consultation(
         }
 
         sealed class PeriodValidationError(override val message: String) : DomainError.ValidationError {
-            data object StartDateMustBeInFuture : PeriodValidationError(
-                "Consultation's start dttm must be in future."
-            )
 
             data object StartIsNotBeforeEnd : PeriodValidationError(
                 "Consultation's dttm must be before end dttdm."

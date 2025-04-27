@@ -6,6 +6,7 @@ import ru.remsely.psyhosom.db.entity.Patient
 import ru.remsely.psyhosom.db.entity.Psychologist
 import ru.remsely.psyhosom.db.entity.Review
 import ru.remsely.psyhosom.domain.error.getOrThrowUnexpectedBehavior
+import ru.remsely.psyhosom.domain.value_object.MeetingLink
 import ru.remsely.psyhosom.domain.value_object.ReviewRating
 import ru.remsely.psyhosom.domain.value_object.TelegramBotToken
 import ru.remsely.psyhosom.domain.value_object.TelegramChatId
@@ -49,6 +50,9 @@ fun Consultation.toDomain() = DomainConsultation(
     status = status,
     orderDtTm = orderDtTm,
     confirmationDtTm = confirmationDtTm,
+    meetingLink = meetingLink?.let {
+        MeetingLink(it).getOrThrowUnexpectedBehavior()
+    }
 )
 
 fun Review.toDomain() = DomainReview(

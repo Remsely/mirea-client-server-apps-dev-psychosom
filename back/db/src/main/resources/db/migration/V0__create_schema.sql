@@ -36,7 +36,8 @@ CREATE TABLE IF NOT EXISTS consultation
     start_dttm          TIMESTAMP                                   NOT NULL,
     end_dttm            TIMESTAMP                                   NOT NULL,
     order_dttm          TIMESTAMP                                   NOT NULL,
-    confirmation_dttm   TIMESTAMP
+    confirmation_dttm   TIMESTAMP,
+    meeting_link        VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS review

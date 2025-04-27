@@ -19,6 +19,21 @@
       "name": "telegram.bot.username",
       "type": "java.lang.String",
       "description": "Telegram bot username."
+    },
+    {
+      "name": "scheduled.account-cleaner.fixed-rate-ms",
+      "type": "java.lang.String",
+      "description": "Frequency of outdated accounts clearing."
+    },
+    {
+      "name": "scheduled.consultations-notifier.fixed-rate-ms",
+      "type": "java.lang.String",
+      "description": "Frequency of consultation notifier worker."
+    },
+    {
+      "name": "scheduled.ended-consultation-informer.fixed-rate-ms",
+      "type": "java.lang.String",
+      "description": "Frequency of finished consultations informer worker."
     }
   ]
 }

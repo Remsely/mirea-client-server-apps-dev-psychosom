@@ -28,11 +28,15 @@ open class StartCommand(
         log.info("Command ${Command.START.value} was executed in chat ${chat.id} with args: $args")
 
         if (args.isNullOrEmpty() || args.size != 1) {
+            val errorText = """
+                ⚠️ <b>Не удалось выполнить команду /start</b>
+                Убедитесь, что вы переходили по ссылке, указанной на сайте.
+            """.trimIndent()
+
             absSender.execute(
                 botMessageSender.sendMessage(
-                    chat.id.toString(),
-                    "При выполнении команды ${Command.START.value} произошла ошибка. " +
-                            "Убедитесь, что вы переходили по ссылке, указанной на сайте."
+                    chatId = TelegramChatId(chat.id).getOrThrowUnexpectedBehavior(),
+                    text = errorText
                 )
             )
             return
@@ -47,10 +51,15 @@ open class StartCommand(
             ).bind()
         }.fold(
             {
+                val errorText = """
+                    ⏰ <b>Время подтверждения истекло</b>
+                    Попробуйте зарегистрироваться заново.
+                """.trimIndent()
+
                 absSender.execute(
                     botMessageSender.sendMessage(
-                        chat.id.toString(),
-                        "Время подтверждения аккаунта вышло. Попробуйте зарегистрироваться снова."
+                        chatId = TelegramChatId(chat.id).getOrThrowUnexpectedBehavior(),
+                        text = errorText
                     )
                 )
                 log.warn("Error while executing command ${Command.START.value} in chat ${chat.id} with args: $args.")
@@ -63,10 +72,15 @@ open class StartCommand(
                     status = WebSocketAccountConfirmationNotifier.Status.CONFIRMED
                 )
 
+                val successText = """
+                    🎉 <b>Поздравляем!</b>
+                    Ваш аккаунт успешно подтверждён.
+                """.trimIndent()
+
                 absSender.execute(
                     botMessageSender.sendMessage(
-                        chat.id.toString(),
-                        "Аккаунт подтвержден!"
+                        chatId = TelegramChatId(chat.id).getOrThrowUnexpectedBehavior(),
+                        text = successText
                     )
                 )
             }

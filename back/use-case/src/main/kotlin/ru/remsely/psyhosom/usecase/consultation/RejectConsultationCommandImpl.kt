@@ -12,24 +12,24 @@ import ru.remsely.psyhosom.domain.value_object.TelegramChatId
 import ru.remsely.psyhosom.usecase.telegram.NotificationEvent
 
 @Component
-open class CancelConsultationCommandImpl(
+class RejectConsultationCommandImpl(
     private val consultationFinder: ConsultationFinder,
     private val consultationUpdater: ConsultationUpdater,
-    private val eventPublisher: ApplicationEventPublisher,
-) : CancelConsultationCommand {
+    private val eventPublisher: ApplicationEventPublisher
+) : RejectConsultationCommand {
     override fun execute(consultationId: Long, chatId: TelegramChatId): Either<DomainError, Unit> = either {
         val consultation = consultationFinder
             .findConsultationById(consultationId)
             .bind()
 
-        ensure(chatId == consultation.patient.account.tgChatId) {
-            ConsultationCancelError.WrongChat(chatId, consultationId)
+        ensure(chatId == consultation.psychologist.account.tgChatId) {
+            ConsultationRejectError.WrongChat(chatId, consultationId)
         }
 
-        consultationUpdater.cancelConsultation(consultation).bind()
+        consultationUpdater.rejectConsultation(consultation).bind()
 
         eventPublisher.publishEvent(
-            NotificationEvent.ConsultationCancelled(consultation)
+            NotificationEvent.ConsultationRejected(consultation)
         )
     }
 }

@@ -10,6 +10,7 @@ dependencies {
     implementation(project(Modules.use_case))
     implementation(project(Modules.monitoring))
 
+    implementation(Libs.arrow_core)
     implementation(Libs.spring_boot_starter)
 
     testImplementation(kotlin("test"))

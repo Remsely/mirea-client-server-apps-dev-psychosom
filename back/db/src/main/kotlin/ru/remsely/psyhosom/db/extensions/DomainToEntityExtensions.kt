@@ -45,7 +45,8 @@ fun DomainConsultation.toEntity() = Consultation(
     startDtTm = period.start,
     endDtTm = period.end,
     orderDtTm = orderDtTm,
-    confirmationDtTm = confirmationDtTm
+    confirmationDtTm = confirmationDtTm,
+    meetingLink = meetingLink?.value
 )
 
 fun DomainReview.toEntity() = Review(

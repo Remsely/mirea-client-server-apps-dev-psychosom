@@ -1,5 +1,6 @@
 package ru.remsely.psyhosom.api.controller
 
+import arrow.core.flatMap
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -12,6 +13,7 @@ import ru.remsely.psyhosom.api.controller.open_api.ConsultationControllerContrac
 import ru.remsely.psyhosom.api.dto.request.CreateConsultationRequest
 import ru.remsely.psyhosom.api.extensions.error_handling.toResponse
 import ru.remsely.psyhosom.api.extensions.mapping.toDto
+import ru.remsely.psyhosom.api.extensions.validation.validate
 import ru.remsely.psyhosom.api.utils.annotations.AuthPatientId
 import ru.remsely.psyhosom.domain.consultation.dao.ConsultationUpdater
 import ru.remsely.psyhosom.domain.consultation.event.CreateConsultationEvent
@@ -35,24 +37,30 @@ class ConsultationController(
         @PathVariable psychologistId: Long,
         @RequestBody request: CreateConsultationRequest
     ): ResponseEntity<*> {
-        log.info("POST /api/v1/consultations | patientId: $patientId.")
-        return createConsultationCommand.execute(
-            CreateConsultationEvent(
-                patientId = patientId,
-                psychologistId = psychologistId,
-                problemDescription = request.problemDescription,
-                startDtTm = request.startDtTm,
-                endDtTm = request.endDtTm,
-            )
-        ).fold(
-            { err ->
-                err.toResponse()
-                    .also { log.warn(err.message) }
-            },
-            {
-                ResponseEntity.ok(it.toDto())
-            }
+        log.info(
+            "POST /api/v1/consultations | patientId: $patientId | psychologistId: $psychologistId | request: $request."
         )
+        return request
+            .validate()
+            .flatMap {
+                createConsultationCommand.execute(
+                    CreateConsultationEvent(
+                        patientId = patientId,
+                        psychologistId = psychologistId,
+                        problemDescription = request.problemDescription,
+                        startDtTm = request.startDtTm,
+                        endDtTm = request.endDtTm,
+                    )
+                )
+            }.fold(
+                { err ->
+                    err.toResponse()
+                        .also { log.warn(err.message) }
+                },
+                {
+                    ResponseEntity.ok(it.toDto())
+                }
+            )
     }
 
     @GetMapping("/{psychologistId}/consultations/active")

@@ -23,6 +23,14 @@ spring:
     init:
       mode: never
 
+scheduled:
+  account-cleaner:
+    fixed-rate-ms: 60000
+  consultations-notifier:
+    fixed-rate-ms: 60000
+  ended-consultation-informer:
+    fixed-rate-ms: 60000
+
 security:
   jwt:
     private-key-path: classpath:jwt/rsa/private_key.pem
@@ -37,6 +45,7 @@ telegram:
 
 frontend:
   url: ${PSYHOSOM_WEB_URL:http://localhost:3000}
+  review-url: "${frontend.url}?section=reviews"
 
 springdoc:
   swagger-ui:
