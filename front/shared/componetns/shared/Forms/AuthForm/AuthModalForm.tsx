@@ -1,14 +1,22 @@
 "use client";
 
-import {ContactInput, NameInput, PasswordInput} from "@/shared/componetns/shared/Inputs";
 import {FieldError, FieldValues, SubmitHandler, useForm} from "react-hook-form";
-import {Button, Dialog, DialogContent, DialogHeader, DialogTitle} from "@/shared/componetns/ui";
 import styles from "./AuthModalForm.module.scss";
 import {toast} from "react-hot-toast";
 import {useEffect, useState} from "react";
 import {signIn, SignInResponse, signOut, useSession} from "next-auth/react";
 import {QRCodeSection} from "./QRCodeSection/QRCodeSection";
 import {useDataStore} from "@/shared/stores/dataStore";
+import {
+    Button,
+    ContactInput,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    NameInput,
+    PasswordInput
+} from "@/shared/componetns";
 
 interface AuthModalFormProps {
     isOpen: boolean;
@@ -82,7 +90,6 @@ export function AuthModalForm({isOpen, onClose}: AuthModalFormProps) {
         if (result?.ok) {
             toast.success("Успешная авторизация!");
             setTimeout(() => (window.location.href = "/"), 700);
-            setData({});
         }
     };
 

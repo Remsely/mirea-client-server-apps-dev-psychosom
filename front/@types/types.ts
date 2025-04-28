@@ -28,8 +28,8 @@ export type Navigation = {
 }
 
 export type User = {
-    firstname: string | null;
-    lastname: string | null;
-    phone: string | null;
-    telegram: string | null
+    firstname: string;
+    lastname: string;
+    phone: string;
+    telegram: string;
 }

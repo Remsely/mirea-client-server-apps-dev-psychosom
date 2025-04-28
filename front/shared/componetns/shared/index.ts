@@ -10,3 +10,6 @@ export {SubmitMessage} from "./SubmitMessages/SubmitMessage"
 export {AuthButton} from "./AuthButton/AuthButton";
 export {Providers} from "./providers";
 export {LoadingSpinner} from "./LoadingSpinner/LoadingSpinner";
+
+export * from './Forms';
+export * from './Inputs';

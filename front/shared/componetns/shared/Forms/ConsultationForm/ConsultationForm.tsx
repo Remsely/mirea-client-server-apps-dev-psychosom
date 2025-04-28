@@ -1,14 +1,15 @@
 "use client";
 
-import {FieldError, FieldValues, SubmitHandler, useForm} from "react-hook-form";
-import {useState} from "react";
+import { FieldError, FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { useState } from "react";
 import styles from "./ConsultationForm.module.scss";
-import {Button, Calendar, Dialog, DialogContent, DialogHeader, DialogTitle} from "@/shared/componetns/ui";
-import {TextInput} from "@/shared/componetns/shared/Inputs";
-import {FrameTitle} from "@/shared/componetns/shared";
-import {useSession} from "next-auth/react";
+import { Button, Calendar, Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/componetns/ui";
+import { TextInput } from "@/shared/componetns/shared/Inputs";
+import { FrameTitle } from "@/shared/componetns/shared";
+import { useSession } from "next-auth/react";
+import { CircleAlert } from "lucide-react";
 import {toast} from "react-hot-toast";
-import {CircleAlert} from "lucide-react";
+import {useScheduleConsultation} from "@/shared/hooks";
 
 interface ConsultationFormProps {
     setIsOpenAuthModal: (isOpenAuthModal: boolean) => void;
@@ -16,36 +17,43 @@ interface ConsultationFormProps {
 
 export function ConsultationForm(props: ConsultationFormProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const {setIsOpenAuthModal} = props;
-    const {data: session} = useSession();
-    const [date, setDate] = useState<Date | undefined>(new Date())
-    const {register, handleSubmit, reset, formState: {errors}} = useForm({
+    const { setIsOpenAuthModal } = props;
+    const { data: session } = useSession();
+    const [date, setDate] = useState<Date | undefined>(new Date());
+    const { register, handleSubmit, reset, formState: { errors } } = useForm({
         mode: "onBlur",
     });
 
-    const onSubmit: SubmitHandler<FieldValues> = async () => {
+    const { scheduleConsultation, isScheduling } = useScheduleConsultation();
+
+    const onSubmit: SubmitHandler<FieldValues> = (data) => {
         if (session) {
-            try {
-                const response = await fetch(`/api/proxy/api/v1/psychologists/1/consultations`, {
-                    method: "POST",
-                });
-
-                if (!response.ok) throw new Error('Не удалось записать на консультацию!');
-
-                reset();
-                setIsOpen(true);
-                toast.success("Вы успешно записаны на консультацию!");
-            } catch (error) {
-                console.error(error);
-                toast.error("Произошла ошибка при записи на консультацию. Пожалуйста, попробуйте позже.");
+            if (!date) {
+                toast.error("Пожалуйста, выберите дату консультации.");
+                return;
             }
+
+            scheduleConsultation(
+                {
+                    id: 1,
+                    startDtTm: "28-04-2025 13:00:00.000",
+                    endDtTm: "28-04-2025 13:50:00.000",
+                    problemDescription: data.message,
+                },
+                {
+                    onSuccess: () => {
+                        reset();
+                        setIsOpen(true);
+                    },
+                }
+            );
         } else {
             setIsOpenAuthModal(true);
-            toast("Прежде чем записаться к специалисту, пожалуйста, войдите в аккаунт", {
-                icon: <CircleAlert/>,
+            toast("Прежде чем записаться к специалисту, пожалуйста, войдите в аккаунт", {
+                icon: <CircleAlert />,
                 duration: 3000,
-                className: styles.toast
-            })
+                className: styles.toast,
+            });
         }
     };
 
@@ -57,8 +65,9 @@ export function ConsultationForm(props: ConsultationFormProps) {
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Поздравляем, вы записаны!</DialogTitle>
-                        <p className={styles.textModal}>Вы записались на консультацию к специалисту.
-                        Скоро с вами свяжется специалист по методу связи, который вы указали.</p>
+                        <p className={styles.textModal}>
+                            Вы записались на консультацию к специалисту. Скоро с вами свяжется специалист по методу связи, который вы указали.
+                        </p>
                     </DialogHeader>
                 </DialogContent>
             </Dialog>
@@ -67,9 +76,7 @@ export function ConsultationForm(props: ConsultationFormProps) {
                 <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
                     <div className={`${styles.leftColumn} ${styles.block}`}>
                         <div className={styles.inputs}>
-                            <Calendar mode="single"
-                                      selected={date}
-                                      onSelect={setDate}/>
+                            <Calendar mode="single" selected={date} onSelect={setDate} />
                         </div>
                     </div>
 
@@ -80,7 +87,9 @@ export function ConsultationForm(props: ConsultationFormProps) {
                             register={register}
                             errors={errors as Record<string, FieldError | undefined>}
                         />
-                        <Button className={styles.buttonForm} type="submit">Записаться</Button>
+                        <Button className={styles.buttonForm} type="submit" disabled={isScheduling} loading={isScheduling}>
+                            Записаться
+                        </Button>
                     </div>
                 </form>
             </div>

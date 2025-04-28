@@ -1,102 +1,123 @@
 "use client";
 
-import styles from "./ReviewModalForm.module.scss"
-import {FieldError, FieldValues, SubmitHandler, useForm} from "react-hook-form";
-import {useState} from "react";
-import {StarRatingInput, TextInput} from "@/shared/componetns/shared/Inputs";
-import {Button, Dialog, DialogContent, DialogHeader, DialogTitle} from "@/shared/componetns/ui";
-import {Review} from "@/@types/types";
+import "./ReviewModalForm.scss";
+import {Button, Dialog, DialogContent, DialogHeader, DialogTitle, StarRatingInput} from "@/shared/componetns";
+import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import {toast} from "react-hot-toast";
-import {SubmitMessage} from "@/shared/componetns/shared";
+import {useSubmitReviewMutation} from "@/shared/hooks";
+
+interface ReviewFormValues {
+    rating: number;
+    text: string;
+}
 
 interface ReviewModalFormProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
-export function ReviewModalForm({ isOpen, onClose } : ReviewModalFormProps) {
+const psychologistId = 1;
+
+export function ReviewModalForm({ isOpen, onClose }: ReviewModalFormProps) {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const {register, handleSubmit, reset, formState: { errors }, setValue} = useForm({ mode: "onBlur" });
+    const {
+        control,
+        handleSubmit,
+        reset,
+        formState: { errors }
+    } = useForm<ReviewFormValues>({
+        defaultValues: { rating: 0, text: "" }
+    });
 
-    const handleErrorResponse = (status: number) => {
-        const errorMessages: Record<number, string> = {
-            // TODO Убрать потом
-            409: "Ваш аккаунт не заполнен. Заполните данные, прежде чем оставить отзыв.",
-            401: "Прежде чем оставить отзыв, пожалуйста, войдите в аккаунт.",
-            400: "Прежде чем оставить отзыв, сеанс со специалистом должен состояться или вы уже оставляли отзыв.",
-        };
+    const { submitReview, isSubmitting } = useSubmitReviewMutation({
+        psychologistId,
+        onSuccessCallback: () => setIsSubmitted(true),
+    });
 
-        const message = errorMessages[status] || "Не удалось отправить отзыв. Попробуйте позже.";
-        toast.error(message, { duration: 3000 });
-    };
-
-    const onSubmit: SubmitHandler<FieldValues> = async (data: Review) => {
-        try {
-            if (data.rating === 0 || undefined) {
-                toast.error("Пожалуйста, выберите рейтинг.", { duration: 3000 });
-                return;
-            }
-            const reviewData = { rating: data.rating, text: data.text };
-            const response = await fetch(`/api/proxy/api/v1/psychologists/1/reviews`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(reviewData),
-            });
-
-            if (!response.ok) {
-                handleErrorResponse(response.status);
-                return
-            }
-
-            setIsSubmitted(true);
-            toast.success("Вы успешно оставили отзыв!")
-            reset();
-        } catch (error) {
-            console.error("Ошибка при отправке отзыва:", error);
-            toast.error("Произошла ошибка. Попробуйте позже.", { duration: 3000 });
+    const onSubmit = async (values: ReviewFormValues) => {
+        if (values.rating < 1) {
+            toast.error("Пожалуйста, выберите рейтинг");
+            return;
         }
+        submitReview(values);
     };
 
-    const handleClose = () => {
+    const handleModalClose = () => {
+        setIsSubmitted(false);
+        reset();
         onClose();
     };
 
-    const handleRatingSelect = (rating: number) => setValue("rating", rating, { shouldValidate: true });
-
     return (
-        <Dialog open={isOpen} onOpenChange={handleClose}>
-            <DialogContent>
+        <Dialog open={isOpen} onOpenChange={handleModalClose}>
+            <DialogContent className="review-modal">
                 <DialogHeader>
-                    <DialogTitle>{isSubmitted ? "Спасибо за отзыв!" : "Оставить отзыв"}</DialogTitle>
-                        {!isSubmitted ? (
-                            <form onSubmit={handleSubmit(onSubmit)} method="POST" className={`${styles.form} ${styles.block}`}>
-                                <div className={styles.flexDiv}>
-                                    <div className={styles.inputs}>
-                                        <StarRatingInput onRatingSelect={handleRatingSelect} />
-                                    </div>
-                                    <div className={`${styles.textarea} block-modal`}>
-                                        <TextInput
-                                            label="Комментарий к отзыву"
-                                            name="text"
-                                            register={register}
-                                            errors={errors as Record<string, FieldError | undefined>}
-                                        />
-                                    </div>
-                                </div>
-                                <Button className={styles.submitButton} type="submit">
-                                    Оставить отзыв
-                                </Button>
-                            </form>
-                        ) : (
-                            <SubmitMessage title="Вы успешно оставили отзыв!">
-                                Спасибо за отзыв! Мы очень ценим это!
-                            </SubmitMessage>
-                        )}
+                    <DialogTitle>
+                        {isSubmitted ? "Спасибо за отзыв!" : "Оставить отзыв"}
+                    </DialogTitle>
                 </DialogHeader>
+                {!isSubmitted ? (
+                    <form className="review-modal__form" onSubmit={handleSubmit(onSubmit)}>
+                        <div className="review-modal__rating-row">
+                            <label className="review-modal__label">Ваша оценка</label>
+                            <Controller
+                                control={control}
+                                name="rating"
+                                rules={{ min: 1, required: true }}
+                                render={({ field }) => (
+                                    <StarRatingInput
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        className={`review-modal__stars${errors.rating ? " review-modal__stars--error" : ""}`}
+                                    />
+                                )}
+                            />
+                            {errors.rating && (
+                                <span className="review-modal__error-text">
+                                  Пожалуйста, выберите рейтинг
+                                </span>
+                            )}
+                        </div>
+                        <div className="review-modal__field">
+                            <label className="review-modal__label" htmlFor="review-text">
+                                Ваш комментарий <span className="review-modal__label--optional">(необязательно)</span>
+                            </label>
+                            <Controller
+                                control={control}
+                                name="text"
+                                render={({ field }) => (
+                                    <textarea
+                                        {...field}
+                                        id="review-text"
+                                        className="review-modal__textarea"
+                                        placeholder="Поделитесь впечатлениями о специалисте"
+                                        rows={4}
+                                        maxLength={500}
+                                    />
+                                )}
+                            />
+                        </div>
+                        <Button
+                            type="submit"
+                            className="review-modal__submit-btn"
+                            disabled={isSubmitting}
+                            loading={isSubmitting}
+                        >
+                            Оставить отзыв
+                        </Button>
+                    </form>
+                ) : (
+                    <div className="review-modal__success">
+                        <div className="review-modal__success-icon">🎉</div>
+                        <div className="review-modal__success-text">Спасибо за ваш отзыв! Мы очень ценим ваше мнение.</div>
+                        <Button onClick={handleModalClose} className="review-modal__close-btn">
+                            Закрыть
+                        </Button>
+                    </div>
+                )}
             </DialogContent>
         </Dialog>
-    )
+    );
 }

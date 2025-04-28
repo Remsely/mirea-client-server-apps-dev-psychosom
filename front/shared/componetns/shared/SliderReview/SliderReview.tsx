@@ -3,11 +3,10 @@
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-import {CSSProperties, FC, useEffect, useState} from "react";
-import { Review, ServerReview } from "@/@types/types";
+import {CSSProperties, FC} from "react";
 import Slider from "react-slick";
-import { ReviewCard } from "../ReviewCard/ReviewCard";
-import {LoadingSpinner} from "@/shared/componetns/shared";
+import {LoadingSpinner, ReviewCard} from "@/shared/componetns";
+import {useReviews} from "@/shared/hooks";
 
 interface ArrowProps {
     className?: string;
@@ -19,38 +18,8 @@ const SampleArrow: FC<ArrowProps> = ({ className, style, onClick }) => (
     <div className={className} style={style} onClick={onClick} />
 );
 
-const mapReviewData = (data: ServerReview): Review => ({
-    id: data.id,
-    name: data.patient.firstName,
-    rating: data.rating,
-    text: data.text,
-    date: data.date,
-});
-
-export const SliderReview: FC = () => {
-    const [reviews, setReviews] = useState<Review[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchReviews = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_REST_URL}/api/v1/psychologists/1/reviews`);
-                if (!response.ok) {
-                    throw new Error("Не удалось загрузить отзывы");
-                }
-                const data: ServerReview[] = await response.json();
-                setReviews(data.map(mapReviewData));
-            } catch (e) {
-                console.error(e);
-                setError("Ошибка при загрузке отзывов. Попробуйте позже.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchReviews();
-    }, []);
+export const SliderReview: FC<{ psychologistId?: number }> = ({ psychologistId = 1 }) => {
+    const { reviews = [], isLoading, error } = useReviews(psychologistId);
 
     const sliderSettings = {
         slidesToShow: 3,
@@ -65,16 +34,20 @@ export const SliderReview: FC = () => {
         ],
     };
 
-    if (loading) {
-        return <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}><LoadingSpinner/></div>;
+    if (isLoading) {
+        return (
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <LoadingSpinner />
+            </div>
+        );
     }
 
     if (error) {
-        return <div style={{color: "red" }}>{error}</div>;
+        return <div style={{ color: "red" }}>Ошибка при загрузке отзывов. Попробуйте позже.</div>;
     }
 
     if (!reviews.length) {
-        return <div style={{height: "50px"}}>Отзывов пока нет.</div>;
+        return <div style={{ height: "50px" }}>Отзывов пока нет.</div>;
     }
 
     return (

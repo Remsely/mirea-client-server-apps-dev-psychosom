@@ -1,6 +1,6 @@
-import {cn} from "@/shared/lib/utils";
 import {ComponentProps, forwardRef} from "react";
 import styles from "./Input.module.scss"
+import {cn} from "@/shared/utils";
 
 export const Input = forwardRef<HTMLInputElement, ComponentProps<"input">>(
     ({ className, type, ...props }, ref) => {

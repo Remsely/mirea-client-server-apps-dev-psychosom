@@ -1,94 +1,62 @@
 "use client";
 
-import {FormEvent, useEffect, useState} from "react";
-import {useSession} from "next-auth/react";
-import {Button, Input} from "@/shared/componetns/ui";
+import { FormEvent, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { Button, Input } from "@/shared/componetns/ui";
 import styles from "./ProfileForm.module.scss";
-import {cn} from "@/shared/lib/utils";
-import {redirect} from "next/navigation";
-import {LoadingSpinner} from "@/shared/componetns/shared";
-
-interface ProfileData {
-    firstName: string;
-    lastName: string;
-}
+import { redirect } from "next/navigation";
+import { LoadingSpinner } from "@/shared/componetns/shared";
+import { cn } from "@/shared/utils";
+import { useProfile, useUpdateProfile } from "@/shared/hooks/useProfile";
 
 export function ProfileForm() {
-    const {data: session, status} = useSession();
-    const [profile, setProfile] = useState<ProfileData | null>(null);
-    const [loading, setLoading] = useState(false);
+    const { data: session, status } = useSession();
+    const { data: profile, isLoading, error } = useProfile();
+    const {
+        mutate: updateProfile,
+        isPending: isUpdating,
+        error: updateError,
+        isSuccess: isUpdated,
+    } = useUpdateProfile();
+
     const [message, setMessage] = useState("");
 
     useEffect(() => {
-        if (status === "authenticated") {
-            loadProfile();
-        }
-    }, [status]);
+        if (error) setMessage(error.message);
+        else setMessage("");
+    }, [error]);
 
-    const loadProfile = async () => {
-        setLoading(true);
-        setMessage("");
+    useEffect(() => {
+        if (updateError) setMessage(updateError.message);
+        else if (isUpdated) setMessage("Профиль успешно обновлён!");
+    }, [updateError, isUpdated]);
 
-        try {
-            const res = await fetch(`/api/proxy/api/v1/patients`);
+    if (status === "loading" || isLoading) {
+        return (
+            <div className={cn("container", styles.block)}>
+                <div className={styles.loaderWrapper}>
+                    <LoadingSpinner />
+                </div>
+            </div>
+        );
+    }
 
-            if (res.status === 401) {
-                setMessage("Требуется авторизация");
-                return;
-            }
+    if (status === "unauthenticated") {
+        redirect("/");
+    }
 
-            if (res.ok) {
-                const data = await res.json();
-                setProfile(data);
-            } else {
-                setMessage("Не удалось загрузить профиль");
-            }
-        } catch (error) {
-            console.error("Ошибка загрузки профиля:", error);
-            setMessage("Ошибка соединения");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleUpdate = async (e: FormEvent<HTMLFormElement>) => {
+    const handleUpdate = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!session) return;
-
-        setLoading(true);
         setMessage("");
+        if (!session || !profile) return;
 
         const formData = new FormData(e.currentTarget);
         const updatedData = {
-            firstName: formData.get("firstName"),
-            lastName: formData.get("lastName"),
+            firstName: String(formData.get("firstName") || ""),
+            lastName: String(formData.get("lastName") || ""),
         };
 
-        try {
-            const res = await fetch(`/api/proxy/api/v1/patients`, {
-                method: "PUT",
-                body: JSON.stringify(updatedData),
-            });
-
-            if (res.status === 401) {
-                setMessage("Сессия истекла");
-                return;
-            }
-
-            if (res.ok) {
-                const data = await res.json();
-                setProfile(data);
-                setMessage("Профиль успешно обновлён!");
-            } else {
-                const error = await res.json();
-                setMessage(error.message || "Ошибка обновления профиля");
-            }
-        } catch (error) {
-            console.error("Ошибка обновления:", error);
-            setMessage("Ошибка соединения");
-        } finally {
-            setLoading(false);
-        }
+        updateProfile(updatedData);
     };
 
     return (
@@ -96,15 +64,8 @@ export function ProfileForm() {
             <div>
                 <form onSubmit={handleUpdate}>
                     <h1 className={styles.title}>Профиль пользователя</h1>
-                    {status === "loading" ? (
-                        <div className={styles.loaderWrapper}>
-                            <LoadingSpinner/>
-                        </div>
-                    ) : status === "unauthenticated" ? (
-                        redirect('/')
-                    ) : message ? (
-                        <p className={styles.message}>{message}</p>
-                    ) : profile ? (
+                    {message && <p className={styles.message}>{message}</p>}
+                    {profile && (
                         <>
                             <div>
                                 <label>
@@ -113,7 +74,7 @@ export function ProfileForm() {
                                         name="firstName"
                                         defaultValue={profile.firstName}
                                         required
-                                        disabled={loading}
+                                        disabled={isUpdating}
                                     />
                                 </label>
                             </div>
@@ -124,18 +85,14 @@ export function ProfileForm() {
                                         name="lastName"
                                         defaultValue={profile.lastName}
                                         required
-                                        disabled={loading}
+                                        disabled={isUpdating}
                                     />
                                 </label>
                             </div>
-                            <Button className={styles.button} type="submit" disabled={loading}>
-                                {loading ? "Обновление..." : "Обновить профиль"}
+                            <Button className={styles.button} type="submit" disabled={isUpdating}>
+                               Обновить профиль
                             </Button>
                         </>
-                    ) : (
-                        <div className={styles.loaderWrapper}>
-                            <LoadingSpinner/>
-                        </div>
                     )}
                 </form>
             </div>

@@ -1,45 +1,17 @@
-import {AuthOptions} from "next-auth";
+import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { cookies } from "next/headers";
-
-interface AuthRequest {
-    username: string;
-    password: string;
-    firstName?: string;
-    lastName?: string;
-}
-
-const apiRequest = async (url: string, body: AuthRequest) => {
-    try {
-        const res = await fetch(url, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(body),
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-            console.error("Запрос к API не выполнен:", data);
-            return {ok: false, data};
-        }
-
-        return {ok: true, data};
-    } catch (error) {
-        console.error("Исключение при запросе к API:", error);
-        return {ok: false, data: null};
-    }
-};
+import { authService } from "@/shared/services";
 
 export const authConfig: AuthOptions = {
     providers: [
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                username: {label: "Username", type: "text"},
-                password: {label: "Password", type: "password"},
-                firstName: {label: "FirstName", type: "text"},
-                lastName: {label: "LastName", type: "text"},
+                username: { label: "Username", type: "text" },
+                password: { label: "Password", type: "password" },
+                firstName: { label: "FirstName", type: "text" },
+                lastName: { label: "LastName", type: "text" },
             },
             async authorize(credentials, req) {
                 if (!credentials?.username || !credentials?.password) {
@@ -49,35 +21,52 @@ export const authConfig: AuthOptions = {
 
                 const isRegister = req.body?.isRegister;
 
-                const endpoint = isRegister
-                    ? `${process.env.BACKEND_URL}/api/v1/auth/register/patient`
-                    : `${process.env.BACKEND_URL}/api/v1/auth/login`;
+                try {
+                    if (isRegister) {
+                        if (!credentials.firstName || !credentials.lastName) {
+                            console.warn("Для регистрации требуются имя и фамилия");
+                            return null;
+                        }
 
-                const requestBody: AuthRequest = {
-                    username: credentials.username,
-                    password: credentials.password,
-                };
+                        const response = await authService.register({
+                            username: credentials.username,
+                            password: credentials.password,
+                            firstName: credentials.firstName,
+                            lastName: credentials.lastName,
+                        });
 
-                if (isRegister) {
-                    if (!credentials.firstName || !credentials.lastName) {
-                        console.warn("Для регистрации требуются имя и фамилия");
-                        return null;
+                        const { webSocketToken, accountConfirmationUrl } = response;
+
+                        return {
+                            id: credentials.username,
+                            webSocketToken,
+                            accountConfirmationUrl,
+                        };
+                    } else {
+                        const response = await authService.login({
+                            username: credentials.username,
+                            password: credentials.password,
+                        });
+
+                        const { token } = response;
+
+                        (await cookies()).set("backend_token", token, {
+                            httpOnly: true,
+                            secure: !!process.env.NEXTAUTH_SECRET,
+                            sameSite: "lax",
+                            path: "/",
+                            maxAge: 60 * 60 * 24 * 7, // 7 дней
+                        });
+
+                        return {
+                            id: credentials.username,
+                            token,
+                        };
                     }
-                    requestBody.firstName = credentials.firstName;
-                    requestBody.lastName = credentials.lastName;
+                } catch (error) {
+                    console.error("Ошибка авторизации:", error);
+                    return null;
                 }
-
-                const {ok, data} = await apiRequest(endpoint, requestBody);
-
-                (await cookies()).set("backend_token", data.token, {
-                    httpOnly: true,
-                    secure: !!process.env.NEXTAUTH_SECRET,
-                    sameSite: "lax",
-                    path: "/",
-                    maxAge: 60 * 60 * 24 * 7,
-                });
-
-                return ok ? data : null;
             },
         }),
     ],

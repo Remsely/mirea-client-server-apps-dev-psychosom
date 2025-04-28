@@ -1,9 +1,9 @@
 "use client"
 
 import * as PopoverPrimitive from "@radix-ui/react-popover"
-import { cn } from "@/shared/lib/utils"
 import {ComponentPropsWithoutRef, ElementRef, forwardRef} from "react";
 import styles from "./Popover.module.scss"
+import {cn} from "@/shared/utils";
 
 export const Popover = PopoverPrimitive.Root
 export const PopoverTrigger = PopoverPrimitive.Trigger

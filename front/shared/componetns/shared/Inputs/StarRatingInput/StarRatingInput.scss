@@ -1,0 +1,30 @@
+@use "@/shared/styles/variables" as *;
+
+.star-rating-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.star-rating {
+    display: flex;
+    gap: 5px;
+}
+
+.star {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+
+    &--filled .star-rating__icon {
+        fill: $title-font-color;
+        stroke: $title-font-color;
+    }
+}
+
+.star-rating__icon {
+    color: #E0E0E0;
+    transition: color 0.2s;
+}
