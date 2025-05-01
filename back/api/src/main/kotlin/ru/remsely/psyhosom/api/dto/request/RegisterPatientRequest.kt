@@ -3,7 +3,7 @@ package ru.remsely.psyhosom.api.dto.request
 import io.swagger.v3.oas.annotations.media.Schema
 
 @Schema(description = "Запрос на регистрацию пользователя")
-data class RegisterRequest(
+data class RegisterPatientRequest(
     @field:Schema(
         description = "Логин пользователя. Telegram username или номер телефона",
         example = "@username"

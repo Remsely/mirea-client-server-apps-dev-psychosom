@@ -15,8 +15,6 @@ import ru.remsely.psyhosom.domain.account.event.RegisterAccountEvent
 import ru.remsely.psyhosom.domain.error.DomainError
 import ru.remsely.psyhosom.domain.patient.Patient
 import ru.remsely.psyhosom.domain.patient.dao.PatientCreator
-import ru.remsely.psyhosom.domain.psychologist.Psychologist
-import ru.remsely.psyhosom.domain.psychologist.dao.PsychologistCreator
 import ru.remsely.psyhosom.domain.value_object.PhoneNumber
 import ru.remsely.psyhosom.domain.value_object.TelegramBotToken
 import ru.remsely.psyhosom.domain.value_object.TelegramChatId
@@ -37,7 +35,6 @@ open class AuthServiceImpl(
     private val tokenGenerator: JwtTokenGenerator,
     private val passwordEncoder: PasswordEncoder,
     private val patientCreator: PatientCreator,
-    private val psychologistCreator: PsychologistCreator,
     private val tgBotUtils: TgBotUtils
 ) : AuthService {
     private val log = logger()
@@ -72,16 +69,7 @@ open class AuthServiceImpl(
                     )
                 ).bind()
 
-                Account.Role.PSYCHOLOGIST -> psychologistCreator.createPsychologist(
-                    Psychologist(
-                        id = 0L,
-                        account = account,
-                        firstName = event.firstName,
-                        lastName = event.lastName
-                    )
-                ).bind()
-
-                Account.Role.ADMIN -> Unit
+                else -> {}
             }
             AccountCreatedEvent(
                 confirmationUrl = tgBotUtils.getConfirmationUrl(account.tgBotToken),
@@ -98,7 +86,5 @@ open class AuthServiceImpl(
         }.also {
             log.info("User with username ${event.username} successfully logged in.")
         }
-    }.mapLeft {
-        UserLoginAuthError.AuthenticationError(event.username)
-    }
+    }.mapLeft { UserLoginAuthError.AuthenticationError }
 }

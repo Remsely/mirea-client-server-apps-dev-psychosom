@@ -4,4 +4,6 @@ interface AuthCredentialsAnnotationsProvider {
     fun getAuthUserId(): Long
 
     fun getAuthPatientId(): Long
+
+    fun getPsychologistId(): Long
 }

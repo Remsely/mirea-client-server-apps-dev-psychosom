@@ -6,4 +6,5 @@ import ru.remsely.psyhosom.db.entity.Psychologist
 
 @Repository
 interface PsychologistRepository : JpaRepository<Psychologist, Long> {
+    fun findByAccountId(accountId: Long): Psychologist?
 }

@@ -3,12 +3,14 @@ package ru.remsely.psyhosom.api.controller.open_api
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.parameters.RequestBody
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import ru.remsely.psyhosom.api.dto.request.LoginRequest
-import ru.remsely.psyhosom.api.dto.request.RegisterRequest
+import ru.remsely.psyhosom.api.dto.request.RegisterPatientRequest
+import ru.remsely.psyhosom.api.dto.request.RegisterPsychologistRequest
 import ru.remsely.psyhosom.api.dto.response.ErrorResponse
 import ru.remsely.psyhosom.api.dto.response.LoginResponse
 import ru.remsely.psyhosom.api.dto.response.RegisterResponse
@@ -51,7 +53,7 @@ interface AuthControllerContract {
         ]
     )
     fun registerAdmin(
-        request: RegisterRequest
+        request: RegisterPatientRequest
     ): ResponseEntity<*>
 
     @Operation(summary = "Регистрация нового пациента")
@@ -90,10 +92,22 @@ interface AuthControllerContract {
         ]
     )
     fun registerPatient(
-        request: RegisterRequest
+        request: RegisterPatientRequest
     ): ResponseEntity<*>
 
-    @Operation(summary = "Регистрация нового психолога")
+    @Operation(
+        summary = "Регистрация нового психолога",
+        requestBody = RequestBody(
+            description = "Данные нового психолога",
+            required = true,
+            content = [
+                Content(
+                    mediaType = "multipart/form-data",
+                    schema = Schema(implementation = RegisterPsychologistRequest::class)
+                )
+            ]
+        )
+    )
     @ApiResponses(
         value = [
             ApiResponse(
@@ -129,7 +143,7 @@ interface AuthControllerContract {
         ]
     )
     fun registerPsychologist(
-        request: RegisterRequest
+        request: RegisterPsychologistRequest
     ): ResponseEntity<*>
 
     @Operation(summary = "Авторизация пользователей")

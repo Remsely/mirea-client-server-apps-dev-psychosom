@@ -18,6 +18,9 @@ object Libs {
     const val telegrambots_spring_boot_starter = "org.telegram:telegrambots-spring-boot-starter:${LibVersions.telegrambots_spring_boot_starter}"
     const val telegrambots_extensions = "org.telegram:telegrambotsextensions:${LibVersions.telegrambots_spring_boot_starter}"
 
+    //S3
+    const val aws_sdk = "software.amazon.awssdk:s3:${LibVersions.aws_sdk}"
+
     // Monitoring
     const val slf2j = "org.slf4j:slf4j-api:${LibVersions.slf4j}"
     const val logback = "ch.qos.logback:logback-classic:${LibVersions.logback}"
@@ -51,6 +54,7 @@ object LibVersions {
     const val logback = "1.5.12"
     const val telegrambots_spring_boot_starter = "6.9.7.1"
     const val springdoc_openapi_starter = "2.8.4"
+    const val aws_sdk = "2.31.30"
 }
 
 object Plugins {

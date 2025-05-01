@@ -26,6 +26,7 @@ dependencies {
     implementation(project(Modules.telegram))
     implementation(project(Modules.monitoring))
     implementation(project(Modules.scheduled))
+    implementation(project(Modules.minio))
 
     implementation(Libs.spring_boot_starter_security)
     implementation(Libs.spring_boot_starter_oauth2_resource_server)

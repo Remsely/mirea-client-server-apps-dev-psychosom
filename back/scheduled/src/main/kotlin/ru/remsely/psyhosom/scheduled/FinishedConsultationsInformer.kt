@@ -1,4 +1,4 @@
-package ru.remsely.psyhosom.scheduled.auth
+package ru.remsely.psyhosom.scheduled
 
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component

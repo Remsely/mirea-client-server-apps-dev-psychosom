@@ -4,6 +4,8 @@ import ru.remsely.psyhosom.db.entity.Account
 import ru.remsely.psyhosom.db.entity.Consultation
 import ru.remsely.psyhosom.db.entity.Patient
 import ru.remsely.psyhosom.db.entity.Psychologist
+import ru.remsely.psyhosom.db.entity.PsychologistEducation
+import ru.remsely.psyhosom.db.entity.PsychologistEducationFile
 import ru.remsely.psyhosom.db.entity.Review
 import ru.remsely.psyhosom.domain.error.getOrThrowUnexpectedBehavior
 import ru.remsely.psyhosom.domain.value_object.MeetingLink
@@ -13,6 +15,7 @@ import ru.remsely.psyhosom.domain.value_object.TelegramChatId
 import ru.remsely.psyhosom.domain.account.Account as DomainAccount
 import ru.remsely.psyhosom.domain.consultation.Consultation as DomainConsultation
 import ru.remsely.psyhosom.domain.patient.Patient as DomainPatient
+import ru.remsely.psyhosom.domain.psychologist.Article as DomainArticle
 import ru.remsely.psyhosom.domain.psychologist.Psychologist as DomainPsychologist
 import ru.remsely.psyhosom.domain.review.Review as DomainReview
 
@@ -38,7 +41,29 @@ fun Psychologist.toDomain() = DomainPsychologist(
     id = id,
     account = account.toDomain(),
     firstName = firstName,
-    lastName = lastName
+    lastName = lastName,
+    profileImage = profileImageUrl,
+    article = article.toDomain(),
+    educations = educations.map { it.toDomain() }
+)
+
+fun PsychologistEducation.toDomain() = DomainPsychologist.Education(
+    id = id,
+    files = files.map { it.toDomain() }
+)
+
+fun PsychologistEducationFile.toDomain() = DomainPsychologist.Education.File(
+    id = id,
+    url = fileUrl,
+)
+
+fun Psychologist.Article.toDomain() = DomainArticle(
+    values = values.map { it.toDomain() }
+)
+
+fun Psychologist.Article.ArticleBlock.toDomain() = DomainArticle.ArticleBlock(
+    type = type,
+    content = content
 )
 
 fun Consultation.toDomain() = DomainConsultation(

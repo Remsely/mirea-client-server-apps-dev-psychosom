@@ -14,14 +14,14 @@ import ru.remsely.psyhosom.domain.psychologist.Psychologist
 import ru.remsely.psyhosom.domain.psychologist.dao.PsychologistCreator
 import ru.remsely.psyhosom.domain.psychologist.dao.PsychologistFinder
 import ru.remsely.psyhosom.domain.psychologist.dao.PsychologistMissingError
-
+import ru.remsely.psyhosom.domain.psychologist.dao.PsychologistUpdater
 import ru.remsely.psyhosom.monitoring.log.logger
 import kotlin.jvm.optionals.getOrNull
 
 @Component
 open class PsychologistDao(
     private val repository: PsychologistRepository
-) : PsychologistCreator, PsychologistFinder {
+) : PsychologistCreator, PsychologistUpdater, PsychologistFinder {
     private val log = logger()
 
     @Transactional
@@ -46,4 +46,21 @@ open class PsychologistDao(
                     }
                 }
             )
+
+    @Transactional(readOnly = true)
+    override fun findPsychologistByAccountId(accountId: Long): Either<DomainError, Psychologist> =
+        repository.findByAccountId(accountId)?.toDomain()?.right()
+            .also {
+                log.info("Patient with account $accountId successfully found in DB.")
+            } ?: PsychologistMissingError.NotFoundByAccountId(accountId).left()
+
+
+    @Transactional
+    override fun updatePsychologist(psychologist: Psychologist): Either<DomainError, Psychologist> =
+        repository.save(psychologist.toEntity())
+            .toDomain()
+            .right()
+            .also {
+                log.info("Psychologist with id ${psychologist.id} successfully updated in DB.")
+            }
 }

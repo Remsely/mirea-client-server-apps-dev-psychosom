@@ -34,6 +34,41 @@
       "name": "scheduled.ended-consultation-informer.fixed-rate-ms",
       "type": "java.lang.String",
       "description": "Frequency of finished consultations informer worker."
+    },
+    {
+      "name": "s3.internal-endpoint",
+      "type": "java.lang.String",
+      "description": "S3 internal storage endpoint."
+    },
+    {
+      "name": "s3.public-endpoint",
+      "type": "java.lang.String",
+      "description": "S3 public storage endpoint."
+    },
+    {
+      "name": "s3.region",
+      "type": "java.lang.String",
+      "description": "S3 storage region."
+    },
+    {
+      "name": "s3.bucket",
+      "type": "java.lang.String",
+      "description": "S3 storage bucket."
+    },
+    {
+      "name": "s3.access-key",
+      "type": "java.lang.String",
+      "description": "S3 storage access key."
+    },
+    {
+      "name": "s3.secret-key",
+      "type": "java.lang.String",
+      "description": "S3 storage secret key."
+    },
+    {
+      "name": "s3.path-style-access",
+      "type": "java.lang.String",
+      "description": "S3 storage s3.path-style-access."
     }
   ]
 }

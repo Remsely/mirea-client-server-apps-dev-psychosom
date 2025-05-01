@@ -1,6 +1,6 @@
 spring:
   application:
-    name: psyhosom
+    name: psychosom
 
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -15,13 +15,42 @@ spring:
         format_sql: true
     open-in-view: false
     show-sql: true
-
   flyway:
     locations: classpath:db/migration
     clean-disabled: false
   sql:
     init:
       mode: never
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
+
+telegram:
+  bot:
+    endpoints:
+      confirmation: https://t.me/${PSYСHOSOM_BOT_USERNAME:psyhosom_test_2_bot}?start=
+    token: ${PSYСHOSOM_BOT_TOKEN:8199547612:AAHOhfzIyITbm6XYe_3Wr4rUcVqC867c-C4}
+    username: ${PSYСHOSOM_BOT_USERNAME:psyhosom_test_2_bot}
+
+s3:
+  internal-endpoint: ${S3_INTERNAL_ENDPOINT:http://localhost:9000}
+  public-endpoint: ${S3_PUBLIC_ENDPOINT:http://localhost:9000}
+  region: ${S3_REGION:us-east-1}
+  bucket: ${S3_BUCKET:psychosom}
+  access-key: ${S3_ACCESS_KEY:psychosom}
+  secret-key: ${S3_SECRET_KEY:psychosom_1234}
+  path-style-access: true
+
+frontend:
+  url: ${PSYCHOSOM_WEB_URL:http://localhost:3000}
+  review-url: "${frontend.url}?section=reviews"
+
+security:
+  jwt:
+    private-key-path: classpath:jwt/rsa/private_key.pem
+    public-key-path: classpath:jwt/rsa/public_key.pem
 
 scheduled:
   account-cleaner:
@@ -30,22 +59,6 @@ scheduled:
     fixed-rate-ms: 60000
   ended-consultation-informer:
     fixed-rate-ms: 60000
-
-security:
-  jwt:
-    private-key-path: classpath:jwt/rsa/private_key.pem
-    public-key-path: classpath:jwt/rsa/public_key.pem
-
-telegram:
-  bot:
-    endpoints:
-      confirmation: https://t.me/${PSYHOSOM_BOT_USERNAME:psyhosom_test_2_bot}?start=
-    token: ${PSYHOSOM_BOT_TOKEN:8199547612:AAHOhfzIyITbm6XYe_3Wr4rUcVqC867c-C4}
-    username: ${PSYHOSOM_BOT_USERNAME:psyhosom_test_2_bot}
-
-frontend:
-  url: ${PSYHOSOM_WEB_URL:http://localhost:3000}
-  review-url: "${frontend.url}?section=reviews"
 
 springdoc:
   swagger-ui:

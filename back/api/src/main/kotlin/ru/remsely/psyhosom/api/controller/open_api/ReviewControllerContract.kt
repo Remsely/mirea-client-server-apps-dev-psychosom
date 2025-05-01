@@ -13,7 +13,7 @@ import ru.remsely.psyhosom.api.dto.request.CreateReviewRequest
 import ru.remsely.psyhosom.api.dto.response.ErrorResponse
 import ru.remsely.psyhosom.api.dto.response.ReviewResponse
 
-@Tag(name = "Отзывы", description = "Эндпоинты для оперирования данными психологов")
+@Tag(name = "Отзывы", description = "Эндпоинты для оперирования отзывами")
 interface ReviewControllerContract {
     @Operation(summary = "Создание отзыва")
     @ApiResponses(

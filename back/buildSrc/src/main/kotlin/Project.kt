@@ -13,4 +13,5 @@ object Modules {
     const val monitoring = ":monitoring"
     const val telegram = ":telegram"
     const val scheduled = ":scheduled"
+    const val minio = ":minio"
 }
