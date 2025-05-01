@@ -16,7 +16,6 @@ interface UseScheduleConsultationProps {
 
 export function useScheduleConsultation({onSuccessCallback}: UseScheduleConsultationProps = {}) {
     const queryClient = useQueryClient()
-
     const {
         mutate: scheduleConsultation,
         isPending: isScheduling,

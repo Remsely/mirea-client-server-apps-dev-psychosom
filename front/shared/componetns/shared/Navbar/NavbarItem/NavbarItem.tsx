@@ -20,8 +20,10 @@ export function NavbarItem(props : NavbarItemProps) {
     };
 
     const handleClick = () => {
-        if (pathname !== "/") {
-            router.push(`/?section=${props.link}`);
+        if (props.link === "head") {
+            router.push("/");
+        } else if (pathname !== "/") {
+            router.push(`?section=${props.link}`, { scroll: false });
         } else {
             handleScroll(props.link);
         }

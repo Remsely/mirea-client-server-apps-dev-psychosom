@@ -13,11 +13,11 @@ export function Footer() {
                         <h1 className={styles.title}>Психосоматика</h1>
                     </div>
                     <div className={styles.important}>
-                        <h2>Важное</h2>
+                        <h2 className="">Важное</h2>
                         <Navbar/>
                     </div>
                     <div className={styles.socials}>
-                        <h2>Соцсети</h2>
+                        <h2 className="">Соцсети</h2>
                         <ContactsItem image="telegram">psychosomatic</ContactsItem>
                         <ContactsItem image="whatsapp">8 (999)-888-77-66</ContactsItem>
                         <ContactsItem image="instagram">psychosomatic</ContactsItem>

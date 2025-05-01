@@ -1,7 +1,7 @@
 "use client";
 
-import { NavbarItem } from "./NavbarItem/NavbarItem";
-import { Navigation } from "@/@types/types";
+import {NavbarItem} from "./NavbarItem/NavbarItem";
+import {Navigation} from "@/@types/types";
 
 export function Navbar() {
     const navigations: Navigation[] = [
@@ -23,7 +23,7 @@ export function Navbar() {
     ];
 
     return (
-        <ul className="flex gap-8">
+        <ul className="">
             {navigations.map((navigation) => (
                 <NavbarItem key={navigation.id} link={navigation.link}>
                     {navigation.name}

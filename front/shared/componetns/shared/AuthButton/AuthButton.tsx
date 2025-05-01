@@ -7,8 +7,9 @@ import {Popover, PopoverContent, PopoverTrigger} from "@/shared/componetns/ui";
 import {LogIn, LogOut, PenLine, User} from "lucide-react";
 import {signOut, useSession} from "next-auth/react";
 import Link from "next/link";
+import {cn} from "@/shared/utils";
 
-export function AuthButton() {
+export function AuthButton({className}: {className?: string}) {
     const {data: session} = useSession();
     const [isOpen, setIsOpen] = useState(false);
 
@@ -17,7 +18,7 @@ export function AuthButton() {
             <AuthModalForm isOpen={isOpen} onClose={() => setIsOpen(false)}/>
             <Popover>
                 <PopoverTrigger asChild>
-                    <div className={styles.button} onClick={() => !session && setIsOpen(!isOpen)}>
+                    <div className={cn(styles.button, className)} onClick={() => !session && setIsOpen(!isOpen)}>
                         {!session ? <LogIn className={styles.svg} width={24}/> :
                             <User className={styles.svg} width={24}/>}
                         <span>{session ? "Профиль" : "Войти"}</span>

@@ -1,0 +1,76 @@
+@use "@/shared/styles/variables" as *;
+
+.header {
+    display: flex;
+    align-items: center;
+
+    &__wrapper {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        padding: 25px 0;
+        animation-name: scrolling-header;
+        animation-fill-mode: both;
+        animation-timeline: scroll();
+        animation-range: 0 50px;
+    }
+
+    @keyframes scrolling-header {
+        to {
+            background-color: $background-main;
+        }
+    }
+}
+
+.logo,
+.auth-button {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+}
+
+.auth-button {
+    justify-content: flex-end;
+}
+
+.navbar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+
+    &__placeholder {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        font-size: $font-size-subtitle;
+    }
+
+    ul {
+        justify-self: center;
+        background: $button-bg-color;
+        width: fit-content;
+        border-radius: $border-radius-inputs-form;
+        list-style: none;
+    }
+
+    li {
+        display: inline-block;
+        margin-right: 5px;
+        padding: 10px 15px;
+        font-weight: $font-weight-subtitle;
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        a {
+            font-size: $font-size-text-title;
+            color: $title-font-color;
+            transition: $transition-main;
+
+            &:hover {
+                color: $title-hover-color;
+            }
+        }
+    }
+}

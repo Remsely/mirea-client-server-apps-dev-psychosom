@@ -15,11 +15,10 @@ interface ReviewFormValues {
 interface ReviewModalFormProps {
     isOpen: boolean;
     onClose: () => void;
+    psychologistId: number;
 }
 
-const psychologistId = 1;
-
-export function ReviewModalForm({ isOpen, onClose }: ReviewModalFormProps) {
+export function ReviewModalForm({ isOpen, onClose, psychologistId}: ReviewModalFormProps) {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     const {

@@ -10,11 +10,11 @@ import {CircleAlert} from "lucide-react";
 
 interface ReviewButtonProps {
     setIsOpenAuthModal: (isOpenAuthModal: boolean) => void;
+    psychologistId: number
 }
 
-export function ReviewButton(props: ReviewButtonProps) {
+export function ReviewButton({setIsOpenAuthModal, psychologistId}: ReviewButtonProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const {setIsOpenAuthModal} = props;
     const {data: session} = useSession();
 
     useEffect(() => {
@@ -45,7 +45,7 @@ export function ReviewButton(props: ReviewButtonProps) {
                     Оставить отзыв
                 </Button>
             </div>
-            <ReviewModalForm isOpen={isOpen} onClose={() => setIsOpen(false)}/>
+            <ReviewModalForm psychologistId={psychologistId} isOpen={isOpen} onClose={() => setIsOpen(false)}/>
         </>
     )
 }

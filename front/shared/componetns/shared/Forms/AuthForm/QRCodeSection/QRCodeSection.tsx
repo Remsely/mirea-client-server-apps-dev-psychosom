@@ -4,7 +4,7 @@ import {QRCodeSVG} from "qrcode.react";
 export function QRCodeSection(props: { qrLink: string }) {
     return (
         <div className={styles.block}>
-            <h2>Подтвердите аккаунт при помощи Telegram.
+            <h2 className="">Подтвердите аккаунт при помощи Telegram.
                 Бот будет помогать вам следить за консультациями.</h2>
             <div>
                 <QRCodeSVG id="qrCode" className="qrCode" value={props.qrLink} size={350} fgColor={"#6E522D"} imageSettings={{

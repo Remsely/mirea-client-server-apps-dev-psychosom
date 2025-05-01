@@ -36,6 +36,10 @@
         font-weight: $font-weight-subtitle;
         transition: $transition-fastest;
 
+        a {
+            color: $text-font-color
+        }
+
         svg {
             margin-right: 10px;
         }

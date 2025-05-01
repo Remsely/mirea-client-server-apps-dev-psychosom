@@ -1,8 +1,15 @@
-import styles from "./PhotoMentorInfo.module.scss"
-import Image from "next/image";
+import React from "react";
+import "./PhotoMentorInfo.scss";
+import {PsychologistProfileType} from "@/@types/types";
 
-export function PhotoMentorInfo(props : {children: string}) {
+export function PhotoMentorInfo({specialist} : PsychologistProfileType) {
     return (
-        <Image className={styles.photo} src={`/${props.children}`} alt="" width={400} height={560} priority/>
+        <div className="psychologist-profile__photo-block">
+            <img
+                className="psychologist-profile__photo"
+                src={specialist.profileImage}
+                alt={`${specialist.firstName} ${specialist.lastName}`}
+            />
+        </div>
     )
 }

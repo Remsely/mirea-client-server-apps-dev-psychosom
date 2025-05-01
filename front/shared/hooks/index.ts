@@ -1,3 +1,5 @@
-export * from "./useReview"
-export * from "./useProfile"
-export * from "./useConsultation"
+export {useReviews, useSubmitReviewMutation} from "./useReview"
+export {useProfile, useUpdateProfile} from "./useProfile"
+export {useScheduleConsultation} from "./useConsultation"
+export {usePsychologistSchedule, type BackendSlot, usePsychologistProfile} from "./usePsychologist"
+export {useAuth} from "./useAuth"

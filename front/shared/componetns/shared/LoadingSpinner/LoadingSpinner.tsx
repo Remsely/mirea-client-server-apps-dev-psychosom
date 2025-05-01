@@ -1,7 +1,7 @@
-import styles from "./LoadingSpinner.module.scss";
+import './LoadingSpinner.scss';
 
 export function LoadingSpinner() {
     return (
-        <span className={styles.loader}></span>
+        <span className="loader-ui"></span>
     )
 }

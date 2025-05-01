@@ -7,7 +7,18 @@ import { X } from "lucide-react"
 import "./Dialog.scss"
 import { cn } from "@/shared/utils"
 
-const Dialog = DialogPrimitive.Root
+const Dialog = ({ children, ...props }: DialogPrimitive.DialogProps) => {
+    React.useEffect(() => {
+        document.body.style.setProperty("margin-right", "0px", "important");
+    }, []);
+
+    return (
+        <DialogPrimitive.Root {...props}>
+            {children}
+        </DialogPrimitive.Root>
+    );
+};
+
 const DialogTrigger = DialogPrimitive.Trigger
 const DialogPortal = DialogPrimitive.Portal
 const DialogClose = DialogPrimitive.Close

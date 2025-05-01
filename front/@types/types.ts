@@ -33,3 +33,21 @@ export type User = {
     phone: string;
     telegram: string;
 }
+
+interface ArticleBlock {
+    type?: string;
+    content: string;
+}
+
+export interface PsychologistProfileData {
+    id: number;
+    firstName: string;
+    lastName: string;
+    article: ArticleBlock[];
+    profileImage: string;
+    educationFiles: string[];
+}
+
+export interface PsychologistProfileType {
+    specialist: PsychologistProfileData;
+}

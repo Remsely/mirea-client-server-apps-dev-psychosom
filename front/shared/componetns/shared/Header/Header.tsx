@@ -1,25 +1,28 @@
 "use client";
 
-import styles from "./Header.module.scss"
+import "./Header.scss";
 import {AuthButton, Navbar} from "@/shared/componetns/shared";
 import Image from "next/image";
 import Link from "next/link";
 
-export function Header() {
+export function Header({hasNavbar = true}: { hasNavbar?: boolean }) {
     return (
-        <>
-            <header id="head" className={`${styles.header} container`}>
-                <div className={styles.logo}>
-                    <Image src="/logo-without-bg.svg" alt="" width={50} height={50}/>
-                    <Link href="/"><h1 className={styles.title}>Психосоматика</h1></Link>
+        <header id="head" className="header__wrapper">
+            <div className="header container">
+                <div className="logo">
+                    <Link href="/" className="link"><Image src="/logo.svg" alt="" width={70} height={70}/></Link>
                 </div>
-                <nav className={styles.navbar}>
-                    <Navbar/>
-                    <div className={styles.authButton}>
-                        <AuthButton/>
-                    </div>
-                </nav>
-            </header>
-        </>
-    )
+
+                {hasNavbar ? (
+                    <nav className="navbar">
+                        <Navbar/>
+                    </nav>
+                ) : <h2 className="navbar__placeholder">Психосоматика - Поиск психологов</h2>}
+
+                <div className="auth-button">
+                    <AuthButton className="auth-button__button"/>
+                </div>
+            </div>
+        </header>
+    );
 }

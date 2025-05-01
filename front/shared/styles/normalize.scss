@@ -106,9 +106,16 @@ button {
   color: inherit;
 }
 
-body,
-body[data-scroll-locked] {
+html {
   scrollbar-gutter: stable;
+}
+
+html, body {
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
 }
 
 /**
@@ -120,13 +127,6 @@ html,
 }
 
 body {
-  /**
-    Пригодится в большинстве ситуаций
-    (когда, например, нужно будет "прижать" футер к низу сайта)
-   */
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
   /**
     Унифицированный интерлиньяж
    */

@@ -2,20 +2,11 @@
 
 .highlight {
     background: $button-bg-color;
-    border-radius: $border-radius-inputs-form;
-    color: $title-font-color;
-    padding: 10px 20px;
-    margin: 22px 0;
-    width: 100%;
-    height: fit-content;
-
-    a {
-        transition: $transition-main;
-
-        &:hover {
-            color: $title-hover-color;
-        }
-    }
+    border-radius: 10px;
+    padding: 13px 18px;
+    margin: 15px 0;
+    font-style: italic;
+    border-left: 4px solid $title-font-color;
 
     p {
         color: $title-font-color;
