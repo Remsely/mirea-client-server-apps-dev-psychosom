@@ -48,8 +48,9 @@ class ConsultationController(
                         patientId = patientId,
                         psychologistId = psychologistId,
                         problemDescription = request.problemDescription,
-                        startDtTm = request.startDtTm,
-                        endDtTm = request.endDtTm,
+                        date = request.date,
+                        startTm = request.startTm,
+                        endTm = request.endTm,
                     )
                 )
             }.fold(

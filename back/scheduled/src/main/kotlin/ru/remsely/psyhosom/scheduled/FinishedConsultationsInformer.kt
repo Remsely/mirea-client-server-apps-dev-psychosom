@@ -17,7 +17,7 @@ class FinishedConsultationsInformer(
         command.execute()
             .fold(
                 {
-                    log.warn("Consultations finishing informing failed with error: ${it.message}.")
+                    log.error("Consultations finishing informing failed with error: ${it.message}.")
                 },
                 {
                     log.info("Successfully informed finished consultations.")

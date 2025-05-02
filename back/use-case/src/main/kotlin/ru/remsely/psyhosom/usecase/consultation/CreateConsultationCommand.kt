@@ -16,4 +16,8 @@ sealed class ConsultationCreationValidationError(override val message: String) :
     ) : ConsultationCreationValidationError(
         "Patient $patientId already has an active consultation with psychologist $psychologistId."
     )
+
+    data object SlotIsUnavailable : ConsultationCreationValidationError(
+        "Schedule slot is unavailable."
+    )
 }

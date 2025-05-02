@@ -1,6 +1,7 @@
 package ru.remsely.psyhosom.api.dto.response
 
 import io.swagger.v3.oas.annotations.media.Schema
+import ru.remsely.psyhosom.api.dto.ScheduleSlotDto
 import ru.remsely.psyhosom.domain.consultation.Consultation
 import java.time.LocalDateTime
 
@@ -37,21 +38,12 @@ data class ConsultationResponse(
     val problemDescription: String?,
 
     @field:Schema(
-        description = "Дата и время начала консультации",
-        pattern = "dd-MM-yyyy HH:mm:ss.SSS",
-        example = "25-12-2025 13:00:00.000"
+        description = "Слот в календаре"
     )
-    val startDtTm: LocalDateTime,
+    val scheduleSlot: ScheduleSlotDto,
 
     @field:Schema(
-        description = "Дата и время окончания консультации",
-        pattern = "dd-MM-yyyy HH:mm:ss.SSS",
-        example = "25-12-2025 13:00:00.000"
-    )
-    val endDtTm: LocalDateTime,
-
-    @field:Schema(
-        description = "Дата и время записи на консультацию",
+        description = "Дата и время подачи заявки на консультацию",
         pattern = "dd-MM-yyyy HH:mm:ss.SSS",
         example = "25-12-2025 13:00:00.000"
     )

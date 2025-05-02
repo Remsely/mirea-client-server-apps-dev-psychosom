@@ -23,7 +23,9 @@ import ru.remsely.psyhosom.domain.consultation.dao.ConsultationUpdater
 import ru.remsely.psyhosom.domain.error.DomainError
 import ru.remsely.psyhosom.monitoring.log.logger
 import java.time.Duration
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import kotlin.jvm.optionals.getOrNull
 
 @Component
@@ -133,7 +135,8 @@ open class ConsultationDao(
             .let { nextTime ->
                 repository.findAllByStatusAndStartDtTmIsBefore(
                     status = Consultation.Status.CONFIRMED,
-                    startDtTm = nextTime
+                    date = nextTime.toLocalDate(),
+                    time = nextTime.toLocalTime()
                 )
             }.map {
                 it.toDomain()
@@ -144,7 +147,8 @@ open class ConsultationDao(
     override fun findAllFinishedConsultationsToInform(): List<Consultation> =
         repository.findAllByStatusAndEndDtTmBefore(
             status = Consultation.Status.NOTIFIED,
-            startDtTm = LocalDateTime.now()
+            date = LocalDate.now(),
+            time = LocalTime.now()
         ).map {
             it.toDomain()
         }.also {

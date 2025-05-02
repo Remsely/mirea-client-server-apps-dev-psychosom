@@ -21,12 +21,14 @@ class AuthCredentialsAnnotationsProviderImpl(
             .claims["id"]!!
             .toString()
             .toLong()
+            .also {
+                log.info("Successfully get account id: $it from JWT token.")
+            }
     }
 
     override fun getAuthPatientId(): Long {
         return (SecurityContextHolder.getContext().authentication.principal as Jwt)
             .claims["id"]!!
-            .also { log.info("$it") }
             .toString()
             .toLong()
             .let {
@@ -34,18 +36,23 @@ class AuthCredentialsAnnotationsProviderImpl(
                     throw Exception("Patient not found.")
                 }.id
             }
+            .also {
+                log.info("Successfully get patient id: $it from JWT token.")
+            }
     }
 
     override fun getPsychologistId(): Long {
         return (SecurityContextHolder.getContext().authentication.principal as Jwt)
             .claims["id"]!!
-            .also { log.info("$it") }
             .toString()
             .toLong()
             .let {
                 psychologistFinder.findPsychologistByAccountId(it).getOrElse {
                     throw Exception("Psychologist not found.")
                 }.id
+            }
+            .also {
+                log.info("Successfully get psychologist id: $it from JWT token.")
             }
     }
 }

@@ -45,14 +45,30 @@ data class Psychologist(
         orphanRemoval = true,
         fetch = FetchType.LAZY
     )
+    private val joinedScheduleSlots: MutableList<ScheduleSlot> = mutableListOf(),
+
+    @OneToMany(
+        mappedBy = "psychologist",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
+    )
     private val joinedEducations: MutableList<PsychologistEducation> = mutableListOf()
 ) {
     val educations: List<PsychologistEducation>
         get() = joinedEducations
 
+    val scheduleSlots: List<ScheduleSlot>
+        get() = joinedScheduleSlots
+
     fun setEducations(newList: List<PsychologistEducation>) {
         joinedEducations.clear()
         joinedEducations.addAll(newList)
+    }
+
+    fun setScheduleSlots(newList: List<ScheduleSlot>) {
+        joinedScheduleSlots.clear()
+        joinedScheduleSlots.addAll(newList)
     }
 
     @JvmInline

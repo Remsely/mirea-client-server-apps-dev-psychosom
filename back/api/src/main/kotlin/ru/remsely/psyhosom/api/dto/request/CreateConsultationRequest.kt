@@ -1,23 +1,31 @@
 package ru.remsely.psyhosom.api.dto.request
 
 import io.swagger.v3.oas.annotations.media.Schema
-import java.time.LocalDateTime
+import java.time.LocalDate
+import java.time.LocalTime
 
 @Schema(description = "Запрос на создание отзыва")
 data class CreateConsultationRequest(
     @field:Schema(
-        description = "Дата и время начала консультации",
-        pattern = "dd-MM-yyyy HH:mm:ss.SSS",
-        example = "25-12-2025 13:00:00.000"
+        description = "Дата консультации",
+        pattern = "dd-MM-yyyy",
+        example = "25-12-2025"
     )
-    val startDtTm: LocalDateTime,
+    val date: LocalDate,
 
     @field:Schema(
-        description = "Дата и время окончания консультации",
-        pattern = "dd-MM-yyyy HH:mm:ss.SSS",
-        example = "25-12-2025 13:00:00.000"
+        description = "Время начала консультации",
+        pattern = "HH:mm:ss",
+        example = "13:00:00"
     )
-    val endDtTm: LocalDateTime,
+    val startTm: LocalTime,
+
+    @field:Schema(
+        description = "Время окончания консультации",
+        pattern = "HH:mm:ss",
+        example = "14:00:00"
+    )
+    val endTm: LocalTime,
 
     @field:Schema(
         description = "Описание проблемы",

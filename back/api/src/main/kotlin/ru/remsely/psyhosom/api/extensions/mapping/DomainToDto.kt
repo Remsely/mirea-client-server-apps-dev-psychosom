@@ -2,12 +2,14 @@ package ru.remsely.psyhosom.api.extensions.mapping
 
 import org.springframework.http.HttpStatus
 import ru.remsely.psyhosom.api.dto.ArticleBlockDto
+import ru.remsely.psyhosom.api.dto.ScheduleSlotDto
 import ru.remsely.psyhosom.api.dto.response.ConsultationResponse
 import ru.remsely.psyhosom.api.dto.response.ErrorResponse
 import ru.remsely.psyhosom.api.dto.response.PatientResponse
 import ru.remsely.psyhosom.api.dto.response.PsychologistFullInfoResponse
 import ru.remsely.psyhosom.api.dto.response.RegisterResponse
 import ru.remsely.psyhosom.api.dto.response.ReviewResponse
+import ru.remsely.psyhosom.api.dto.response.ScheduleItemResponse
 import ru.remsely.psyhosom.api.extensions.error_handling.responseStatus
 import ru.remsely.psyhosom.domain.consultation.Consultation
 import ru.remsely.psyhosom.domain.error.DomainError
@@ -15,6 +17,7 @@ import ru.remsely.psyhosom.domain.patient.Patient
 import ru.remsely.psyhosom.domain.psychologist.Article
 import ru.remsely.psyhosom.domain.psychologist.Psychologist
 import ru.remsely.psyhosom.domain.review.Review
+import ru.remsely.psyhosom.domain.schedule.Schedule
 import ru.remsely.psyhosom.usecase.auth.AccountCreatedEvent
 import java.time.LocalDateTime
 
@@ -41,18 +44,20 @@ fun Review.toDto() = ReviewResponse(
     date = date
 )
 
-fun Consultation.toDto(): ConsultationResponse =
-    ConsultationResponse(
-        id = id,
-        psychologistId = psychologist.id,
-        patientId = patient.id,
-        problemDescription = problemDescription,
-        startDtTm = period.start,
-        endDtTm = period.end,
-        status = status,
-        orderDtTm = orderDtTm,
-        confirmationDtTm = confirmationDtTm
-    )
+fun Consultation.toDto(): ConsultationResponse = ConsultationResponse(
+    id = id,
+    psychologistId = psychologist.id,
+    patientId = patient.id,
+    problemDescription = problemDescription,
+    scheduleSlot = ScheduleSlotDto(
+        date = scheduleSlot.date,
+        startTm = scheduleSlot.startTm,
+        endTm = scheduleSlot.endTm,
+    ),
+    status = status,
+    orderDtTm = orderDtTm,
+    confirmationDtTm = confirmationDtTm
+)
 
 fun DomainError.toDto() = ErrorResponse(
     status = this.responseStatus.name,
@@ -77,12 +82,32 @@ fun Psychologist.toDto(): PsychologistFullInfoResponse = PsychologistFullInfoRes
     id = id,
     firstName = firstName,
     lastName = lastName,
-    article = article.values.takeIf { it.isNotEmpty() }?.map { it.toDto() },
+    article = article.values
+        .takeIf { it.isNotEmpty() }
+        ?.map { it.toDto() },
     profileImage = profileImage,
-    educationFiles = educations.takeIf { it.isNotEmpty() }?.flatMap { edu -> edu.files.map { it.url } }
+    educationFiles = educations
+        .takeIf { it.isNotEmpty() }
+        ?.flatMap { edu -> edu.files.map { it.url } }
 )
 
 fun Article.ArticleBlock.toDto(): ArticleBlockDto = ArticleBlockDto(
     type = type,
     content = content
 )
+
+fun Schedule.toDto(): List<ScheduleItemResponse> = this.values
+    .groupBy { it.date }
+    .map { (date, slots) ->
+        ScheduleItemResponse(
+            date = date,
+            slots = slots.sortedBy { it.startTm }
+                .map {
+                    ScheduleItemResponse.Slot(
+                        startTm = it.startTm,
+                        endTm = it.endTm
+                    )
+                }
+        )
+    }
+    .sortedBy { it.date }

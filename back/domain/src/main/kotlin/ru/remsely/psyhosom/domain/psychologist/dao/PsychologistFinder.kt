@@ -8,6 +8,8 @@ interface PsychologistFinder {
     fun findPsychologistById(id: Long): Either<DomainError, Psychologist>
 
     fun findPsychologistByAccountId(accountId: Long): Either<DomainError, Psychologist>
+
+    fun findAllPsychologists(): Either<DomainError, List<Psychologist>>
 }
 
 sealed class PsychologistMissingError(override val message: String) : DomainError.MissingError {

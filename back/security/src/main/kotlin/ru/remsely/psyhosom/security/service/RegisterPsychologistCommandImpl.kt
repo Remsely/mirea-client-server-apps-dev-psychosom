@@ -12,6 +12,7 @@ import ru.remsely.psyhosom.domain.error.DomainError
 import ru.remsely.psyhosom.domain.psychologist.Article
 import ru.remsely.psyhosom.domain.psychologist.Psychologist
 import ru.remsely.psyhosom.domain.psychologist.dao.PsychologistCreator
+import ru.remsely.psyhosom.domain.schedule.Schedule
 import ru.remsely.psyhosom.domain.value_object.PhoneNumber
 import ru.remsely.psyhosom.domain.value_object.TelegramBotToken
 import ru.remsely.psyhosom.domain.value_object.TelegramChatId
@@ -62,7 +63,8 @@ class RegisterPsychologistCommandImpl(
                 lastName = event.lastName,
                 profileImage = s3File.url,
                 article = Article.empty(),
-                educations = emptyList()
+                educations = emptyList(),
+                schedule = Schedule.empty()
             )
         ).bind()
 

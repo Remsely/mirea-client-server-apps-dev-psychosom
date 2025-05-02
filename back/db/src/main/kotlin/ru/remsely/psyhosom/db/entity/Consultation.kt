@@ -29,18 +29,16 @@ data class Consultation(
     @ManyToOne(fetch = FetchType.LAZY)
     val patient: Patient,
 
+    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    val scheduleSlot: ScheduleSlot,
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     val status: Consultation.Status,
 
     @Column(name = "problem_description", nullable = true)
     val problemDescription: String?,
-
-    @Column(name = "start_dttm", nullable = false)
-    val startDtTm: LocalDateTime,
-
-    @Column(name = "end_dttm", nullable = false)
-    val endDtTm: LocalDateTime,
 
     @Column(name = "order_dttm", nullable = false)
     val orderDtTm: LocalDateTime,

@@ -1,6 +1,7 @@
 package ru.remsely.psyhosom.domain.psychologist
 
 import ru.remsely.psyhosom.domain.account.Account
+import ru.remsely.psyhosom.domain.schedule.Schedule
 
 data class Psychologist(
     val id: Long,
@@ -9,6 +10,7 @@ data class Psychologist(
     val lastName: String,
     val profileImage: String,
     val article: Article,
+    val schedule: Schedule,
     val educations: List<Education>
 ) {
     data class Education(

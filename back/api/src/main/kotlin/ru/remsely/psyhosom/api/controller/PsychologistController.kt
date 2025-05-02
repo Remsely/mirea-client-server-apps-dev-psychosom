@@ -23,13 +23,15 @@ import ru.remsely.psyhosom.monitoring.log.logger
 import ru.remsely.psyhosom.usecase.psychologist.AddPsychologistEducationCommand
 import ru.remsely.psyhosom.usecase.psychologist.GetPsychologistByIdCommand
 import ru.remsely.psyhosom.usecase.psychologist.PublishArticleCommand
+import ru.remsely.psyhosom.usecase.schedule.GetPsychologistScheduleCommand
 
 @RestController
 @RequestMapping("/api/v1/psychologists")
 class PsychologistController(
     private val publishArticleCommand: PublishArticleCommand,
     private val addEducationCommand: AddPsychologistEducationCommand,
-    private val getPsychologistByIdCommand: GetPsychologistByIdCommand
+    private val getPsychologistByIdCommand: GetPsychologistByIdCommand,
+    private val getPsychologistScheduleCommand: GetPsychologistScheduleCommand
 ) : PsychologistControllerContract {
     private val log = logger()
 
@@ -89,6 +91,23 @@ class PsychologistController(
     ): ResponseEntity<*> {
         log.info("GET /api/v1/psychologists/$psychologistId")
         return getPsychologistByIdCommand.execute(psychologistId)
+            .fold(
+                { err ->
+                    err.toResponse()
+                        .also { log.warn(err.message) }
+                },
+                {
+                    ResponseEntity.ok(it.toDto())
+                }
+            )
+    }
+
+    @GetMapping("/{psychologistId}/schedule")
+    override fun getPsychologistSchedule(
+        @PathVariable psychologistId: Long
+    ): ResponseEntity<*> {
+        log.info("GET /api/v1/psychologists/$psychologistId/schedule")
+        return getPsychologistScheduleCommand.execute(psychologistId)
             .fold(
                 { err ->
                     err.toResponse()

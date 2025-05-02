@@ -17,7 +17,7 @@ class ComingConsultationNotifier(
         command.execute()
             .fold(
                 {
-                    log.warn("Consultations notification failed with error: ${it.message}.")
+                    log.error("Consultations notification failed with error: ${it.message}.")
                 },
                 {
                     log.info("Successfully notified consultations.")

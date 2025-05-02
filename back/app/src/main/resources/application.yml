@@ -59,6 +59,8 @@ scheduled:
     fixed-rate-ms: 60000
   ended-consultation-informer:
     fixed-rate-ms: 60000
+  psychologist-schedule-slots-addition:
+    cron: "0 0 3 * * *"
 
 springdoc:
   swagger-ui:

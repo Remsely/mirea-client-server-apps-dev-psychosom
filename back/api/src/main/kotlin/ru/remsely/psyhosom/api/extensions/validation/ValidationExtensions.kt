@@ -6,12 +6,15 @@ import arrow.core.raise.ensure
 import ru.remsely.psyhosom.api.dto.request.AddPsychologistEducationRequest
 import ru.remsely.psyhosom.api.dto.request.CreateConsultationRequest
 import ru.remsely.psyhosom.domain.error.DomainError
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 fun CreateConsultationRequest.validate(): Either<DomainError.ValidationError, CreateConsultationRequest> =
     either {
-        ensure(startDtTm.isAfter(LocalDateTime.now())) {
-            CreateConsultationRequestValidationError.StartInThePast
+        ensure(date.isAfter(LocalDate.now())) {
+            CreateConsultationRequestValidationError.DateThePast
+        }
+        ensure(startTm.isBefore(endTm)) {
+            CreateConsultationRequestValidationError.EndBeforeStart
         }
         this@validate
     }
@@ -31,8 +34,12 @@ sealed class CreateConsultationRequestValidationError(
     override val message: String
 ) : DomainError.ValidationError {
 
-    data object StartInThePast : CreateConsultationRequestValidationError(
-        "StartDtTm must be in future."
+    data object DateThePast : CreateConsultationRequestValidationError(
+        "Date must be in future."
+    )
+
+    data object EndBeforeStart : CreateConsultationRequestValidationError(
+        "startTm must be before endTm."
     )
 }
 

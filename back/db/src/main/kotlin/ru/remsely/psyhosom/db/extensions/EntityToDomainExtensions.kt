@@ -7,6 +7,7 @@ import ru.remsely.psyhosom.db.entity.Psychologist
 import ru.remsely.psyhosom.db.entity.PsychologistEducation
 import ru.remsely.psyhosom.db.entity.PsychologistEducationFile
 import ru.remsely.psyhosom.db.entity.Review
+import ru.remsely.psyhosom.db.entity.ScheduleSlot
 import ru.remsely.psyhosom.domain.error.getOrThrowUnexpectedBehavior
 import ru.remsely.psyhosom.domain.value_object.MeetingLink
 import ru.remsely.psyhosom.domain.value_object.ReviewRating
@@ -18,6 +19,7 @@ import ru.remsely.psyhosom.domain.patient.Patient as DomainPatient
 import ru.remsely.psyhosom.domain.psychologist.Article as DomainArticle
 import ru.remsely.psyhosom.domain.psychologist.Psychologist as DomainPsychologist
 import ru.remsely.psyhosom.domain.review.Review as DomainReview
+import ru.remsely.psyhosom.domain.schedule.Schedule as DomainSchedule
 
 fun Account.toDomain() = DomainAccount(
     id = id,
@@ -44,7 +46,16 @@ fun Psychologist.toDomain() = DomainPsychologist(
     lastName = lastName,
     profileImage = profileImageUrl,
     article = article.toDomain(),
+    schedule = DomainSchedule(scheduleSlots.map { it.toDomain() }),
     educations = educations.map { it.toDomain() }
+)
+
+fun ScheduleSlot.toDomain() = DomainSchedule.Slot(
+    id = id,
+    date = date,
+    startTm = startTm,
+    endTm = endTm,
+    available = available
 )
 
 fun PsychologistEducation.toDomain() = DomainPsychologist.Education(
@@ -71,7 +82,7 @@ fun Consultation.toDomain() = DomainConsultation(
     psychologist = psychologist.toDomain(),
     patient = patient.toDomain(),
     problemDescription = problemDescription,
-    period = DomainConsultation.Period(startDtTm, endDtTm).getOrThrowUnexpectedBehavior(),
+    scheduleSlot = scheduleSlot.toDomain(),
     status = status,
     orderDtTm = orderDtTm,
     confirmationDtTm = confirmationDtTm,

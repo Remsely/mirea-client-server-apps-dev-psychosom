@@ -6,10 +6,12 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 import org.telegram.telegrambots.meta.bots.AbsSender
 import ru.remsely.psyhosom.domain.consultation.Consultation
+import ru.remsely.psyhosom.domain.schedule.Schedule
 import ru.remsely.psyhosom.telegram.BotMessageSender
 import ru.remsely.psyhosom.telegram.callback.Callback
 import ru.remsely.psyhosom.usecase.telegram.NotificationEvent
 import ru.remsely.psyhosom.usecase.telegram.TelegramBotNotifier
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
@@ -54,8 +56,8 @@ class TelegramBotNotifierImpl(
             🆕 <b>Новая заявка на консультацию.</b>
 
             👤 Пациент: <i>${c.patient.firstName}</i>
-            📅 Дата: <code>${c.period.readableStartDate}</code>
-            ⏰ Время: <code>${c.period.readableTimePeriod}</code>
+            📅 Дата: <code>${c.scheduleSlot.date.readable}</code>
+            ⏰ Время: <code>${c.scheduleSlot.readableTimePeriod}</code>
         """.trimIndent() + if (c.problemDescription != null) {
             "\n\uD83D\uDCDD Описание проблемы: <i>${c.problemDescription}</i>"
         } else {
@@ -105,7 +107,7 @@ class TelegramBotNotifierImpl(
         val psychologistText = """
             ⚠️ <b>${c.patient.firstName} отменил(-а) консультацию.</b>
 
-            📅 ${c.period.readableStartDate}, ⏰ ${c.period.readableTimePeriod} — эта встреча больше не состоится.
+            📅 ${c.scheduleSlot.date.readable}, ⏰ ${c.scheduleSlot.readableTimePeriod} — эта встреча больше не состоится.
         """.trimIndent()
 
         absSender.execute(
@@ -153,7 +155,7 @@ class TelegramBotNotifierImpl(
         val patientText = """
             🎉 <b>${c.psychologist.firstName} принял(-а) вашу заявку.</b>
 
-            📅 ${c.period.readableStartDate} ⏰ ${c.period.readableTimePeriod}
+            📅 ${c.scheduleSlot.date.readable} ⏰ ${c.scheduleSlot.readableTimePeriod}
             Мы отправим вам ссылку для присоединения к звонку перед консультацией.
         """.trimIndent()
 
@@ -188,8 +190,8 @@ class TelegramBotNotifierImpl(
         val patientText = """
             📣 <b>Напоминание о консультации.</b>
             
-            🗓 Дата: ${c.period.readableStartDate}
-            ⏰ Время: ${c.period.readableTimePeriod}
+            🗓 Дата: ${c.scheduleSlot.date.readable}
+            ⏰ Время: ${c.scheduleSlot.readableTimePeriod}
             
             👤 Специалист: ${c.psychologist.firstName} ${c.psychologist.lastName}
             
@@ -199,8 +201,8 @@ class TelegramBotNotifierImpl(
         val psychologistText = """
             ⏰ <b>Скоро консультация.</b>
             
-            🗓 Дата: ${c.period.readableStartDate}
-            ⏰ Время: ${c.period.readableTimePeriod}
+            🗓 Дата: ${c.scheduleSlot.date.readable}
+            ⏰ Время: ${c.scheduleSlot.readableTimePeriod}
             
             👤 Пациент: ${c.patient.firstName} ${c.patient.lastName}
             
@@ -240,8 +242,8 @@ class TelegramBotNotifierImpl(
     }
 }
 
-private val Consultation.Period.readableStartDate: String
-    get() = this.start.format(dateFormatter)
+private val LocalDate.readable: String
+    get() = this.format(dateFormatter)
 
-private val Consultation.Period.readableTimePeriod: String
-    get() = "${this.start.format(timeFormatter)}-${this.end.format(timeFormatter)}"
+private val Schedule.Slot.readableTimePeriod: String
+    get() = "${this.startTm.format(timeFormatter)}-${this.endTm.format(timeFormatter)}"

@@ -54,6 +54,12 @@ open class PsychologistDao(
                 log.info("Patient with account $accountId successfully found in DB.")
             } ?: PsychologistMissingError.NotFoundByAccountId(accountId).left()
 
+    @Transactional(readOnly = true)
+    override fun findAllPsychologists(): Either<DomainError, List<Psychologist>> =
+        repository.findAll().map { it.toDomain() }
+            .also {
+                log.info("All psychologists successfully found in DB. Selection size: ${it.size}.")
+            }.right()
 
     @Transactional
     override fun updatePsychologist(psychologist: Psychologist): Either<DomainError, Psychologist> =
