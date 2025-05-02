@@ -1,14 +1,15 @@
 import {api} from "@/shared/utils";
 
 interface ScheduleConsultationRequest {
-    startDtTm: string;
-    endDtTm: string;
+    startTm: string;
+    endTm: string;
+    date: string;
     problemDescription? : string;
 }
 
 class ConsultationService {
-    public async scheduleConsultation(params: { id: number; body: ScheduleConsultationRequest; }) {
-        await api.post(`psychologists/${params.id}/consultations`, params.body);
+    public async scheduleConsultation( id: number, body: ScheduleConsultationRequest) {
+        await api.post(`psychologists/${id}/consultations`, body);
     }
 }
 

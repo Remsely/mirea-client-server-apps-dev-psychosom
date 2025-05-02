@@ -43,6 +43,7 @@ const DialogContent = React.forwardRef<
         <DialogOverlay />
         <DialogPrimitive.Content
             ref={ref}
+            onOpenAutoFocus={(e) => e.preventDefault()}
             className={cn("dialog-ui-content", className)}
             {...props}
         >

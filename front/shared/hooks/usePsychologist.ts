@@ -13,33 +13,10 @@ export interface BackendDaySchedule {
     slots: BackendSlot[];
 }
 
-const TEST_SCHEDULE: BackendDaySchedule[] = [
-    {
-        jsDate: new Date(),
-        slots: [
-            { start: '09:00', end: '09:50' },
-            { start: '11:00', end: '11:50' },
-            { start: '14:00', end: '14:50' },
-        ],
-    },
-    {
-        jsDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
-        slots: [
-            { start: '10:00', end: '10:50' },
-            { start: '15:00', end: '15:50' },
-        ],
-    },
-];
-
-const fetchScheduleMock = async (): Promise<BackendDaySchedule[]> => {
-    await new Promise((r) => setTimeout(r, 400));
-    return TEST_SCHEDULE;
-};
-
 export const usePsychologistSchedule = (id: number) =>
     useQuery<BackendDaySchedule[]>({
         queryKey: ['psychologistSchedule', id],
-        queryFn: fetchScheduleMock,
+        queryFn: () => psychologistService.getPsychologistSchedule(id),
         enabled: !!id,
         staleTime: 5 * 60_000,
     });
@@ -60,7 +37,6 @@ export function usePsychologistProfile({
         data,
         isPending,
         isError,
-        error,
     } = useQuery<PsychologistProfileData, FetchError>({
         queryKey: ['psychologist-profile', psychologistId],
         queryFn: () => {
@@ -76,6 +52,5 @@ export function usePsychologistProfile({
         profile: data,
         isLoading: isPending,
         isError,
-        error,
     };
 }

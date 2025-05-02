@@ -17,7 +17,6 @@ import {
     NameInput,
     PasswordInput
 } from "@/shared/componetns";
-import {redirect} from "next/navigation";
 
 interface AuthModalFormProps {
     isOpen: boolean;
@@ -90,7 +89,7 @@ export function AuthModalForm({isOpen, onClose}: AuthModalFormProps) {
 
         if (result?.ok) {
             toast.success("Успешная авторизация!");
-            setTimeout(() => (redirect("/")), 700);
+            setTimeout(() => (window.location.href = "/"), 700);
         }
     };
 

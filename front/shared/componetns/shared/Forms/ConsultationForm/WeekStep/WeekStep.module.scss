@@ -1,0 +1,33 @@
+@use "@/shared/styles/variables" as *;
+
+.weekStrip {
+    width: 309px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.dayBtn {
+    width: 39px;
+    padding: 5px;
+    border-radius: 6px;
+    border: 1px solid $title-hover-color;
+    font-size: 13px;
+    background: transparent;
+    cursor: pointer;
+
+    &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+}
+
+.dayBtnDisabled {
+    opacity: 0.3;
+    cursor: auto;
+}
+
+.dayBtnActive {
+    background: $button-hover-color !important;
+    color: $title-font-color;
+}

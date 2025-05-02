@@ -1,7 +1,7 @@
 import styles from "./FrameTitle.module.scss"
 
 interface FrameTitleProps {
-    children: string;
+    children: string | string[];
     id?: string;
 }
 

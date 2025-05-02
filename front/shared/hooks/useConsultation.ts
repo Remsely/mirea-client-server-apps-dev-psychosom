@@ -4,29 +4,30 @@ import {FetchError} from "@/shared/utils";
 import {consultationService} from "@/shared/services";
 
 type ConsultationVariables = {
-    id: number
-    startDtTm: string;
-    endDtTm: string;
+    date: string;
+    startTm: string;
+    endTm: string;
     problemDescription? : string;
 }
 
 interface UseScheduleConsultationProps {
+    psychologistId: number
     onSuccessCallback?: () => void
 }
 
-export function useScheduleConsultation({onSuccessCallback}: UseScheduleConsultationProps = {}) {
+export function useScheduleConsultation({onSuccessCallback, psychologistId}: UseScheduleConsultationProps) {
     const queryClient = useQueryClient()
     const {
         mutate: scheduleConsultation,
         isPending: isScheduling,
     } = useMutation<void, FetchError, ConsultationVariables>({
         mutationKey: ['schedule-consultation'],
-        mutationFn: ({ id, problemDescription, startDtTm, endDtTm }) =>
-            consultationService.scheduleConsultation({ id, body: { startDtTm, endDtTm, problemDescription } }),
-        onSuccess: (_, variables) => {
+        mutationFn: (body) =>
+            consultationService.scheduleConsultation(psychologistId, body),
+        onSuccess: () => {
             toast.success('Вы успешно записаны на консультацию!')
             queryClient.invalidateQueries({
-                queryKey: ['consultations', variables.id],
+                queryKey: ['consultations', psychologistId],
             })
             if (onSuccessCallback) onSuccessCallback()
         },

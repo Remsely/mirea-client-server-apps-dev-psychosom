@@ -1,14 +1,23 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import {CircleAlert, ChevronLeft, ChevronRight} from "lucide-react";
+import {toast} from "react-hot-toast";
+import {useSession} from "next-auth/react";
+import styles from "./ConsultationForm.module.scss";
+import {cn} from "@/shared/utils";
+import {useCallback, useMemo, useState} from "react";
+import {isSameDay} from "date-fns";
 import {
     FieldValues,
     SubmitHandler,
     useForm,
     FieldError,
 } from "react-hook-form";
-
-import styles from "./ConsultationForm.module.scss";
+import {
+    BackendSlot,
+    usePsychologistSchedule,
+    useScheduleConsultation,
+} from "@/shared/hooks";
 import {
     Button,
     Calendar,
@@ -16,59 +25,59 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
-} from "@/shared/componetns/ui";
-import { TextInput } from "@/shared/componetns/shared/Inputs";
-import { FrameTitle } from "@/shared/componetns/shared";
-
-import { CircleAlert } from "lucide-react";
-import { toast } from "react-hot-toast";
-import { useSession } from "next-auth/react";
-
-import Skeleton from "react-loading-skeleton";
-import {BackendSlot, usePsychologistSchedule, useScheduleConsultation} from "@/shared/hooks";
+    FrameTitle,
+    TextInput,
+    SlotList, DisableFn, WeekStep
+} from "@/shared/componetns";
 
 interface ConsultationFormProps {
-    setIsOpenAuthModal: (v: boolean) => void;
     id: number;
+    specialistName: string;
+    setIsOpenAuthModal: (v: boolean) => void;
 }
 
-export function ConsultationForm({setIsOpenAuthModal, id}: ConsultationFormProps) {
-    const { data: session } = useSession();
+export function ConsultationForm({
+                                     id,
+                                     specialistName,
+                                     setIsOpenAuthModal,
+                                 }: ConsultationFormProps) {
+    const {data: schedule, isLoading} = usePsychologistSchedule(id);
+    const {data: session} = useSession();
+    const {scheduleConsultation, isScheduling} = useScheduleConsultation({psychologistId: id});
 
-    const { data: schedule, isLoading } = usePsychologistSchedule(id);
-
-    const [selectedDate, setSelectedDate] = useState<Date>();
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>();
     const [selectedSlot, setSelectedSlot] = useState<BackendSlot | null>(null);
-
-    const availableDates = useMemo<Date[]>(
-        () => schedule?.map((d) => d.jsDate) ?? [],
-        [schedule],
-    );
-
-    const daySlots = useMemo<BackendSlot[]>(() => {
-        if (!selectedDate || !schedule) return [];
-        const day = schedule.find(
-            (d) => d.jsDate.toDateString() === selectedDate.toDateString(),
-        );
-        return day?.slots ?? [];
-    }, [selectedDate, schedule]);
+    const [weekOffset, setWeekOffset] = useState(0);
+    const [dialog, toggleDialog] = useState(false);
 
     const {
         register,
         handleSubmit,
         reset,
-        formState: { errors },
-    } = useForm({ mode: "onBlur" });
+        formState: {errors},
+    } = useForm({mode: "onBlur"});
 
-    const { scheduleConsultation, isScheduling } = useScheduleConsultation();
-    const [isOpen, setIsOpen] = useState(false);
+    const availableDates = useMemo(
+        () => schedule?.map((d) => d.jsDate) ?? [],
+        [schedule],
+    );
+
+    const disableDate = useCallback<DisableFn>(
+        (d) => !availableDates.some((av) => isSameDay(av, d)),
+        [availableDates],
+    );
+
+    const daySlots = useMemo<BackendSlot[]>(() => {
+        if (!selectedDate || !schedule) return [];
+        return schedule.find((d) => isSameDay(d.jsDate, selectedDate))?.slots ?? [];
+    }, [selectedDate, schedule]);
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         if (!session) {
             setIsOpenAuthModal(true);
             toast(
                 "Прежде чем записаться к специалисту, пожалуйста, войдите в аккаунт",
-                { icon: <CircleAlert />, className: styles.toast },
+                {icon: <CircleAlert/>, className: styles.toast},
             );
             return;
         }
@@ -76,15 +85,13 @@ export function ConsultationForm({setIsOpenAuthModal, id}: ConsultationFormProps
             toast.error("Выберите дату и время консультации");
             return;
         }
-
         const [d, m, y] = selectedDate.toLocaleDateString("ru-RU").split(".");
         const datePart = `${d}-${m}-${y}`;
-
         scheduleConsultation(
             {
-                id,
-                startDtTm: `${datePart} ${selectedSlot.start}:00.000`,
-                endDtTm: `${datePart} ${selectedSlot.end}:00.000`,
+                date: datePart,
+                startTm: `${selectedSlot.start}:00`,
+                endTm: `${selectedSlot.end}:00`,
                 problemDescription: data.message,
             },
             {
@@ -92,25 +99,23 @@ export function ConsultationForm({setIsOpenAuthModal, id}: ConsultationFormProps
                     reset();
                     setSelectedDate(undefined);
                     setSelectedSlot(null);
-                    setIsOpen(true);
+                    setWeekOffset(0);
+                    toggleDialog(true);
                 },
             },
         );
     };
 
-    const disableUnavailable = (d: Date) =>
-        !availableDates.some((av) => av.toDateString() === d.toDateString());
-
     return (
         <>
-            <FrameTitle id="consultation">Запишитесь на консультацию</FrameTitle>
+            <FrameTitle id="consultation">{specialistName} | Запись на консультацию</FrameTitle>
 
-            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <Dialog open={dialog} onOpenChange={toggleDialog}>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Поздравляем, вы записаны!</DialogTitle>
                         <p className={styles.textModal}>
-                            Скоро с вами свяжется специалист по выбранному способу связи.
+                            Вы успешно записаны на консультацию к специалисту <b>{specialistName}</b>. Перейди в телеграмм-бот, чтобы продолжить запись.
                         </p>
                     </DialogHeader>
                 </DialogContent>
@@ -118,61 +123,84 @@ export function ConsultationForm({setIsOpenAuthModal, id}: ConsultationFormProps
 
             <div className={styles.formWrapper}>
                 <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-                    <div className={`${styles.leftColumn} ${styles.block}`}>
-                        {isLoading ? (
-                            <Skeleton className={styles.calendarSkeleton} height={320} />
-                        ) : (
+                    <div className={cn(styles.leftColumn, styles.block)}>
+                        {!selectedDate && (
                             <Calendar
                                 mode="single"
-                                selected={selectedDate}
+                                disabled={disableDate}
                                 onSelect={(d) => {
                                     setSelectedDate(d);
-                                    setSelectedSlot(null);
+                                    setWeekOffset(0);
                                 }}
-                                disabled={disableUnavailable}
                                 className={styles.calendar}
                             />
                         )}
-                    </div>
-                    <div className={`${styles.rightColumn} ${styles.block}`}>
-                        <div className={styles.timesWrapper}>
-                            {isLoading && (
-                                <Skeleton
-                                    className={styles.timeSkeleton}
-                                    width={220}
-                                    height={20}
-                                    count={3}
+
+                        {selectedDate && (
+                            <div>
+                                <div className={styles.weekHeader}>
+                                    <button
+                                        type="button"
+                                        className={styles.backBtn}
+                                        onClick={() => {
+                                            setSelectedDate(undefined);
+                                            setSelectedSlot(null);
+                                            setWeekOffset(0);
+                                        }}
+                                    >
+                                        <ChevronLeft size={26}/> Назад
+                                    </button>
+                                    <div className={styles.weekButtons}>
+                                        <button
+                                            type="button"
+                                            className="rdp-button_next"
+                                            onClick={() => setWeekOffset(weekOffset - 1)}
+                                        >
+                                            <ChevronLeft size={24}/>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="rdp-button_previous"
+                                            onClick={() => setWeekOffset(weekOffset + 1)}
+                                        >
+                                            <ChevronRight size={24}/>
+                                        </button>
+                                    </div>
+                                </div>
+                                <WeekStep
+                                    baseDate={selectedDate}
+                                    offset={weekOffset}
+                                    onOffsetChange={setWeekOffset}
+                                    disableDate={disableDate}
+                                    selectedDate={selectedDate}
+                                    onSelectDate={(d) => {
+                                        setSelectedDate(d);
+                                        setSelectedSlot(null);
+                                        setWeekOffset(0);
+                                    }}
                                 />
-                            )}
+                                <SlotList
+                                    loading={isLoading}
+                                    slots={daySlots}
+                                    selectedSlot={selectedSlot}
+                                    onSelect={setSelectedSlot}
+                                />
+                            </div>
+                        )}
+                    </div>
 
-                            {!isLoading && daySlots.length === 0 && (
-                                <p className={styles.noTimes}>Нет свободных слотов</p>
-                            )}
-
-                            {daySlots.map((s) => (
-                                <button
-                                    key={s.start}
-                                    type="button"
-                                    onClick={() => setSelectedSlot(s)}
-                                    className={`${styles.timeBtn} ${
-                                        selectedSlot?.start === s.start ? styles.timeBtnActive : ""
-                                    }`}
-                                >
-                                    {s.start}
-                                </button>
-                            ))}
-                        </div>
+                    <div className={cn(styles.textarea, styles.block)}>
                         <TextInput
-                            label="Опишите свою проблему"
+                            label="Опишите свою проблему (необязательно)"
                             name="message"
                             register={register}
                             errors={errors as Record<string, FieldError | undefined>}
                         />
                         <Button
-                            className={styles.buttonForm}
                             type="submit"
-                            disabled={isScheduling}
+                            className={styles.buttonForm}
                             loading={isScheduling}
+                            disabled={isScheduling}
                         >
                             Записаться
                         </Button>

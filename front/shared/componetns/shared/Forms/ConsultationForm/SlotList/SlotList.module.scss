@@ -1,0 +1,28 @@
+@use "@/shared/styles/variables" as *;
+
+.timesWrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.timeBtn,
+.timeBtnActive {
+    padding: 8px 3px;
+    border-radius: 6px;
+    border: 1px solid $title-hover-color;
+    font-size: 14px;
+    background: transparent;
+    transition: $transition-fastest;
+    width: 100%;
+    text-align: center;
+
+    &:hover {
+        background: $button-hover-color;
+    }
+}
+
+.timeBtnActive {
+    background: $button-hover-color !important;
+    color: $title-font-color;
+}
