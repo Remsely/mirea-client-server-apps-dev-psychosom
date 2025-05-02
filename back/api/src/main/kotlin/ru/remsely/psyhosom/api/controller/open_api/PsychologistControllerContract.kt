@@ -15,6 +15,7 @@ import ru.remsely.psyhosom.api.dto.ArticleBlockDto
 import ru.remsely.psyhosom.api.dto.request.AddPsychologistEducationRequest
 import ru.remsely.psyhosom.api.dto.response.ErrorResponse
 import ru.remsely.psyhosom.api.dto.response.PsychologistFullInfoResponse
+import ru.remsely.psyhosom.api.dto.response.PsychologistShortInfoResponse
 import ru.remsely.psyhosom.api.dto.response.ScheduleItemResponse
 
 @Tag(name = "Психологи", description = "Эндпоинты для оперирования данными психологов")
@@ -237,4 +238,53 @@ interface PsychologistControllerContract {
         @Parameter(description = "ID психолога")
         psychologistId: Long
     ): ResponseEntity<*>
+
+    @Operation(summary = "Получение короткой информации о психологах")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Информация добавлена успешно",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        array = ArraySchema(
+                            schema = Schema(implementation = PsychologistShortInfoResponse::class)
+                        )
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Некорректные входные данные",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class)
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "401",
+                description = "Неверные учетные данные",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class)
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "Внутренняя ошибка сервера",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class)
+                    )
+                ]
+            )
+        ]
+    )
+    fun getPsychologistsShortInfo(): ResponseEntity<*>
 }

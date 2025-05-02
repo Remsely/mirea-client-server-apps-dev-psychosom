@@ -16,11 +16,13 @@ import ru.remsely.psyhosom.api.dto.request.AddPsychologistEducationRequest
 import ru.remsely.psyhosom.api.extensions.error_handling.toResponse
 import ru.remsely.psyhosom.api.extensions.mapping.toDomain
 import ru.remsely.psyhosom.api.extensions.mapping.toDto
+import ru.remsely.psyhosom.api.extensions.mapping.toShortDto
 import ru.remsely.psyhosom.api.extensions.validation.validate
 import ru.remsely.psyhosom.api.utils.annotations.AuthPsychologistId
 import ru.remsely.psyhosom.domain.psychologist.event.AddPsychologistEducationEvent
 import ru.remsely.psyhosom.monitoring.log.logger
 import ru.remsely.psyhosom.usecase.psychologist.AddPsychologistEducationCommand
+import ru.remsely.psyhosom.usecase.psychologist.FindPsychologistsCommand
 import ru.remsely.psyhosom.usecase.psychologist.GetPsychologistByIdCommand
 import ru.remsely.psyhosom.usecase.psychologist.PublishArticleCommand
 import ru.remsely.psyhosom.usecase.schedule.GetPsychologistScheduleCommand
@@ -31,7 +33,8 @@ class PsychologistController(
     private val publishArticleCommand: PublishArticleCommand,
     private val addEducationCommand: AddPsychologistEducationCommand,
     private val getPsychologistByIdCommand: GetPsychologistByIdCommand,
-    private val getPsychologistScheduleCommand: GetPsychologistScheduleCommand
+    private val getPsychologistScheduleCommand: GetPsychologistScheduleCommand,
+    private val findPsychologistsCommand: FindPsychologistsCommand
 ) : PsychologistControllerContract {
     private val log = logger()
 
@@ -115,6 +118,23 @@ class PsychologistController(
                 },
                 {
                     ResponseEntity.ok(it.toDto())
+                }
+            )
+    }
+
+    @GetMapping("/catalog")
+    override fun getPsychologistsShortInfo(): ResponseEntity<*> {
+        log.info("GET /api/v1/psychologists/catalog")
+        return findPsychologistsCommand.execute()
+            .fold(
+                { err ->
+                    err.toResponse()
+                        .also { log.warn(err.message) }
+                },
+                { psychologists ->
+                    ResponseEntity.ok(
+                        psychologists.map { it.toShortDto() }
+                    )
                 }
             )
     }

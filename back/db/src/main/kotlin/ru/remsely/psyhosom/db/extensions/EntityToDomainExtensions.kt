@@ -47,7 +47,8 @@ fun Psychologist.toDomain() = DomainPsychologist(
     profileImage = profileImageUrl,
     article = article.toDomain(),
     schedule = DomainSchedule(scheduleSlots.map { it.toDomain() }),
-    educations = educations.map { it.toDomain() }
+    educations = educations.map { it.toDomain() },
+    reviews = reviews.map { it.toDomain() }
 )
 
 fun ScheduleSlot.toDomain() = DomainSchedule.Slot(
@@ -93,7 +94,6 @@ fun Consultation.toDomain() = DomainConsultation(
 
 fun Review.toDomain() = DomainReview(
     id = id,
-    psychologist = psychologist.toDomain(),
     patient = patient.toDomain(),
     rating = ReviewRating(rating).getOrThrowUnexpectedBehavior(),
     text = text,

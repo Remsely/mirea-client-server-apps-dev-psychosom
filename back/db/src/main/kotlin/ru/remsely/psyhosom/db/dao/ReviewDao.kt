@@ -1,23 +1,18 @@
 package ru.remsely.psyhosom.db.dao
 
 
-import arrow.core.Either
-import arrow.core.right
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import ru.remsely.psyhosom.db.extensions.toDomain
-import ru.remsely.psyhosom.db.extensions.toEntity
 import ru.remsely.psyhosom.db.repository.ReviewRepository
-import ru.remsely.psyhosom.domain.error.DomainError
 import ru.remsely.psyhosom.domain.review.Review
-import ru.remsely.psyhosom.domain.review.dao.ReviewCreator
 import ru.remsely.psyhosom.domain.review.dao.ReviewFinder
 import ru.remsely.psyhosom.monitoring.log.logger
 
 @Component
 open class ReviewDao(
     private val repository: ReviewRepository
-) : ReviewCreator, ReviewFinder {
+) : ReviewFinder {
     private val log = logger()
 
     @Transactional(readOnly = true)
@@ -41,14 +36,5 @@ open class ReviewDao(
                 it.toDomain()
             }.also {
                 log.info("${it.size} reviews for psychologist with id $psychologistId found in DB.")
-            }
-
-    @Transactional
-    override fun createReview(review: Review): Either<DomainError, Review> =
-        repository.save(review.toEntity())
-            .toDomain()
-            .right()
-            .also {
-                log.info("Review with id ${review.id} successfully created in DB.")
             }
 }

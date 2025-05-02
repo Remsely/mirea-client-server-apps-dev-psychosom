@@ -60,10 +60,15 @@ fun DomainPsychologist.toEntity(): Psychologist {
         eduEntity
     }
 
+    val reviews = reviews.map {
+        it.toEntity(psychologistEntity)
+    }
+
     val scheduleSlots = schedule.values.map { it.toEntity(psychologistEntity) }
 
     psychologistEntity.setScheduleSlots(scheduleSlots)
     psychologistEntity.setEducations(educations)
+    psychologistEntity.setReviews(reviews)
 
     return psychologistEntity
 }
@@ -98,9 +103,9 @@ fun DomainConsultation.toEntity() = Consultation(
     meetingLink = meetingLink?.value
 )
 
-fun DomainReview.toEntity() = Review(
+fun DomainReview.toEntity(psychologist: Psychologist) = Review(
     id = id,
-    psychologist = psychologist.toEntity(),
+    psychologist = psychologist,
     patient = patient.toEntity(),
     rating = rating.value,
     text = text,

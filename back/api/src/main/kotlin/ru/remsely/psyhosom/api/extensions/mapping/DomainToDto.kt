@@ -7,6 +7,7 @@ import ru.remsely.psyhosom.api.dto.response.ConsultationResponse
 import ru.remsely.psyhosom.api.dto.response.ErrorResponse
 import ru.remsely.psyhosom.api.dto.response.PatientResponse
 import ru.remsely.psyhosom.api.dto.response.PsychologistFullInfoResponse
+import ru.remsely.psyhosom.api.dto.response.PsychologistShortInfoResponse
 import ru.remsely.psyhosom.api.dto.response.RegisterResponse
 import ru.remsely.psyhosom.api.dto.response.ReviewResponse
 import ru.remsely.psyhosom.api.dto.response.ScheduleItemResponse
@@ -19,6 +20,8 @@ import ru.remsely.psyhosom.domain.psychologist.Psychologist
 import ru.remsely.psyhosom.domain.review.Review
 import ru.remsely.psyhosom.domain.schedule.Schedule
 import ru.remsely.psyhosom.usecase.auth.AccountCreatedEvent
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.LocalDateTime
 
 fun Patient.toDto() = PatientResponse(
@@ -32,11 +35,6 @@ fun Review.toDto() = ReviewResponse(
         id = patient.id,
         firstName = patient.firstName,
         lastName = patient.lastName
-    ),
-    psychologist = ReviewResponse.Psychologist(
-        id = psychologist.id,
-        firstName = psychologist.firstName,
-        lastName = psychologist.lastName
     ),
     id = id,
     rating = rating.value,
@@ -88,7 +86,8 @@ fun Psychologist.toDto(): PsychologistFullInfoResponse = PsychologistFullInfoRes
     profileImage = profileImage,
     educationFiles = educations
         .takeIf { it.isNotEmpty() }
-        ?.flatMap { edu -> edu.files.map { it.url } }
+        ?.flatMap { edu -> edu.files.map { it.url } },
+    rating = reviews.toAvgRating()
 )
 
 fun Article.ArticleBlock.toDto(): ArticleBlockDto = ArticleBlockDto(
@@ -111,3 +110,17 @@ fun Schedule.toDto(): List<ScheduleItemResponse> = this.values
         )
     }
     .sortedBy { it.date }
+
+fun Psychologist.toShortDto(): PsychologistShortInfoResponse = PsychologistShortInfoResponse(
+    id = id,
+    firstName = firstName,
+    lastName = lastName,
+    profileImage = profileImage,
+    rating = reviews.toAvgRating()
+)
+
+private fun List<Review>.toAvgRating(): Double? = this.takeIf { it.isNotEmpty() }?.let {
+    BigDecimal(
+        this.sumOf { it.rating.value }.toDouble() / this.size
+    ).setScale(2, RoundingMode.HALF_UP).toDouble()
+}

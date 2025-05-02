@@ -1,11 +1,9 @@
 package ru.remsely.psyhosom.api.dto.response
 
-import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Schema
-import ru.remsely.psyhosom.api.dto.ArticleBlockDto
 
-@Schema(description = "Информация о психологе")
-data class PsychologistFullInfoResponse(
+@Schema(description = "Краткая информация оп психологе")
+data class PsychologistShortInfoResponse(
     @field:Schema(
         description = "ID психолога",
         example = "1"
@@ -29,23 +27,6 @@ data class PsychologistFullInfoResponse(
         example = "https://aws.amazon.s3/profile_image.jpg"
     )
     val profileImage: String,
-
-    @field:Schema(
-        description = "Статья профиля",
-    )
-    val article: List<ArticleBlockDto>?,
-
-    @ArraySchema(
-        arraySchema = Schema(
-            description = "Список файлов, подтверждающих квалификацию психолога"
-        ),
-        schema = Schema(
-            type = "string",
-            format = "uri",
-            example = "https://aws.amazon.s3/edu_image1.jpg"
-        )
-    )
-    val educationFiles: List<String>?,
 
     @field:Schema(
         description = "Средний рейтинг психолога",

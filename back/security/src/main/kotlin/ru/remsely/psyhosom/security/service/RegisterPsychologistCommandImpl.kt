@@ -64,7 +64,8 @@ class RegisterPsychologistCommandImpl(
                 profileImage = s3File.url,
                 article = Article.empty(),
                 educations = emptyList(),
-                schedule = Schedule.empty()
+                schedule = Schedule.empty(),
+                reviews = emptyList(),
             )
         ).bind()
 

@@ -11,11 +11,6 @@ data class ReviewResponse(
     val patient: Patient,
 
     @field:Schema(
-        description = "Информация о психологе",
-    )
-    val psychologist: Psychologist,
-
-    @field:Schema(
         description = "ID отзыва",
         example = "1"
     )
@@ -39,26 +34,6 @@ data class ReviewResponse(
     )
     val date: LocalDate,
 ) {
-    data class Psychologist(
-        @field:Schema(
-            description = "ID психолога",
-            example = "1"
-        )
-        val id: Long,
-
-        @field:Schema(
-            description = "Имя психолога",
-            example = "Иван"
-        )
-        val firstName: String,
-
-        @field:Schema(
-            description = "Фамилия психолога",
-            example = "Иванов"
-        )
-        val lastName: String
-    )
-
     data class Patient(
         @field:Schema(
             description = "ID пациента",

@@ -9,8 +9,8 @@ import ru.remsely.psyhosom.domain.consultation.dao.ConsultationFinder
 import ru.remsely.psyhosom.domain.error.DomainError
 import ru.remsely.psyhosom.domain.patient.dao.PatientFinder
 import ru.remsely.psyhosom.domain.psychologist.dao.PsychologistFinder
+import ru.remsely.psyhosom.domain.psychologist.dao.PsychologistUpdater
 import ru.remsely.psyhosom.domain.review.Review
-import ru.remsely.psyhosom.domain.review.dao.ReviewCreator
 import ru.remsely.psyhosom.domain.review.dao.ReviewFinder
 import ru.remsely.psyhosom.domain.review.event.CreateReviewEvent
 import ru.remsely.psyhosom.monitoring.log.logger
@@ -19,10 +19,10 @@ import java.time.LocalDate
 @Component
 open class CreateReviewCommandImpl(
     private val psychologistFinder: PsychologistFinder,
+    private val psychologistUpdater: PsychologistUpdater,
     private val patientFinder: PatientFinder,
     private val consultationFinder: ConsultationFinder,
-    private val reviewFinder: ReviewFinder,
-    private val reviewCreator: ReviewCreator
+    private val reviewFinder: ReviewFinder
 ) : CreateReviewCommand {
     private val log = logger()
 
@@ -56,17 +56,22 @@ open class CreateReviewCommandImpl(
             )
         }
 
-        reviewCreator.createReview(
-            Review(
-                id = 0L,
-                patient = patient,
-                psychologist = psychologist,
-                text = event.text,
-                rating = event.rating,
-                date = LocalDate.now(),
+        val review = Review(
+            id = 0L,
+            patient = patient,
+            text = event.text,
+            rating = event.rating,
+            date = LocalDate.now(),
+        )
+
+        psychologistUpdater.updatePsychologist(
+            psychologist.copy(
+                reviews = psychologist.reviews + review
             )
-        ).bind().also {
-            log.info("Review with id ${it.id} successfully created.")
+        ).bind().let { psy ->
+            psy.reviews.maxBy { it.date }
+        }.also {
+            log.info("Review with id ${review.id} successfully created.")
         }
     }
 }

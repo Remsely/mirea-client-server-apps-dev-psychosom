@@ -53,6 +53,14 @@ data class Psychologist(
         orphanRemoval = true,
         fetch = FetchType.LAZY
     )
+    private val joinedReviews: MutableList<Review> = mutableListOf(),
+
+    @OneToMany(
+        mappedBy = "psychologist",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
+    )
     private val joinedEducations: MutableList<PsychologistEducation> = mutableListOf()
 ) {
     val educations: List<PsychologistEducation>
@@ -60,6 +68,9 @@ data class Psychologist(
 
     val scheduleSlots: List<ScheduleSlot>
         get() = joinedScheduleSlots
+
+    val reviews: List<Review>
+        get() = joinedReviews
 
     fun setEducations(newList: List<PsychologistEducation>) {
         joinedEducations.clear()
@@ -69,6 +80,11 @@ data class Psychologist(
     fun setScheduleSlots(newList: List<ScheduleSlot>) {
         joinedScheduleSlots.clear()
         joinedScheduleSlots.addAll(newList)
+    }
+
+    fun setReviews(newList: List<Review>) {
+        joinedReviews.clear()
+        joinedReviews.addAll(newList)
     }
 
     @JvmInline
