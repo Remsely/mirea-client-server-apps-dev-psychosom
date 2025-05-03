@@ -25,6 +25,9 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import ru.remsely.psyhosom.domain.account.Account
+import ru.remsely.psyhosom.security.extensions.public
+import ru.remsely.psyhosom.security.extensions.withRole
 import ru.remsely.psyhosom.security.jwt.RsaKeyProperties
 import ru.remsely.psyhosom.security.service.UserDetailsServiceImpl
 
@@ -42,11 +45,36 @@ class SecurityConfig(
             .formLogin { it.disable() }
             .cors { it.configurationSource(corsConfig()) }
             .authorizeHttpRequests { auth ->
-                auth.apply {
-                    requestMatchers("/v1/admin/**").hasRole("ADMIN")
-                    requestMatchers("/v1/**").permitAll()
-                    anyRequest().permitAll()
-                }
+                auth
+                    .withRole(Account.Role.ADMIN) {
+                        post("/api/v1/auth/register/admin")
+                    }
+                    .withRole(Account.Role.PATIENT) {
+                        put("/api/v1/patients")
+                        get("/api/v1/patients")
+                        post("/api/v1/psychologists/*/consultations")
+                        get("/api/v1/psychologists/*/consultations/active")
+                        patch("/api/v1/psychologists/*/consultations/*/finish")
+                        post("/api/v1/psychologists/*/reviews")
+                    }
+                    .withRole(Account.Role.PSYCHOLOGIST) {
+                        put("/api/v1/psychologists/article")
+                        post("/api/v1/psychologists/education")
+                    }
+                    .public {
+                        post("/api/v1/auth/**")
+                        get("/api/v1/psychologists/*/reviews")
+                        get("/api/v1/psychologists/catalog")
+                        get("/api/v1/psychologists/*")
+                        get("/api/v1/psychologists/*/schedule")
+                        any("/v3/api-docs/**")
+                        any("/swagger-ui/**")
+                        any("/swagger-ui.html")
+                        any("/swagger-ui/index.html")
+                        any("/swagger-resources/**")
+                        any("/webjars/**")
+                    }
+                    .anyRequest().authenticated()
             }
             .oauth2ResourceServer { oauth2 ->
                 oauth2.jwt {
