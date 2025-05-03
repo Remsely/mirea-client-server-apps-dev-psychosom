@@ -1,9 +1,9 @@
 export type Review = {
-    id?: number;
-    name?: string;
-    rating?: number;
-    text?: string;
-    date?: string;
+    id: number;
+    name: string;
+    rating: number;
+    text: string;
+    date: string;
 }
 
 export interface ServerReview {
@@ -46,8 +46,17 @@ export interface PsychologistProfileData {
     article: ArticleBlock[];
     profileImage: string;
     educationFiles: string[];
+    rating: number;
 }
 
 export interface PsychologistProfileType {
     specialist: PsychologistProfileData;
+}
+
+export interface IPsychologist {
+    id: number;
+    firstName: string;
+    lastName: string;
+    profileImage: string;
+    rating: number | null;
 }

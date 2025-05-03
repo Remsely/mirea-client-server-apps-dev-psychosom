@@ -17,7 +17,7 @@ export function Header({hasNavbar = true}: { hasNavbar?: boolean }) {
                     <nav className="navbar">
                         <Navbar/>
                     </nav>
-                ) : <h2 className="navbar__placeholder">Психосоматика - Поиск психологов</h2>}
+                ) : <h2 className="navbar__placeholder">Psychosom - Поиск психологов</h2>}
 
                 <div className="auth-button">
                     <AuthButton className="auth-button__button"/>

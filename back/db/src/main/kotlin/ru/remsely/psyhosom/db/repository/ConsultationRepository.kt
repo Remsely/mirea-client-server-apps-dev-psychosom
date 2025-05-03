@@ -21,14 +21,14 @@ interface ConsultationRepository : JpaRepository<Consultation, Long> {
         status: DomainConsultation.Status
     ): Boolean
 
-    @EntityGraph(attributePaths = ["patient", "psychologist"])
+    @EntityGraph(attributePaths = ["patient", "psychologist", "scheduleSlot"])
     fun findByPatientIdAndPsychologistIdAndStatusNotIn(
         patientId: Long,
         psychologistId: Long,
         statuses: List<DomainConsultation.Status>
     ): List<Consultation>
 
-    @EntityGraph(attributePaths = ["patient", "psychologist"])
+    @EntityGraph(attributePaths = ["patient", "psychologist", "scheduleSlot"])
     @Query(
         """
         select c 
@@ -43,7 +43,7 @@ interface ConsultationRepository : JpaRepository<Consultation, Long> {
         time: LocalTime
     ): List<Consultation>
 
-    @EntityGraph(attributePaths = ["patient", "psychologist"])
+    @EntityGraph(attributePaths = ["patient", "psychologist", "scheduleSlot"])
     @Query(
         """
         select c 

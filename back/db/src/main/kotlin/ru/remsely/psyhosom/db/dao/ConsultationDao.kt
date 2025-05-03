@@ -128,6 +128,7 @@ open class ConsultationDao(
                 }
             )
 
+    @Transactional(readOnly = true)
     override fun findAllConfirmedConsultationsToNotify(): List<Consultation> =
         LocalDateTime.now()
             .plus(Duration.ofMillis(notificationsFixedRate))
@@ -144,6 +145,7 @@ open class ConsultationDao(
                 log.info("Found ${it.size} consultations to notify.")
             }
 
+    @Transactional(readOnly = true)
     override fun findAllFinishedConsultationsToInform(): List<Consultation> =
         repository.findAllByStatusAndEndDtTmBefore(
             status = Consultation.Status.NOTIFIED,

@@ -9,9 +9,15 @@ import {signOut, useSession} from "next-auth/react";
 import Link from "next/link";
 import {cn} from "@/shared/utils";
 
-export function AuthButton({className}: {className?: string}) {
+export function AuthButton({className}: { className?: string }) {
     const {data: session} = useSession();
     const [isOpen, setIsOpen] = useState(false);
+
+    const handleLogout = async () => {
+        await fetch("/api/auth/logout", { method: "GET" });
+        await signOut({ callbackUrl: "/" });
+        window.location.href = "/";
+    }
 
     return (
         <>
@@ -24,18 +30,19 @@ export function AuthButton({className}: {className?: string}) {
                         <span>{session ? "Профиль" : "Войти"}</span>
                     </div>
                 </PopoverTrigger>
-                <PopoverContent>
+                {session && <PopoverContent>
                     <ul className={styles.authList}>
                         <li className={styles.authItem}>
                             <Link href="/profile">
-                                <PenLine /> Изменить
+                                <PenLine/> Изменить
                             </Link>
                         </li>
-                        <li onClick={() => signOut()} className={styles.authItem}>
+                        <li onClick={handleLogout}
+                            className={styles.authItem}>
                             <LogOut/> Выход
                         </li>
                     </ul>
-                </PopoverContent>
+                </PopoverContent>}
             </Popover>
         </>
     );

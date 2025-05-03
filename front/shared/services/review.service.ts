@@ -1,4 +1,4 @@
-import {Review} from "@/@types/types";
+import {Review, ServerReview} from "@/@types/types";
 import {api} from "@/shared/utils";
 
 export interface ReviewSubmitData {
@@ -16,7 +16,7 @@ class ReviewService {
     }
 
     public async getReviews(psychologistId: number) {
-        return await api.get<Review[]>(
+        return await api.get<ServerReview[]>(
             `psychologists/${psychologistId}/reviews`
         )
     }

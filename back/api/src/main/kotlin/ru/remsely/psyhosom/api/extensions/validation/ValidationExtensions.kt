@@ -7,10 +7,15 @@ import ru.remsely.psyhosom.api.dto.request.AddPsychologistEducationRequest
 import ru.remsely.psyhosom.api.dto.request.CreateConsultationRequest
 import ru.remsely.psyhosom.domain.error.DomainError
 import java.time.LocalDate
+import java.time.LocalTime
 
 fun CreateConsultationRequest.validate(): Either<DomainError.ValidationError, CreateConsultationRequest> =
     either {
-        ensure(date.isAfter(LocalDate.now())) {
+        val currentDate = LocalDate.now()
+        ensure(
+            date.isAfter(currentDate) ||
+                    date.isEqual(currentDate) && startTm.isAfter(LocalTime.now())
+        ) {
             CreateConsultationRequestValidationError.DateThePast
         }
         ensure(startTm.isBefore(endTm)) {

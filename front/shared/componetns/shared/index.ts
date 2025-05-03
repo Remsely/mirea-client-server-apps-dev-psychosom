@@ -12,6 +12,8 @@ export {Providers} from "./providers";
 export {LoadingSpinner} from "./LoadingSpinner/LoadingSpinner";
 export {PsychologistProfile} from "./PsychologistProfile/PsychologistProfile"
 export {AuthModalContext} from "./providers"
+export {PsychologistsCatalog} from "./PsychologistsCatalog/PsychologistsCatalog"
+export {PsychologistCard} from "./PsychologistCard/PsychologistCard"
 
 export * from './Forms';
 export * from './Inputs';

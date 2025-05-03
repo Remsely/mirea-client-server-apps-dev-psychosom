@@ -40,8 +40,16 @@ open class CreateConsultationCommandImpl(
 
         val psychologistSlots = psychologist.schedule.values
 
-        ensure(!consultationFinder.existActiveConsultationByPatientAndPsychologist(patient.id, psychologist.id)) {
-            ConsultationCreationValidationError.ActiveConsultationExist(patient.id, psychologist.id)
+        ensure(
+            !consultationFinder.existActiveConsultationByPatientAndPsychologist(
+                patientId = patient.id,
+                psychologistId = psychologist.id
+            )
+        ) {
+            ConsultationCreationValidationError.ActiveConsultationExist(
+                psychologistId = psychologist.id,
+                patientId = patient.id
+            )
         }
 
         val bookedSlot = psychologistSlots.singleOrNone {

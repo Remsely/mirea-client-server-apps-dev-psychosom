@@ -1,5 +1,5 @@
 import {keepPreviousData, useQuery} from "@tanstack/react-query";
-import {PsychologistProfileData} from "@/@types/types";
+import {IPsychologist, PsychologistProfileData} from "@/@types/types";
 import {psychologistService} from "../services";
 import {FetchError} from "@/shared/utils";
 
@@ -27,6 +27,18 @@ type UsePsychologistProfileOptions = {
     staleTime?: number;
     onSuccess?: (data: PsychologistProfileData) => void;
 };
+
+export const usePsychologists = () => {
+  const { data, isPending, isError } = useQuery<IPsychologist[]>({
+      queryKey: ["psychologists"],
+      queryFn: () => psychologistService.getPsychologistsCatalog(),
+  });
+    return {
+        psychologists: data,
+        isLoading: isPending,
+        isError,
+    };
+}
 
 export function usePsychologistProfile({
                                            psychologistId,

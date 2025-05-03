@@ -115,7 +115,8 @@ export function ConsultationForm({
                     <DialogHeader>
                         <DialogTitle>Поздравляем, вы записаны!</DialogTitle>
                         <p className={styles.textModal}>
-                            Вы успешно записаны на консультацию к специалисту <b>{specialistName}</b>. Перейди в телеграмм-бот, чтобы продолжить запись.
+                            Вы успешно записаны на консультацию к специалисту <b>{specialistName}</b>. Перейди в
+                            телеграмм-бот, чтобы продолжить запись.
                         </p>
                     </DialogHeader>
                 </DialogContent>

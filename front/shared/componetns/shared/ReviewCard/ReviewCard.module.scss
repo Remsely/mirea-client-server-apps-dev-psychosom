@@ -20,17 +20,23 @@
         align-items: center;
 
         h3 {
-            font-size: $font-size-subtitle;
-            font-weight: $font-weight-subtitle;
+            margin: 6px 0;
+            font-size: 26px;
+            font-weight: $font-weight-title;
             color: $title-font-color;
         }
 
-        span {
-            font-size: $font-size-title;
-            font-weight: $font-weight-subtitle;
-            color: $title-font-color;
+        .rating {
+            display: flex;
+            align-items: center;
             margin-left: auto;
-            margin-right: 5px;
+
+            span {
+                font-size: 26px;
+                font-weight: $font-weight-title;
+                color: $title-font-color;
+                margin-right: 5px;
+            }
         }
 
         svg {

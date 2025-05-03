@@ -20,8 +20,8 @@ interface ScheduleSlotRepository : JpaRepository<ScheduleSlot, Long> {
     @Query(
         """
         delete ScheduleSlot ss
-        where ss.date < :date or (ss.date = :date and ss.startTm < :time)
+        where (ss.date < :date or (ss.date = :date and ss.startTm < :time)) and ss.available = :available
         """
     )
-    fun deleteByEndDtTmIsBefore(date: LocalDate, time: LocalTime): Int
+    fun deleteByEndDtTmIsBeforeAndAvailable(date: LocalDate, time: LocalTime, available: Boolean): Int
 }

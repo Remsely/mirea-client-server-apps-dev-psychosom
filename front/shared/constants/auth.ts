@@ -55,7 +55,7 @@ export const authConfig: AuthOptions = {
                             secure: !!process.env.NEXTAUTH_SECRET,
                             sameSite: "lax",
                             path: "/",
-                            maxAge: 60 * 60 * 24 * 7, // 7 дней
+                            maxAge: 60 * 60 * 24 * 7,
                         });
 
                         return {

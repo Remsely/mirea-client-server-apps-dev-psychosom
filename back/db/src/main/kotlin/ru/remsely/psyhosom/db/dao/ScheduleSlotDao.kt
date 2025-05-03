@@ -42,9 +42,10 @@ open class ScheduleSlotDao(
 
     @Transactional
     override fun removeOutdatedSlots(): Either<DomainError, Unit> = either {
-        scheduleSlotRepository.deleteByEndDtTmIsBefore(
+        scheduleSlotRepository.deleteByEndDtTmIsBeforeAndAvailable(
             date = LocalDate.now(),
-            time = LocalTime.now()
+            time = LocalTime.now(),
+            available = true,
         ).also {
             log.info("Removed $it outdated slots from DB.")
         }

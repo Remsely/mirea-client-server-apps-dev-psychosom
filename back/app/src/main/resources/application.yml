@@ -45,7 +45,6 @@ s3:
 
 frontend:
   url: ${PSYCHOSOM_WEB_URL:http://localhost:3000}
-  review-url: "${frontend.url}?section=reviews"
 
 security:
   jwt:

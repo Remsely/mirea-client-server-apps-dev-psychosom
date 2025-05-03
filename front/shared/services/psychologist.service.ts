@@ -1,5 +1,5 @@
 import { api } from "@/shared/utils";
-import { PsychologistProfileData } from "@/@types/types";
+import {IPsychologist, PsychologistProfileData} from "@/@types/types";
 import {BackendDaySchedule, BackendSlot} from "../hooks/usePsychologist";
 
 interface BackendSlotDto {
@@ -33,6 +33,10 @@ class PsychologistService {
 
             return { jsDate, slots };
         });
+    }
+
+    public async getPsychologistsCatalog() {
+        return api.get<IPsychologist[]>("psychologists/catalog");
     }
 }
 

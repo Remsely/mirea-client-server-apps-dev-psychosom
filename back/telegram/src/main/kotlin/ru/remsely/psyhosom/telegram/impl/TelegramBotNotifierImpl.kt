@@ -19,8 +19,8 @@ private val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
 @Component
 class TelegramBotNotifierImpl(
-    @Value("\${frontend.review-url}")
-    private val reviewUrl: String,
+    @Value("\${frontend.url}")
+    private val frontendUrl: String,
 
     private val absSender: AbsSender,
 
@@ -229,9 +229,8 @@ class TelegramBotNotifierImpl(
             ✅ <b>Консультация завершена!</b>
 
             Спасибо, что выбрали нас. Мы будем рады получить от вас обратную связь.
-            Отзыв о специалисте можно оставить по ссылке: $reviewUrl.
+            Отзыв о специалисте можно оставить по ссылке: $frontendUrl/psychologist/${c.psychologist.id}?section=reviews.
         """.trimIndent()
-
 
         absSender.execute(
             botMessageSender.sendMessage(

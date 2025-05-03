@@ -1,0 +1,8 @@
+@use "@/shared/styles/variables" as *;
+
+.psychologistsCatalog {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 32px;
+    padding: 48px 0;
+}

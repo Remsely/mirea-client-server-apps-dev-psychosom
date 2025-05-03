@@ -5,7 +5,7 @@ import {Footer, Header} from "@/shared/componetns/shared";
 import {ScrollToSection} from "@/shared/lib/scroll-to-section";
 
 export const metadata: Metadata = {
-    title: "Психосоматика",
+    title: "Psychosom",
 };
 
 export default function PsychologistLayout({children}: Readonly<{ children: ReactNode }>) {

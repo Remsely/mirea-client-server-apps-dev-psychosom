@@ -1,5 +1,5 @@
 export {useReviews, useSubmitReviewMutation} from "./useReview"
 export {useProfile, useUpdateProfile} from "./useProfile"
 export {useScheduleConsultation} from "./useConsultation"
-export {usePsychologistSchedule, type BackendSlot, usePsychologistProfile} from "./usePsychologist"
+export {usePsychologistSchedule, type BackendSlot, usePsychologistProfile, usePsychologists} from "./usePsychologist"
 export {useAuth} from "./useAuth"

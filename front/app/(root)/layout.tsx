@@ -4,7 +4,7 @@ import "@/shared/styles/index.scss"
 import {Footer, Header} from "@/shared/componetns/shared";
 
 export const metadata: Metadata = {
-    title: "Психосоматика",
+    title: "Psychosom",
 };
 
 export default function HomeLayout({children}: Readonly<{ children: ReactNode }>) {
