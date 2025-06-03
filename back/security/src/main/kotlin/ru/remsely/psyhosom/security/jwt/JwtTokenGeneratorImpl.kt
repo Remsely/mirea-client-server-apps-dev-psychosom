@@ -16,16 +16,18 @@ class JwtTokenGeneratorImpl(
     private val log = logger()
 
     override fun generate(auth: Authentication): String =
-        JwtClaimsSet.builder()
-            .issuer("self")
-            .issuedAt(Instant.now())
-            .subject(auth.name)
-            .claim("role", auth.authorities.first())
-            .claim("id", (auth.principal as User).id.toString())
-            .build()
-            .let { claims ->
-                jwtEncoder.encode(JwtEncoderParameters.from(claims)).tokenValue
-            }.also {
-                log.info("Token was generated successfully.")
-            }
+        (auth.principal as User).let { user ->
+            JwtClaimsSet.builder()
+                .issuer("self")
+                .issuedAt(Instant.now())
+                .subject(user.username)
+                .claim("role", user.role.name)
+                .claim("id", user.id.toString())
+                .build()
+                .let { claims ->
+                    jwtEncoder.encode(JwtEncoderParameters.from(claims)).tokenValue
+                }.also {
+                    log.info("Token was generated successfully.")
+                }
+        }
 }

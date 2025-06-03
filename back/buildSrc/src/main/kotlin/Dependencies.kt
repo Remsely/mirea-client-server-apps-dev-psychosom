@@ -7,7 +7,9 @@ object Libs {
     const val spring_boot_starter_security = "org.springframework.boot:spring-boot-starter-security:${LibVersions.spring_boot_starter}"
     const val spring_boot_starter_oauth2_resource_server = "org.springframework.boot:spring-boot-starter-oauth2-resource-server:${LibVersions.spring_boot_starter}"
     const val spring_boot_starter_test = "org.springframework.boot:spring-boot-starter-test:${LibVersions.spring_boot_starter}"
+
     const val spring_tx = "org.springframework:spring-tx:${LibVersions.spring_tx}"
+    const val jakarta_servlet_api = "jakarta.servlet:jakarta.servlet-api:${LibVersions.jakarta_servlet_api}"
 
     // Arrow
     const val arrow_core = "io.arrow-kt:arrow-core:${LibVersions.arrow}"
@@ -49,6 +51,7 @@ object LibVersions {
     const val spring_boot_starter = "3.3.2"
     const val postgresql = "42.7.1"
     const val spring_tx = "6.1.12"
+    const val jakarta_servlet_api = "6.1.0"
     const val flyway = "10.17.3"
     const val slf4j = "2.0.16"
     const val logback = "1.5.12"

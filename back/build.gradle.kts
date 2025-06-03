@@ -33,6 +33,7 @@ repositories {
 subprojects {
     apply {
         plugin(Plugins.kotlin_jvm)
+        plugin(Plugins.kotlin_spring)
     }
 
     repositories {

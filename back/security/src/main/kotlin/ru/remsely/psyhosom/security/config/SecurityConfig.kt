@@ -1,4 +1,4 @@
-package ru.remsely.psyhosom.app.config.security
+package ru.remsely.psyhosom.security.config
 
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
@@ -34,11 +34,11 @@ import ru.remsely.psyhosom.security.service.UserDetailsServiceImpl
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
-    private val rsaKeyProperties: RsaKeyProperties
-) {
-    @Value("\${frontend.url}")
-    private lateinit var websiteUrl: String
+    private val rsaKeyProperties: RsaKeyProperties,
 
+    @Value("\${frontend.url}")
+    private val websiteUrl: String
+) {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain =
         http.csrf { it.disable() }
@@ -62,6 +62,10 @@ class SecurityConfig(
                         post("/api/v1/psychologists/education")
                     }
                     .public {
+                        // web socket
+                        get("/ws/auth/confirmation")
+
+                        // rest
                         post("/api/v1/auth/**")
                         get("/api/v1/psychologists/*/reviews")
                         get("/api/v1/psychologists/catalog")

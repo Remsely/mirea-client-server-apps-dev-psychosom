@@ -28,8 +28,6 @@ dependencies {
     implementation(project(Modules.scheduled))
     implementation(project(Modules.minio))
 
-    implementation(Libs.spring_boot_starter_security)
-    implementation(Libs.spring_boot_starter_oauth2_resource_server)
     implementation(Libs.spring_boot_starter_web)
     implementation(Libs.spring_boot_starter_data_jpa)
     implementation(Libs.spring_boot_starter_web_socket)

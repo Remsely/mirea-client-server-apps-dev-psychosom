@@ -14,5 +14,7 @@ dependencies {
     implementation(Libs.spring_boot_starter_oauth2_resource_server)
     implementation(Libs.spring_tx)
 
+    compileOnly(Libs.jakarta_servlet_api)
+
     implementation(Libs.arrow_core)
 }
